@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/22 19:06:52 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/19 17:29:38 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/20 13:09:12 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int			ft_count_word(char const *s, char c)
 	return (j);
 }
 
-char		**ft_strsplit_array(char const *s, char c)
+char		**ft_strsplit_array(char const *s, char *s)
 {
 	char	**str;
 	int		i;

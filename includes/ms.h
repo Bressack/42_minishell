@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 15:53:10 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/19 14:16:34 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/20 13:14:50 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct			s_exp // sep by exp_sep
 {
 	struct s_exp		*next;
 	struct s_exp		*prev;
+	char				*raw;
 	t_cmd				*cmd;
 	t_cmd_sep			*sep;
 }						t_exp;
