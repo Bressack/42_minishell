@@ -1,39 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_del_node_np.c                                   :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/29 14:33:35 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/25 19:26:36 by tharchen         ###   ########.fr       */
+/*   Created: 2019/09/27 12:17:15 by tharchen          #+#    #+#             */
+/*   Updated: 2020/01/19 17:26:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void		ft_del_node_np(t_pnp **begin_list, t_pnp *del,
-	void (*f)(t_pnp *curr))
+char			*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	t_pnp	*tmp;
+	char		*new_s;
+	int			i;
 
-	tmp = *begin_list;
-	if (tmp == del)
+	if (!s)
+		return (NULL);
+	if (ft_strlen(s) == 0)
+		return ("");
+	new_s = try_malloc(sizeof(char) * (len + 1), _FL_);
+	i = 0;
+	while (s[start] && i < (int)len)
 	{
-		*begin_list = (*begin_list)->next;
-		if (*begin_list)
-			(*begin_list)->prev = NULL;
+		new_s[i] = s[start];
+		start++;
+		i++;
 	}
-	else
-	{
-		while (tmp->next != del)
-			tmp = tmp->next;
-		if (tmp->next == NULL)
-			return ;
-		tmp->next = del->next;
-		tmp->next->prev = tmp;
-	}
-	if (f)
-		f(del);
-	try_free_((void **)&del, _FL_);
+	new_s[i] = '\0';
+	return (new_s);
 }

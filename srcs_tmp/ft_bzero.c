@@ -1,39 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_del_node_np.c                                   :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/29 14:33:35 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/25 19:26:36 by tharchen         ###   ########.fr       */
+/*   Created: 2019/10/09 15:30:38 by tharchen          #+#    #+#             */
+/*   Updated: 2019/12/04 13:31:01 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void		ft_del_node_np(t_pnp **begin_list, t_pnp *del,
-	void (*f)(t_pnp *curr))
+void	ft_bzero(void *s, int n)
 {
-	t_pnp	*tmp;
+	unsigned char	*str;
 
-	tmp = *begin_list;
-	if (tmp == del)
+	str = (unsigned char *)s;
+	while (n > 0)
 	{
-		*begin_list = (*begin_list)->next;
-		if (*begin_list)
-			(*begin_list)->prev = NULL;
+		n--;
+		str[n] = '\0';
 	}
-	else
-	{
-		while (tmp->next != del)
-			tmp = tmp->next;
-		if (tmp->next == NULL)
-			return ;
-		tmp->next = del->next;
-		tmp->next->prev = tmp;
-	}
-	if (f)
-		f(del);
-	try_free_((void **)&del, _FL_);
 }

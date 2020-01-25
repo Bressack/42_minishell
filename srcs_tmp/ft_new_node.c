@@ -1,39 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_del_node_np.c                                   :+:      :+:    :+:   */
+/*   ft_new_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/29 14:33:35 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/25 19:26:36 by tharchen         ###   ########.fr       */
+/*   Created: 2019/09/28 13:06:52 by tharchen          #+#    #+#             */
+/*   Updated: 2019/11/27 16:36:23 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void		ft_del_node_np(t_pnp **begin_list, t_pnp *del,
-	void (*f)(t_pnp *curr))
+void		*ft_new_node(
+	size_t size, void (*f)(void *, int, va_list), int nb_arg, ...)
 {
-	t_pnp	*tmp;
+	va_list	ap;
+	void	*new;
 
-	tmp = *begin_list;
-	if (tmp == del)
-	{
-		*begin_list = (*begin_list)->next;
-		if (*begin_list)
-			(*begin_list)->prev = NULL;
-	}
-	else
-	{
-		while (tmp->next != del)
-			tmp = tmp->next;
-		if (tmp->next == NULL)
-			return ;
-		tmp->next = del->next;
-		tmp->next->prev = tmp;
-	}
-	if (f)
-		f(del);
-	try_free_((void **)&del, _FL_);
+	if (!(new = try_malloc(size, _FL_)))
+		return (NULL);
+	va_start(ap, nb_arg);
+	f(new, nb_arg, ap);
+	va_end(ap);
+	return (new);
 }

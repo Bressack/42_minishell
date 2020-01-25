@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/01/19 17:29:33 by tharchen         ###   ########.fr        #
+#    Updated: 2020/01/25 19:26:42 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -47,6 +47,7 @@ SRCS_LIST			=	\
 						.//srcs/lists/ft_add_node_f_nextto_np.c \
 						.//srcs/lists/ft_swap_node_np.c \
 						.//srcs/lists/ft_del_node_np.c \
+						.//srcs/lists/ft_del_list_np.c \
 						.//srcs/lists/ft_add_node_prevto_np.c \
 						.//srcs/lists/ft_foreach_node_f_np.c \
 						.//srcs/lists/ft_add_node_end_np.c \
@@ -76,6 +77,7 @@ SRCS_LIST_TMP		=	\
 						ft_add_node_f_nextto_np.c \
 						ft_swap_node_np.c \
 						ft_del_node_np.c \
+						ft_del_list_np.c \
 						ft_add_node_prevto_np.c \
 						ft_foreach_node_f_np.c \
 						ft_add_node_end_np.c \
