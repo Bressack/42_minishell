@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 17:17:28 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/25 20:59:10 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/26 11:09:05 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct		s_cmd
 	int				link;
 }					t_cmd;
 t_cmd				*g_exp = NULL;
-int					needling = ISCMD;
+int					g_needling = ISCMD;
 /*
 
 ls -lRah | cat -e | grep "xds i ui iu 'n un9' uno p" && rm -rf / ; ls -l && echo  -n "ok les potos" > test || > test2 echo -n "lel op" > test3
@@ -96,7 +96,7 @@ void				parser__quote(char *line, int *i, int *j)
 		if (line[(*j)] == '\0')
 		{
 			new_element(
-				ft_strndup(&line[(*i)], (*j) - (*i)), needling, ISQUOTE, QUOTE_OPEN);
+				ft_strndup(&line[(*i)], (*j) - (*i)), g_needling, ISQUOTE, QUOTE_OPEN);
 			preparser(PROMPT_NEXT_NEEDED);
 			return ;
 		}
@@ -105,7 +105,7 @@ void				parser__quote(char *line, int *i, int *j)
 		(*j)++;
 	}
 	new_element(
-		ft_strndup(&line[(*i)], (*j) - (*i)), needling, ISQUOTE, QUOTE_CLOSE);
+		ft_strndup(&line[(*i)], (*j) - (*i)), g_needling, ISQUOTE, QUOTE_CLOSE);
 	pass_space(line, i);
 }
 
@@ -120,13 +120,29 @@ void				parser__valid_char(char *line, int *i, int *j)
 	while (ft_isvalid_char(line[(*j)])) // ft_isvalid_char TODO
 		(*j)++;
 	new_element(
-		ft_strndup(&line[i], (*j) - (*i)), needling, ISNOTQUOTE, QUOTE_CLOSE);
+		ft_strndup(&line[i], (*j) - (*i)), g_needling, ISNOTQUOTE, QUOTE_CLOSE);
+	g_needling = ISARG;
 	pass_space(line, i);
+}
+
+int					ft_isspecial(char *s)
+{
+	return ((*s == ';') || (*s == '&' && *(s + 1) == '&') || (*s == '&') ||
+		(*s == '|' && *(s + 1) == '|') || (*s == '|') ? 1 : 0);
 }
 
 void				parser__link(char *line, int *i, int *j)
 {
-	// TODO ;)
+	if (line[ii] == ';')
+		;
+	else if (line[ii] == '&' && line[ii + 1] == '&')	// BONUS
+		;
+	else if (line[ii] == '&')							// BONUS
+		;
+	else if (line[ii] == '|' && line[ii + 1] == '|')	// BONUS
+		;
+	else if (line[ii] == '|')
+		;
 }
 
 void				parser(char *line)
