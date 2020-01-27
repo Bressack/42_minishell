@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 17:17:28 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/26 11:09:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/27 17:36:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,9 @@
 #include <stdlib.h>
 #include <get_next_line.h>
 
-# define LINK_SEMICON	0
-# define LINK_PIPE___	1
-# define LINK_AND____	2 // BONUS
-# define LINK_OR_____	3 // BONUS
-# define LINK_THREAD_	4 // BONUS
-
-typedef struct		s_arg
-{
-	struct s_arg	*next;
-	struct s_arg	*prev;
-	char			*data;
-}					t_arg;
-typedef struct		s_cmd
-{
-	struct s_cmd	*next;
-	struct s_cmd	*prev;
-	char			*name;
-	t_arg			*av;
-	int				fd_out;
-	int				fd_in;
-	int				link;
-}					t_cmd;
 t_cmd				*g_exp = NULL;
+t_cmd				*g_last_cmd = NULL;
+t_cmd				*g_last_arg = NULL;
 int					g_needling = ISCMD;
 /*
 
@@ -131,18 +111,80 @@ int					ft_isspecial(char *s)
 		(*s == '|' && *(s + 1) == '|') || (*s == '|') ? 1 : 0);
 }
 
+void				parser__link__colon(void)
+{
+	g_last_cmd->link = LINK_COLON_;
+	g_needling = ISCMD;
+}
+
+void				parser__link__dbland(void) // BONUS
+{
+	g_last_cmd->link = LINK_AND___;
+	g_needling = ISCMD;
+}
+
+void				parser__link__and(void) // BONUS
+{
+	g_last_cmd->link = LINK_THREAD;
+	g_needling = ISCMD;
+}
+
+void				parser__link__dblor(void) // BONUS
+{
+	g_last_cmd->link = LINK_OR____;
+	g_needling = ISCMD;
+}
+
+void				parser__link__pipe(void)
+{
+	g_last_cmd->link = LINK_PIPE__;
+	g_needling = ISCMD;
+}
+
+void				parser__link__dblrafters_right(void)
+{
+	g_last_cmd->link = REDIR_DBLRIGHT;
+	g_needling = ISARG;
+}
+
+void				parser__link__dblrafters_left(void) // BONUS
+{
+	g_last_cmd->link = REDIR_DBLLEFT_;
+	g_needling = ISARG;
+}
+
+void				parser__link__rafters_right(void)
+{
+	g_last_cmd->link = REDIR_RIGHT___;
+	g_needling = ISARG;
+}
+
+void				parser__link__rafters_left(void)
+{
+	g_last_cmd->link = REDIR_LEFT____;
+	g_needling = ISARG;
+}
+
 void				parser__link(char *line, int *i, int *j)
 {
-	if (line[ii] == ';')
-		;
-	else if (line[ii] == '&' && line[ii + 1] == '&')	// BONUS
-		;
-	else if (line[ii] == '&')							// BONUS
-		;
-	else if (line[ii] == '|' && line[ii + 1] == '|')	// BONUS
-		;
-	else if (line[ii] == '|')
-		;
+	if (line[*i] == ';')
+		parser__link__colon();
+	else if (line[*i] == '&' && line[*i + 1] == '&')	// BONUS
+		parser__link__dbland();
+	else if (line[*i] == '&')							// BONUS
+		parser__link__and();
+	else if (line[*i] == '|' && line[*i + 1] == '|')	// BONUS
+		parser__link__dblor();
+	else if (line[*i] == '|')
+		parser__link__pipe();
+	else if (line[*i] == '>' && line[*i + 1] == '>')
+		parser__link__dblrafters_right();
+	else if (line[*i] == '<' && line[*i + 1] == '<')	// BONUS
+		parser__link__dblrafters_left();
+	else if (line[*i] == '>')
+		parser__link__rafters_right();
+	else if (line[*i] == '<')
+		parser__link__rafters_left();
 }
 
 void				parser(char *line)
@@ -191,6 +233,7 @@ void				add_new_arg(char *data, va_list ap)
 	while (tmp_c->next);
 		tmp_c = tmp_c->next;
 	ft_add_node_end_np((t_pnp **)(&tmp_c->av), new);
+	g_last_arg = (t_arg *)new;
 }
 
 void				add_new_cmd(char *data, va_list ap)
@@ -201,6 +244,7 @@ void				add_new_cmd(char *data, va_list ap)
 	new->fd_in = FD_STDIN;
 	new->fd_out = FD_STDOUT;
 	ft_add_node_end_np(&g_exp, new);
+	g_last_cmd = (t_cmd *)new;
 }
 
 void				preparser(int prompt)
@@ -253,4 +297,6 @@ int					main(void)
 	}
 	return (0);
 }
+
+
 

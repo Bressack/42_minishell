@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 15:53:10 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/25 20:56:36 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/27 17:22:37 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,17 @@
 # define FD_STDIN		1
 
 # define SPECIAL_CHAR	"\\/><|:&"
-# define LINK_SEMICON	0
-# define LINK_PIPE___	1
-# define LINK_AND____	2 // BONUS
-# define LINK_OR_____	3 // BONUS
-# define LINK_THREAD_	4 // BONUS
+# define LINK_COLON_	0
+# define LINK_PIPE__	1
+# define LINK_AND___	2 // BONUS
+# define LINK_OR____	3 // BONUS
+# define LINK_THREAD	4 // BONUS
+
+# define NOREDIR_______
+# define REDIR_RIGHT___	1
+# define REDIR_DBLRIGHT	2
+# define REDIR_LEFT____	3
+# define REDIR_DBLLEFT_	4
 
 typedef struct		s_arg
 {
@@ -58,4 +64,8 @@ typedef struct		s_cmd
 	int				link;
 	int				quote; // quote & 1 -> isquote | quote & 2 -> isquote_closed
 }					t_cmd;
+extern t_cmd		*g_exp;
+extern t_cmd		*g_last_cmd;
+extern t_cmd		*g_last_arg;
+extern int			g_needling;
 #endif
