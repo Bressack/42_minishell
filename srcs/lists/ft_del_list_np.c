@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 19:19:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/25 19:22:45 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/29 22:31:32 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void		ft_del_list_np(t_pnp **begin_list, void (*f)(t_pnp *curr))
 	{
 		next = tmp->next;
 		f(tmp);
-		try_free_(tmp);
+		try_free_((void **)&tmp, _FL_);
 		tmp = next;
 	}
 	*begin_list = NULL;

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 17:17:28 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/29 21:12:53 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/29 23:28:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,73 @@
 
 t_cmd				*g_exp = NULL;
 t_cmd				*g_last_cmd = NULL;
-t_cmd				*g_last_arg = NULL;
+t_arg				*g_last_arg = NULL;
 int					g_needling = ISCMD;
-char				*g_line;
-t_arg				*g_av_in;
-t_arg				*g_av_out;
-t_arg				*g_av;
+char				*g_line = NULL;
+t_arg				*g_av_in = NULL;
+t_arg				*g_av_out = NULL;
+t_arg				*g_av = NULL;
+int					g_ret_last_cmd = SUCCESS;
+char				*g_curr_dir;
 
-void				__f__ft_del_node_np__t_cmd__(t_pnp *a)
+int					ft_isspace(char c)
 {
-	try_free_((t_arg *)a->name);
-	ft_del_list_np(&((t_arg *)a->av), __f__ft_del_node_np__t_arg__);
+	return (c == '\t' || c == '\n' || c == '\r' ||
+			c == '\v' || c == '\f' || c == ' ');
 }
 
 void				__f__ft_del_node_np__t_arg__(t_pnp *a)
 {
-	try_free_((t_arg *)a->data);
+	try_free_((void **)&((t_arg *)a)->name, _FL_);
+}
+
+void				__f__ft_del_node_np__t_cmd__(t_pnp *a)
+{
+	try_free_((void **)&((t_arg *)a)->name, _FL_);
+	ft_del_list_np((t_pnp **)&((t_cmd *)a)->av, __f__ft_del_node_np__t_arg__);
+}
+
+void				add_new_arg(char *data, int type, va_list ap)
+{
+	t_arg			*new;
+
+	new = try_malloc(sizeof(t_arg), _FL_);
+	new->name = data;
+	new->isquote = va_arg(ap, int);
+	new->quote_state = va_arg(ap, int);
+	if (type == ISARG_IN)
+	{
+		ft_add_node_end_np((t_pnp **)(&g_av_in), (t_pnp *)new);
+		!new ? g_last_cmd->av_in = new : 0;
+	}
+	else if (type == ISARG_OUT)
+	{
+		ft_add_node_end_np((t_pnp **)(&g_av_out), (t_pnp *)new);
+		!new ? g_last_cmd->av_out = new : 0;
+	}
+	else
+	{
+		ft_add_node_end_np((t_pnp **)(&g_av), (t_pnp *)new);
+		!new ? g_last_cmd->av = new : 0;
+	}
+	g_last_arg = new; // IDKIIIU
+}
+
+void				add_new_cmd(char *data, va_list ap)
+{
+	t_cmd			*new;
+
+	new = try_malloc(sizeof(t_cmd), _FL_);
+	new->name = data;
+	new->fd_in = FD_STDIN;
+	new->fd_out = FD_STDOUT;
+	new->av_in = g_av_in;
+	new->av_out = g_av_out;
+	new->av = g_av;
+	new->isquote = va_arg(ap, int);
+	new->quote_state = va_arg(ap, int);
+	ft_add_node_end_np((t_pnp **)&g_exp, (t_pnp *)new);
+	g_last_cmd = new;
 }
 
 				//  new_element(data, ISARG     , QUOTE_OPEN || QUOTE_CLOSE);
@@ -41,7 +92,7 @@ void				__f__ft_del_node_np__t_arg__(t_pnp *a)
 				//  new_element(data, ISCMD     , QUOTE_OPEN || QUOTE_CLOSE);
 void				new_element(char *data, int type, ...)
 {
-	va_list	*ap;
+	va_list			ap;
 
 	va_start(ap, type);
 	if (type == ISARG)
@@ -59,7 +110,7 @@ int					ft_isquote(char c)
 	return (c == '\"' || c == '\'');
 }
 
-#if BONUS == ON // ft_isspecial bonus
+#ifdef BONUS // ft_isspecial bonus
 
 int					ft_isspecial(char *s)
 {
@@ -83,49 +134,7 @@ int					pass_quotes(int *i, int *j)
 	while (g_line[*j] && ft_isquote(g_line[*j]))
 		(*j)++;
 	return (!g_line[*j] ? QUOTE_OPEN : QUOTE_CLOSE);
-}
-
-void				add_new_arg(char *data, int type, va_list ap)
-{
-	t_pnp			*new;
-	int				quote[2];
-
-	new = try_malloc(sizeof(t_arg), _FL_);
-	quote[0] = va_arg(ap, int);
-	quote[1] = va_arg(ap, int);
-	new->data = data;
-	new->quote &= quote[0];
-	new->quote &= quote[1];
-	if (type == ISARG_IN)
-	{
-		ft_add_node_end_np((t_pnp **)(&g_av_in), new);
-		!new ? g_last_cmd->av_in = new : 0;
-	}
-	else if (type == ISARG_OUT)
-	{
-		ft_add_node_end_np((t_pnp **)(&g_av_out), new);
-		!new ? g_last_cmd->av_out = new : 0;
-	}
-	else
-	{
-		ft_add_node_end_np((t_pnp **)(&g_av), new);
-		!new ? g_last_cmd->av = new : 0;
-	}
-	g_last_arg = (t_arg *)new; // IDKIIIU
-}
-
-void				add_new_cmd(char *data, va_list ap)
-{
-	t_pnp			*new;
-
-	new = try_malloc(sizeof(t_cmd), _FL_);
-	new->fd_in = FD_STDIN;
-	new->fd_out = FD_STDOUT;
-	new->av_in = g_av_in;
-	new->av_out = g_av_out;
-	new->av = g_av;
-	ft_add_node_end_np(&g_exp, new);
-	g_last_cmd = (t_cmd *)new;
+	(void)i; // i IS NOT USED
 }
 
 void				print_prompt(int select)
@@ -134,12 +143,12 @@ void				print_prompt(int select)
 
 	if (select == PROMPT_NORMAL)
 	{
-		color_arrow = g_all->ret_last_cmd == SUCCESS ? C_G_GREEN : C_G_RED;
-		printf("%s%s"C_G_CYAN" %s"C_RES" \n",
-			color_arrow, PROMPT_ARROW, g_all->curr_dir);
+		color_arrow = g_ret_last_cmd == SUCCESS ? C_G_GREEN : C_G_RED;
+		dprintf(1, "%s%s"C_G_CYAN"  %s"C_RES" ",
+			color_arrow, PROMPT_ARROW, g_curr_dir);
 	}
 	else if (select == PROMPT_NEXT_NEEDED)
-		printf("> ");
+		dprintf(1, "> ");
 }
 
 int					pass_space(int *i)
@@ -159,24 +168,24 @@ void				parser__quote(int *i, int *j)
 	{
 		if (g_line[(*j)] == '\0')
 			break ;
-		if (g_line[(*j) - 1] != '\\' && g_line[(*j)] == )
+		if (g_line[(*j) - 1] != '\\' && g_line[(*j)] == g_line[(*i)])
 			break ;
 		if (g_line[(*j)] == '\\')
 			(*j) += 2;
 		else
 			(*j)++;
 	}
-	new_element(
-		ft_strndup(&g_line[(*i)], (*j) - (*i)), g_needling, ISQUOTE, !g_line[(*j)] ? QUOTE_OPEN);
-	pass_space(g_line, i);
+	new_element(ft_strndup(&g_line[(*i)], (*j) - (*i)), g_needling, ISQUOTE,
+		!g_line[(*j)] ? QUOTE_OPEN : QUOTE_CLOSE);
+	pass_space(i);
 }
 
 void				parser__valid_char(int *i, int *j)
 {
 	(*j) = (*i) + 1;
-	while (!ft_isspecial(g_line[(*j)]) && !ft_isspace(g_line[(*j)]))
+	while (g_line[(*j)] && !ft_isspecial(&g_line[(*j)]) && !ft_isspace(g_line[(*j)]))
 	{
-		if (ft_isquote(g_line[(*j)]) && pass_quotes(g_line, i, j) == QUOTE_OPEN)
+		if (ft_isquote(g_line[(*j)]) && pass_quotes(i, j) == QUOTE_OPEN)
 		{
 			preparser(PROMPT_NEXT_NEEDED);
 			break ;
@@ -184,11 +193,10 @@ void				parser__valid_char(int *i, int *j)
 		else
 			(*j)++;
 	}
-
-	new_element(
-		ft_strndup(&g_line[i], (*j) - (*i)), g_needling, ISNOTQUOTE, QUOTE_CLOSE);
+	new_element(ft_strndup(&g_line[*i], (*j) - (*i)), g_needling, ISNOTQUOTE,
+		QUOTE_CLOSE);
 	g_needling = ISARG;
-	pass_space(g_line, i);
+	pass_space(i);
 }
 
 // return ((*s == ';') || (*s == '&' && *(s + 1) == '&') || (*s == '&') ||
@@ -204,98 +212,100 @@ void				cmd_stop(int type)
 
 #ifdef BONUS
 
-void				parser__link__dbland(void) // ------------------------------: &&	BONUS
+void				parser__special__dbland(void) // ------------------------------: &&	BONUS
 {
-	g_last_cmd->link = LINK_AND___;
+	g_last_cmd->link = LINK_AND;
 	cmd_stop(ISCMD);
-	g_needling = ISCMD;
 }
 
-void				parser__link__and(void) // ---------------------------------: &		BONUS
+void				parser__special__and(void) // ---------------------------------: &		BONUS
 {
 	g_last_cmd->link = LINK_THREAD;
-	g_needling = ISCMD;
+	cmd_stop(ISCMD);
 }
 
-void				parser__link__dblor(void) // -------------------------------: ||	BONUS
+void				parser__special__dblor(void) // -------------------------------: ||	BONUS
 {
-	g_last_cmd->link = LINK_OR____;
-	g_needling = ISCMD;
+	g_last_cmd->link = LINK_OR;
+	cmd_stop(ISCMD);
 }
 
-void				parser__link__dblrafters_left(void) // ---------------------: <<	BONUS
+void				parser__special__dblrafters_left(void) // ---------------------: <<	BONUS
 {
-	g_last_cmd->link = REDIR_DBLLEFT_;
+	g_last_cmd->link = REDIR_DBLLEFT;
 	g_needling = ISARG_RAFTER;
 }
 #endif
 
-void				parser__link__colon(void) // -------------------------------: ;
+void				parser__special__colon(void) // -------------------------------: ;
 {
-	g_last_cmd->link = LINK_COLON_;
-	g_needling = ISCMD;
+	g_last_cmd->link = LINK_COLON;
+	cmd_stop(ISCMD);
 }
 
-void				parser__link__pipe(void) // --------------------------------: |
+void				parser__special__pipe(void) // --------------------------------: |
 {
-	g_last_cmd->link = LINK_PIPE__;
-	g_needling = ISCMD;
+	g_last_cmd->link = LINK_PIPE;
+	cmd_stop(ISCMD);
 }
 
-void				parser__link__dblrafters_right(void) // --------------------: >>
+void				parser__special__dblrafters_right(void) // --------------------: >>
 {
-	g_last_cmd->link = REDIR_DBLRIGHT;
-	g_needling = ISARG_RAFTER;
+	g_last_cmd->open_flags = O_WRONLY|O_CREAT;
+	g_last_cmd->open_flags_rights = OPEN__FLAG_O_CREAT__RIGHTS;
+	g_needling = ISARG_OUT;
 }
 
-void				parser__link__rafters_right(void) // -----------------------: >
+void				parser__special__rafters_right(void) // -----------------------: >
 {
-	g_last_cmd->link = REDIR_RIGHT___;
-	g_needling = ISARG_RAFTER;
+	g_last_cmd->open_flags = O_WRONLY|O_CREAT|O_TRUNC;
+	g_last_cmd->open_flags_rights = OPEN__FLAG_O_CREAT__RIGHTS;
+	g_needling = ISARG_OUT;
 }
 
-void				parser__link__rafters_left(void) // ------------------------: <
+void				parser__special__rafters_left(void) // ------------------------: <
 {
-	g_last_cmd->link = REDIR_LEFT____;
-	g_needling = ISARG_RAFTER;
+	g_last_cmd->open_flags = O_RDONLY;
+	g_needling = ISARG_IN;
 }
 
-#if BONUS == ON
+#ifdef BONUS
 
-void				parser__link(int *i, int *j)
+void				parser__special(int *i, int *j)
 {
 	if (g_line[*i] == ';')
-		parser__link__colon();
+		parser__special__colon();
 	else if (g_line[*i] == '&' && g_line[*i + 1] == '&')	// BONUS
-		parser__link__dbland();
+		parser__special__dbland();
 	else if (g_line[*i] == '&')								// BONUS
-		parser__link__and();
+		parser__special__and();
 	else if (g_line[*i] == '|' && g_line[*i + 1] == '|')	// BONUS
-		parser__link__dblor();
+		parser__special__dblor();
 	else if (g_line[*i] == '|')
-		parser__link__pipe();
+		parser__special__pipe();
 	else if (g_line[*i] == '>' && g_line[*i + 1] == '>')
-		parser__link__dblrafters_right();
+		parser__special__dblrafters_right();
 	else if (g_line[*i] == '<' && g_line[*i + 1] == '<')	// BONUS
-		parser__link__dblrafters_left();
+		parser__special__dblrafters_left();
 	else if (g_line[*i] == '>')
-		parser__link__rafters_right();
+		parser__special__rafters_right();
 	else if (g_line[*i] == '<')
-		parser__link__rafters_left();
+		parser__special__rafters_left();
 }
 #else
-void				parser__link(int *i, int *j)
+void				parser__special(int *i, int *j)
 {
 	if (g_line[*i] == ';')
-		parser__link__colon();
+		parser__special__colon();
 	else if (g_line[*i] == '|')
-		parser__link__pipe();
+		parser__special__pipe();
 	else if (g_line[*i] == '>' && g_line[*i + 1] == '>')
-		parser__link__dblrafters_right();
+		parser__special__dblrafters_right();
 	else if (g_line[*i] == '>')
-		parser__link__rafters_right();
+		parser__special__rafters_right();
 	else if (g_line[*i] == '<')
-		parser__link__rafters_left();
+		parser__special__rafters_left();
+	*j += 2;
 }
 #endif
 
@@ -305,19 +315,20 @@ void				parser(void)
 	int				j;
 
 	i = 0;
+	j = 0;
 	while (1)
 	{
-		pass_space(g_line, &i); // pass all spaces while isspace(g_line[i]) is true
-		if (!g_line[i]) // id end of g_line, loop break
+		if (!g_line[i]) // end of g_line, loop break
 			break ;
+		pass_space(&i); // pass all spaces while isspace(g_line[i]) is true
 		if (g_line[i] == '\\') // if backslash next char is a cmd or an arg
-			parser__valid_char(&g_exp, g_line, &i, &j);
+			parser__valid_char(&i, &j);
 		if (g_line[i] == '\"' || g_line[i] == '\'') // strsub the string into quottes ["] will search next ["] and ['] will search next [']
-			parser__quote(&g_exp, g_line, &i, &j);
-		else if (ft_isspecial(g_line[i])) // & or | or ; or > or < // special effect
-			parser__link(g_line[i], i);
+			parser__quote(&i, &j);
+		else if (ft_isspecial(&g_line[i])) // & or | or ; or > or < // special effect
+			parser__special(&i, &j);
 		else
-			parser__valid_char(&g_exp, g_line, &i, &j);
+			parser__valid_char(&i, &j);
 		i = j;
 	}
 }
@@ -331,33 +342,55 @@ void				preparser(int prompt)
 	get_next_line(0, &str);
 	if (str && ft_strlen(str))
 	{
-		tmp = ft_strjoin(g_line, str);
-		try_free_(&g_line, _FL_);
+		tmp = ft_strjoin(2, g_line, str);
+		try_free_((void **)&g_line, _FL_);
 		g_line = tmp;
 	}
-	try_free_(str, _FL_);
+	try_free_((void **)&str, _FL_);
 }
 
 void				init(void)
 {
-	g_exp = try_malloc(sizeof(t_cmd), _FL_);
+	// MAYBE NOT USEFULL
 }
 
 void				reset_exp(void)
 {
-	ft_del_list_np(&g_exp, __f__ft_del_node_np__t_arg__);
+	ft_del_list_np((t_pnp **)&g_exp, __f__ft_del_node_np__t_cmd__);
+}
+
+void				debug__print_data(void)
+{
+	dprintf(2, "info exp:\n");
+	for (t_cmd *tmp = g_exp; tmp; tmp = tmp->next)
+	{
+		dprintf(2, "cmd: \'%s\'\n", tmp->name);
+		for (t_arg *tmp2 = tmp->av_in; tmp2; tmp2 = tmp2->next)
+		{
+			dprintf(2, "     av_in : %s\n", tmp2->name);
+		}
+		for (t_arg *tmp2 = tmp->av; tmp2; tmp2 = tmp2->next)
+		{
+			dprintf(2, "     av    : %s\n", tmp2->name);
+		}
+		for (t_arg *tmp2 = tmp->av_out; tmp2; tmp2 = tmp2->next)
+		{
+			dprintf(2, "     av_out: %s\n", tmp2->name);
+		}
+	}
+
 }
 
 int					main(void)
 {
-	char			*raw_exp;
-	init();
+	// init();
 	while (1)
 	{
 		reset_exp(); // DONE // works ? TO TEST // norme OK !
-		preparser(&raw_exp, PROMPT_NORMAL); // IN PROGRESS
-		parser(raw_exp);
-		process(); // TODO
+		preparser(PROMPT_NORMAL); // IN PROGRESS
+		parser();
+		debug__print_data();
+		// process(); // TODO
 	}
 	return (0);
 }

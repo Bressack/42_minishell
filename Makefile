@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/01/25 19:26:42 by tharchen         ###   ########.fr        #
+#    Updated: 2020/01/29 23:06:32 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -28,7 +28,7 @@ NAME				=	minishell
 
 CC					=	gcc
 
-FLAGS				=	-Wall -Wextra -Werror -O3 -g3 -fsanitize=address
+FLAGS				=	-Wall -Wextra -Werror -O3 -g3 -fsanitize=address -ferror-limit=5
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -37,8 +37,12 @@ HDIR				=	$(addprefix -I, $(HEADER_DIR))
 HEADER_DIR			=	./includes/
 
 HEADER				=	\
+						color_shell.h \
+						double_linked.h \
 						get_next_line.h \
 						ms.h \
+						try_malloc.h \
+						utils.h \
 
 # *** SRCS ******************************************************************* #
 
@@ -58,8 +62,6 @@ SRCS_LIST			=	\
 						.//srcs/lists/ft_del_node_end_np.c \
 						.//srcs/lists/ft_add_node_nextto_np.c \
 						.//srcs/utils/ft_strlen.c \
-						.//srcs/utils/strsplit.c \
-						.//srcs/utils/strsplit_array.c \
 						.//srcs/utils/ft_bzero.c \
 						.//srcs/utils/ft_strjoin.c \
 						.//srcs/utils/ft_strstr.c \
@@ -88,8 +90,6 @@ SRCS_LIST_TMP		=	\
 						ft_del_node_end_np.c \
 						ft_add_node_nextto_np.c \
 						ft_strlen.c \
-						strsplit.c \
-						strsplit_array.c \
 						ft_bzero.c \
 						ft_strjoin.c \
 						ft_strstr.c \
@@ -116,7 +116,7 @@ OBJS				=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 
 all: lnsrcs $(NAME)
 
-$(NAME): $(OBJS) $(HEADER)
+$(NAME): $(OBJS)
 	@ $(CC) $(FLAGS) $(HDIR) $(OBJS) -o $@
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
