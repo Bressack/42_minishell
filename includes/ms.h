@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 15:53:10 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/27 17:22:37 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/29 19:29:11 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 
 # define ISCMD			0
 # define ISARG			1
+# define ISARG_IN		2
+# define ISARG_OUT		3
 
 # define ISQUOTE		0
 # define ISNOTQUOTE		1
@@ -33,14 +35,13 @@
 # define FD_STDOUT		0
 # define FD_STDIN		1
 
-# define SPECIAL_CHAR	"\\/><|:&"
 # define LINK_COLON_	0
 # define LINK_PIPE__	1
 # define LINK_AND___	2 // BONUS
 # define LINK_OR____	3 // BONUS
 # define LINK_THREAD	4 // BONUS
 
-# define NOREDIR_______
+# define NOREDIR_______	0
 # define REDIR_RIGHT___	1
 # define REDIR_DBLRIGHT	2
 # define REDIR_LEFT____	3
@@ -52,13 +53,16 @@ typedef struct		s_arg
 	struct s_arg	*prev;
 	char			*data;
 	int				quote; // quote & 1 -> isquote | quote & 2 -> isquote_closed
+
 }					t_arg;
 typedef struct		s_cmd
 {
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 	char			*name;
+	t_arg			*av_in;
 	t_arg			*av;
+	t_arg			*av_out;
 	int				fd_out;
 	int				fd_in;
 	int				link;
