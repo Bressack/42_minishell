@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_add_node_end_np.c                               :+:      :+:    :+:   */
+/*   parser_valid_char.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/28 16:28:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/30 17:09:00 by tharchen         ###   ########.fr       */
+/*   Created: 2020/01/30 15:02:49 by tharchen          #+#    #+#             */
+/*   Updated: 2020/01/30 15:03:07 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void		ft_add_node_end_np(t_pnp **begin_list, t_pnp *new)
+void	parser__valid_char(int *i, int *j)
 {
-	t_pnp	*tmp;
-
-	if (!(*begin_list))
-		*begin_list = new;
-	else
+	(*j) = (*i) + 1;
+	while (g_line[(*j)] && !ft_isspecial(&g_line[(*j)]) && !ft_isspace(g_line[(*j)]))
 	{
-		tmp = *begin_list;
-		while (tmp && tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-		new->prev = tmp;
-		new->next = NULL;
+		if (ft_isquote(g_line[(*j)]) && pass_quotes(i, j) == QUOTE_OPEN)
+		{
+			preparser(PROMPT_NEXT_NEEDED);
+			break ;
+		}
+		else
+			(*j)++;
 	}
-	(*begin_list)->prev = new;
+	new_element(ft_strndup(&g_line[*i], (*j) - (*i)), g_needling, ISNOTQUOTE,
+		QUOTE_CLOSE);
+	g_needling = ISARG;
+	pass_space(i);
 }

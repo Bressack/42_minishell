@@ -1,28 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   f__del_list_np.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/13 09:07:42 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/30 13:46:34 by tharchen         ###   ########.fr       */
+/*   Created: 2020/01/30 15:59:49 by tharchen          #+#    #+#             */
+/*   Updated: 2020/01/30 16:00:06 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define GNL_RET 0
-# define GNL_LEN 1
-# define GNL_BUFFER_SIZE	1024
-# define CURR 0
-# define SAVE 1
-# include <ms.h>
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <libc.h>
+#include <ms.h>
 
-int		get_next_line(const int fd, char **line);
-#endif
+void				__f__ft_del_node_np__t_arg__(t_pnp *a)
+{
+	try_free_((void **)&((t_arg *)a)->name, _FL_);
+}
+
+void				__f__ft_del_node_np__t_cmd__(t_pnp *a)
+{
+	try_free_((void **)&((t_arg *)a)->name, _FL_);
+	ft_del_list_np((t_pnp **)&((t_cmd *)a)->av, __f__ft_del_node_np__t_arg__);
+}

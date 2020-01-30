@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 15:53:10 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/29 23:01:07 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/30 17:00:31 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,14 @@ typedef struct		s_cmd
 	int				isquote;
 	int				quote_state;
 }					t_cmd;
+typedef struct		s_env
+{
+	struct s_env	*next;
+	struct s_env	*prev;
+	char			*key;
+	char			*value;
+}					t_env;
+extern t_env		*g_env;
 extern t_cmd		*g_exp;
 extern t_cmd		*g_last_cmd;
 extern t_arg		*g_last_arg;
@@ -85,5 +93,35 @@ extern char			*g_line;
 extern t_arg		*g_av_in;
 extern t_arg		*g_av_out;
 extern t_arg		*g_av;
+extern int			g_ret_last_cmd;
+extern char			*g_curr_dir;
 void				preparser(int prompt);
+void				parser__valid_char(int *i, int *j);
+void				parser__quote(int *i, int *j);
+void				parser(void);
+void				preparser(int prompt);
+void				__f__ft_del_node_np__t_arg__(t_pnp *a);
+void				__f__ft_del_node_np__t_cmd__(t_pnp *a);
+int					pass_quotes(int *i, int *j);
+int					pass_space(int *i);
+void				parser__special__pipe(void);
+void				parser__special__dblrafters_right(void);
+void				parser__special__rafters_right(void);
+void				parser__special__rafters_left(void);
+void				parser__special__colon(void);
+# ifdef BONUS
+void				parser__special__dbland(void);
+void				parser__special__and(void);
+void				parser__special__dblor(void);
+void				parser__special__dblrafters_left(void);
+# endif
+void				parser__special(int *i, int *j);
+int					ft_isspace(char c);
+int					ft_isquote(char c);
+int					ft_isspecial(char *s);
+void				new_element(char *data, int type, ...);
+void				debug_print_msg(char *msg, char *f, int l);
+void				debug__print_data(void);
+void				print_prompt(int select);
+void				cmd_stop(int type);
 #endif

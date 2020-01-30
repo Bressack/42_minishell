@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/01/29 23:06:32 by tharchen         ###   ########.fr        #
+#    Updated: 2020/01/30 17:01:16 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -28,7 +28,7 @@ NAME				=	minishell
 
 CC					=	gcc
 
-FLAGS				=	-Wall -Wextra -Werror -O3 -g3 -fsanitize=address -ferror-limit=5
+FLAGS				=	-Wall -Wextra -Werror -O3 -g3 -fsanitize=address -ferror-limit=1000
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -71,6 +71,17 @@ SRCS_LIST			=	\
 						.//srcs/utils/ft_atoi.c \
 						.//srcs/utils/ft_strcmp.c \
 						.//srcs/main/main.c \
+						.//srcs/main/new_element.c \
+						.//srcs/main/debug.c \
+						.//srcs/main/f__del_list_np.c \
+						.//srcs/main/ft_iss.c \
+						.//srcs/main/parser.c \
+						.//srcs/main/parser_quote.c \
+						.//srcs/main/parser_special.c \
+						.//srcs/main/parser_special_init.c \
+						.//srcs/main/parser_special_init__bonus.c \
+						.//srcs/main/parser_valid_char.c \
+						.//srcs/main/pass.c \
 
 SRCS_DIR			=	./srcs_tmp/
 
@@ -99,6 +110,17 @@ SRCS_LIST_TMP		=	\
 						ft_atoi.c \
 						ft_strcmp.c \
 						main.c \
+						new_element.c \
+						debug.c \
+						f__del_list_np.c \
+						ft_iss.c \
+						parser.c \
+						parser_quote.c \
+						parser_special.c \
+						parser_special_init.c \
+						parser_special_init__bonus.c \
+						parser_valid_char.c \
+						pass.c \
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST_TMP))
 

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 23:32:03 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/25 10:53:10 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/30 17:01:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,5 @@ char	*ft_strndup(const char *src, size_t n);
 char	*ft_strjoin(int nb_str, ...);
 void	ft_bzero(void *s, int n);
 int		ft_strfind(char *s, int c);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 #endif

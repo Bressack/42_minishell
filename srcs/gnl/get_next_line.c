@@ -6,11 +6,11 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/13 08:56:08 by tharchen          #+#    #+#             */
-/*   Updated: 2019/11/05 16:48:20 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/30 17:11:48 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <get_next_line.h>
 
 static int		gnl_u(char *s1, char **s2, char *s3, int cc)
 {
@@ -40,27 +40,26 @@ static int		gnl_u(char *s1, char **s2, char *s3, int cc)
 
 static int		fill_save(int *fd, char **save)
 {
-	char		buf[BUFFER_SIZE + 1];
+	char		buf[GNL_BUFFER_SIZE + 1];
 	char		*tmp;
 	int			len[2];
 
-	len[LEN] = 0;
-	len[RET] = 0;
+	len[GNL_LEN] = 0;
+	len[GNL_RET] = 0;
 	while (1)
 	{
 		if (gnl_u(*save, NULL, NULL, -1) != -1)
 			return (gnl_u(*save, NULL, NULL, -1));
-		len[LEN] = gnl_u(*save, (char **)1, NULL, -1);
-		if ((len[RET] = read(*fd, buf, BUFFER_SIZE)) < 0)
+		len[GNL_LEN] = gnl_u(*save, (char **)1, NULL, -1);
+		if ((len[GNL_RET] = read(*fd, buf, GNL_BUFFER_SIZE)) < 0)
 			return (-1);
-		if (!len[RET] && (*fd = -1))
-			return (len[LEN]);
-		buf[len[RET]] = 0;
-		if (!(tmp = (char *)malloc((len[RET] + len[LEN] + 1))))
-			return (-1);
-		gnl_u(tmp, NULL, *save, len[LEN]);
-		gnl_u(tmp + len[LEN], NULL, buf, len[RET]);
-		*save ? FREE(*save) : 0;
+		if (!len[GNL_RET] && (*fd = -1))
+			return (len[GNL_LEN]);
+		buf[len[GNL_RET]] = 0;
+		tmp = try_malloc((len[GNL_RET] + len[GNL_LEN] + 1), _FL_);
+		gnl_u(tmp, NULL, *save, len[GNL_LEN]);
+		gnl_u(tmp + len[GNL_LEN], NULL, buf, len[GNL_RET]);
+		try_free_((void **)save, _FL_);
 		*save = tmp;
 	}
 }
@@ -71,24 +70,24 @@ int				get_next_line(int fd, char **line)
 	char		*tmp[2];
 	size_t		pos_nl;
 
-	if (fd < 0 || !line || (pos_nl = fill_save(&fd, &save)) == -1 ||
-		!(*line = (char *)malloc(pos_nl + 1)))
+	if (fd < 0 || !line || (pos_nl = fill_save(&fd, &save)) == -1)
 	{
-		save ? FREE(save) : 0;
+		try_free_((void **)&save, _FL_);
 		return (-1);
 	}
+	*line = try_malloc(pos_nl + 1, _FL_);
 	if (!save)
 		return (0);
 	gnl_u(*line, NULL, save, pos_nl);
 	if (gnl_u(save, (char **)1, NULL, -1) - pos_nl)
 	{
-		if (!(tmp[0] = malloc(gnl_u(save, (char **)1, NULL, -1) - pos_nl + 1)))
-			return (-1);
+		tmp[0] = try_malloc(gnl_u(save,
+			(char **)1, NULL, -1) - pos_nl + 1, _FL_);
 		gnl_u(tmp[0], &tmp[1], save + pos_nl + 1, -1);
-		save ? FREE(save) : 0;
+		try_free_((void **)&save, _FL_);
 		save = tmp[1];
 	}
 	if (fd == -1)
-		save ? FREE(save) : 0;
+		try_free_((void **)&save, _FL_);
 	return (fd == -1 ? 0 : 1);
 }

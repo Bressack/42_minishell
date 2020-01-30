@@ -40,7 +40,7 @@
 
 /* ************************************************************************** */
 
-t_debug_malloc	g_debug_malloc[__SIZE_MALLOC_DEBUG];
+t_debug_malloc	g_debug_malloc[SIZE_MALLOC_DEBUG];
 size_t			g_i_malloc = 1;
 
 void		print_mem__(int opt)
@@ -92,9 +92,9 @@ void		*try_malloc(size_t size, char *f, int l)
 {
 	void	*alloc;
 
-	if (g_i_malloc == __SIZE_MALLOC_DEBUG)
+	if (g_i_malloc == SIZE_MALLOC_DEBUG)
 	{
-		dprintf(2, C_G_RED"error:"C_G_WHITE" not enough space on malloc debug array. (actually %d)\n", __SIZE_MALLOC_DEBUG);
+		dprintf(2, C_G_RED"error:"C_G_WHITE" not enough space on malloc debug array. (actually %d)\n", SIZE_MALLOC_DEBUG);
 		print_mem__(PRINT_ALL);
 		exit(-2);
 	}
@@ -125,16 +125,16 @@ void		try_free_(void **p, char *f, int l)
 	if (!p)
 		return ;
 	i = -1;
-	while (++i < __SIZE_MALLOC_DEBUG && *p)
+	while (++i < SIZE_MALLOC_DEBUG && *p)
 		if (g_debug_malloc[i].mem == *p && !g_debug_malloc[i].nb_free)
 			break ;
-	if (i >= __SIZE_MALLOC_DEBUG)
+	if (i >= SIZE_MALLOC_DEBUG)
 	{
-		for (i = 0; i < __SIZE_MALLOC_DEBUG; i++)
+		for (i = 0; i < SIZE_MALLOC_DEBUG; i++)
 			if (g_debug_malloc[i].mem == *p)
 				break ;
 	}
-	if (i < __SIZE_MALLOC_DEBUG)
+	if (i < SIZE_MALLOC_DEBUG)
 	{
 		if (*p && !g_debug_malloc[i].nb_free)
 		{
@@ -149,7 +149,7 @@ void		try_free_(void **p, char *f, int l)
 
 void		try_free_all(char *f, int l)
 {
-	for (int i = 0; i < __SIZE_MALLOC_DEBUG; i++)
+	for (int i = 0; i < SIZE_MALLOC_DEBUG; i++)
 	{
 		if (g_debug_malloc[i].mem && !g_debug_malloc[i].nb_free)
 		{
