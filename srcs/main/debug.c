@@ -6,15 +6,20 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 16:07:14 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/30 16:08:48 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/31 01:17:24 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void				debug_print_msg(char *msg, char *f, int l)
+void				debug_print_msg(char *f, int l, char *fmt, ...)
 {
-	dprintf(2, ""C_G_RED"[ DEBUG ]"C_RES" ("C_G_MAGENTA"%20s"C_RES":"C_G_CYAN"%4d"C_RES") "C_G_WHITE"%s"C_RES"\n", f, l, msg);
+	char			*s;
+	va_list			ap;
+
+	va_start(ap, fmt);
+	vasprintf(&s, fmt, ap);
+	dprintf(2, ""C_G_RED"[ DEBUG ]"C_RES" ("C_G_MAGENTA"%20s"C_RES":"C_G_CYAN"%4d"C_RES") "C_G_WHITE"%s"C_RES"\n", f, l, s);
 }
 
 void				debug__print_data(void)

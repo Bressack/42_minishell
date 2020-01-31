@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 15:53:10 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/30 17:00:31 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/31 01:17:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int					ft_isspace(char c);
 int					ft_isquote(char c);
 int					ft_isspecial(char *s);
 void				new_element(char *data, int type, ...);
-void				debug_print_msg(char *msg, char *f, int l);
+void				debug_print_msg(char *f, int l, char *fmt, ...);
 void				debug__print_data(void);
 void				print_prompt(int select);
 void				cmd_stop(int type);

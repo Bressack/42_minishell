@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 16:04:51 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/30 16:05:29 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/31 01:34:57 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ void				new_element(char *data, int type, ...)
 {
 	va_list			ap;
 
+	debug_print_msg(_FL_, "    new element : [ %10s ] \'%s\'",
+		type == ISARG ? "cmd arg" :
+		type == ISARG_IN ? "input arg" :
+		type == ISARG_OUT ? "output arg" :
+		type == ISCMD ? "cmd" : "unknown",
+		data);
 	va_start(ap, type);
 	if (type == ISARG)
 		add_new_arg(data, ISARG, ap);

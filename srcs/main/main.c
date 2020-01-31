@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 17:17:28 by tharchen          #+#    #+#             */
-/*   Updated: 2020/01/30 17:43:09 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/01/31 04:18:54 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,12 @@ void				cmd_stop(int type)
 
 void				reset_exp(void)
 {
-	debug_print_msg("reset g_exp", _FL_);
+	debug_print_msg(_FL_, "reset g_exp");
 	ft_del_list_np((t_pnp **)&g_exp, __f__ft_del_node_np__t_cmd__);
 	// print_mem__(PRINT_OK);
 	g_exp = NULL;
+	try_free_((void **)&g_line, _FL_);
+	g_needling = ISCMD;
 }
 
 void				init_env(char **env)
@@ -80,14 +82,10 @@ int					main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
 	printf(" --- minishell v0.0.1 ---\n");
-	debug_print_msg("start", _FL_);
+	debug_print_msg(_FL_, "start");
 	init_env(env);
-	for (t_env *tmp = g_env ; tmp ; tmp = tmp->next)
-	{
-		// printf(""C_G_CYAN"key"C_RES": %s | "C_G_CYAN"value"C_RES": %s\n", tmp->key, tmp->value);
-		printf(""C_G_CYAN"%s"C_RES"="C_G_MAGENTA"%s"C_RES"\n", tmp->key, tmp->value);
-	}
-
+	// for (t_env *tmp = g_env ; tmp ; tmp = tmp->next)
+	// 	printf(""C_G_CYAN"%s"C_RES"="C_G_MAGENTA"%s"C_RES"\n", tmp->key, tmp->value);
 	while (1)
 	{
 		preparser(PROMPT_NORMAL); // IN PROGRESS
@@ -97,6 +95,6 @@ int					main(int ac, char **av, char **env)
 		reset_exp(); // DONE // works ? TO TEST // norme OK !
 		debug__print_data();
 	}
-	debug_print_msg("end", _FL_);
+	debug_print_msg(_FL_, "end");
 	return (0);
 }
