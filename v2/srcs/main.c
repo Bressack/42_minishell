@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 15:44:55 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/07 17:04:48 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/07 18:12:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int		main(void)
 		for (t_lex *tmp = lex ; tmp ; tmp = tmp->next)
 			printf("token [ not defined ] : {%s}\n", tmp->str);
 		ft_del_list_np((t_pnp **)lex, __f__ft_del_list_np___t_lex);
-		print_mem__(PRINT_ALL);
+		// print_mem__(PRINT_ALL);
 	}
 	return (0);
 }

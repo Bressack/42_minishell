@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 14:10:54 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/07 17:06:17 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/07 19:22:26 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,24 @@ int			isinlexicon(char *s)
 	int		j;
 	int		max;
 
+	printf("searching for spec: ");
 	max = -1;
 	i = 0;
 	while (lexicon[i])
 	{
 		j = 0;
-		while (lexicon[i][j] && lexicon[i][j] == s[j])
+		printf("lexicon[i][j]: {%d}:(%c)\n", lexicon[i][j], lexicon[i][j]);
+		while (s[j] && lexicon[i][j] && lexicon[i][j] == s[j])
 			j++;
+		printf("lexicon[i][j]: {%d}:(%c)\n\n", lexicon[i][j], lexicon[i][j]);
 		if (!lexicon[i][j])
 			max = i;
 		i++;
 	}
+	if (max == -1)
+		printf("no match\n");
+	else
+		printf("matched: [%s]\n", lexicon[max]);
 	return (max);
 }
 
@@ -85,6 +92,7 @@ int		lexer__frame(t_lex **lex, char *s, int end, int *start)
 	}
 	return (end);
 }
+
 // echo l"e"s 'amis'haha
 
 t_lex		*lexer(char *s)
@@ -97,24 +105,24 @@ t_lex		*lexer(char *s)
 	start = 0;
 	end = 0;
 	lex = NULL;
-	printf("lexer start with {%s}\n", s);
+	printf(""C_G_GREEN"lexer:"C_G_WHITE" start with {"C_G_RED"%s"C_G_WHITE"}"C_RES"\n", s);
 	while (s)
 	{
 		printf("current : [%.*s]\n", end - start, &s[start]);
 		if (!s[end])
 		{
-			printf("end of s: breaking loop\n");
+			printf(""C_G_GREEN"lexer:"C_G_WHITE" end"C_RES"\n");
 			add_to_lex(&lex, &s[start], end - start);
 			printf("[!] add_to_lex: [%.*s]\n", end - start, &s[start]);
 			break ;
 		}
 		end = lexer__frame(&lex, s, end, &start);
-		if (s[end] && (i = isinlexicon(&s[start])) > -1)
+		if (s[end] && (i = isinlexicon(&s[end])) > -1)
 		{
 			printf("char in lexicon\n");
 			if (end - start)
 			{
-				add_to_lex(&lex, &s[start], end - start);
+				add_to_lex(&lex, &s[start], end - start - 1);
 				printf("[!] add_to_lex: [%.*s]\n", end - start, &s[start]);
 			}
 			add_to_lex(&lex, lexicon[i], ft_strlen(lexicon[i])); // add a new node in lex with the lexicon[i]'s string

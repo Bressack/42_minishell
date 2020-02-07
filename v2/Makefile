@@ -6,11 +6,11 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/07 17:03:49 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/07 18:18:47 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
-#    Makefile project minishell by tharchen and flindh                         #
+#    Makefile project minishell by tharchen and frlindh                        #
 #                                                                              #
 #    rules:                                                                    #
 #                                                                              #
@@ -28,7 +28,7 @@ NAME				=	minishell
 
 CC					=	gcc
 
-FLAGS				=	-Wall -Wextra -Werror -g3 -fsanitize=address -ferror-limit=1000
+FLAGS				=	-Wall -Wextra -Werror #-g3 -fsanitize=address -ferror-limit=1000
 
 # *** PROJECT HEADER ********************************************************* #
 
