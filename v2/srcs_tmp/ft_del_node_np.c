@@ -1,34 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_add_node_end_np.c                               :+:      :+:    :+:   */
+/*   ft_del_node_np.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/28 16:28:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/07 17:03:15 by tharchen         ###   ########.fr       */
+/*   Created: 2019/09/29 14:33:35 by tharchen          #+#    #+#             */
+/*   Updated: 2020/01/25 19:26:36 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void		ft_add_node_end_np(t_pnp **begin_list, t_pnp *new)
+void		ft_del_node_np(t_pnp **begin_list, t_pnp *del,
+	void (*f)(t_pnp *curr))
 {
 	t_pnp	*tmp;
 
-	if (!(*begin_list))
-		*begin_list = new;
+	tmp = *begin_list;
+	if (tmp == del)
+	{
+		*begin_list = (*begin_list)->next;
+		if (*begin_list)
+			(*begin_list)->prev = NULL;
+	}
 	else
 	{
-		tmp = *begin_list;
-		printf("tmp: %p\n", tmp);
-		if (tmp)
-			printf("tmp->next: %p\n", tmp->next);
-		while (tmp && tmp->next)
+		while (tmp->next != del)
 			tmp = tmp->next;
-		tmp->next = new;
-		new->prev = tmp;
-		new->next = NULL;
+		if (tmp->next == NULL)
+			return ;
+		tmp->next = del->next;
+		tmp->next->prev = tmp;
 	}
-	(*begin_list)->prev = new;
+	if (f)
+		f(del);
+	try_free_((void **)&del, _FL_);
 }

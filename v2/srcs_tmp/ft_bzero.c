@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_add_node_end_np.c                               :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/28 16:28:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/07 17:03:15 by tharchen         ###   ########.fr       */
+/*   Created: 2019/10/09 15:30:38 by tharchen          #+#    #+#             */
+/*   Updated: 2019/12/04 13:31:01 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void		ft_add_node_end_np(t_pnp **begin_list, t_pnp *new)
+void	ft_bzero(void *s, int n)
 {
-	t_pnp	*tmp;
+	unsigned char	*str;
 
-	if (!(*begin_list))
-		*begin_list = new;
-	else
+	str = (unsigned char *)s;
+	while (n > 0)
 	{
-		tmp = *begin_list;
-		printf("tmp: %p\n", tmp);
-		if (tmp)
-			printf("tmp->next: %p\n", tmp->next);
-		while (tmp && tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-		new->prev = tmp;
-		new->next = NULL;
+		n--;
+		str[n] = '\0';
 	}
-	(*begin_list)->prev = new;
 }

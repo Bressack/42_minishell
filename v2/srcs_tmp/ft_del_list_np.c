@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_add_node_end_np.c                               :+:      :+:    :+:   */
+/*   ft_del_list_np.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/28 16:28:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/07 17:03:15 by tharchen         ###   ########.fr       */
+/*   Created: 2020/01/25 19:19:19 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/06 15:57:45 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void		ft_add_node_end_np(t_pnp **begin_list, t_pnp *new)
+void		ft_del_list_np(t_pnp **begin_list, void (*f)(t_pnp *curr))
 {
 	t_pnp	*tmp;
+	t_pnp	*next;
 
-	if (!(*begin_list))
-		*begin_list = new;
-	else
+	if (!f || !begin_list || !(*begin_list))
+		return ;
+	tmp = *begin_list;
+	while (tmp)
 	{
-		tmp = *begin_list;
-		printf("tmp: %p\n", tmp);
-		if (tmp)
-			printf("tmp->next: %p\n", tmp->next);
-		while (tmp && tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-		new->prev = tmp;
-		new->next = NULL;
+		next = tmp->next;
+		f(tmp);
+		try_free_((void **)&tmp, _FL_);
+		tmp = next;
 	}
-	(*begin_list)->prev = new;
+	*begin_list = NULL;
 }

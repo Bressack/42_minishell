@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 13:29:36 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/06 16:06:16 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/07 17:01:26 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ typedef struct		s_cmd
 {
 	struct s_cmd	*next;			// next cmd
 	struct s_cmd	*prev;			// prev cmd
-	char			*path;			// path cmd "/where/is/the/cmd/ls"
-	t_arg			*av_in;			// paths files rafters inputs '>' and '>>'
+	char			*path;			// path cmd "/path/of/the/cmd/like/ls"
+	t_arg			*av_in;			// paths files rafters inputs '<' and '<<'
 	t_arg			*av;			// args cmd
-	t_arg			*av_out;		// paths files rafters inputs '<' (and '<<' (BONUS))
+	t_arg			*av_out;		// paths files rafters inputs '>' (and '>>' (BONUS))
 	int				fd_out;			// fd used by cmd as stdout
 	int				fd_in;			// fd used by cmd as stdin
 }					t_cmd;

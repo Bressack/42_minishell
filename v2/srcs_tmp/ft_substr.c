@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_add_node_end_np.c                               :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/28 16:28:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/07 17:03:15 by tharchen         ###   ########.fr       */
+/*   Created: 2019/09/27 12:17:15 by tharchen          #+#    #+#             */
+/*   Updated: 2020/01/19 17:26:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ms.h>
 
-void		ft_add_node_end_np(t_pnp **begin_list, t_pnp *new)
+char			*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	t_pnp	*tmp;
+	char		*new_s;
+	int			i;
 
-	if (!(*begin_list))
-		*begin_list = new;
-	else
+	if (!s)
+		return (NULL);
+	if (ft_strlen(s) == 0)
+		return ("");
+	new_s = try_malloc(sizeof(char) * (len + 1), _FL_);
+	i = 0;
+	while (s[start] && i < (int)len)
 	{
-		tmp = *begin_list;
-		printf("tmp: %p\n", tmp);
-		if (tmp)
-			printf("tmp->next: %p\n", tmp->next);
-		while (tmp && tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-		new->prev = tmp;
-		new->next = NULL;
+		new_s[i] = s[start];
+		start++;
+		i++;
 	}
-	(*begin_list)->prev = new;
+	new_s[i] = '\0';
+	return (new_s);
 }

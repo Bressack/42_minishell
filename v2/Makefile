@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/06 16:08:51 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/07 17:03:49 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -28,7 +28,7 @@ NAME				=	minishell
 
 CC					=	gcc
 
-FLAGS				=	-Wall -Wextra -Werror -O3 -g3 -fsanitize=address -ferror-limit=1000
+FLAGS				=	-Wall -Wextra -Werror -g3 -fsanitize=address -ferror-limit=1000
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -73,7 +73,7 @@ SRCS_LIST			=	\
 						.//srcs/utils/ft_substr.c \
 						.//srcs/utils/get_next_line.c \
 						.//srcs/utils/try_malloc.c \
-						
+
 						# .//srcs/utils/split_exp.c \
 
 SRCS_DIR			=	./srcs_tmp/
@@ -105,7 +105,7 @@ SRCS_LIST_TMP		=	\
 						ft_substr.c \
 						get_next_line.c \
 						try_malloc.c \
-						
+
 						# split_exp.c \
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST_TMP))
