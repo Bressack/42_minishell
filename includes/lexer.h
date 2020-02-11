@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/11 09:07:56 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/11 09:31:53 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/11 12:43:45 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int					char_table[255] =
 	';'             = CHR_SPEC,
 	'\''            = CHR_FRAME,
 	'\"'            = CHR_FRAME,
-}
+};
 
 char				*token_redir[6] =
 {
@@ -52,7 +52,7 @@ char				*token_redir[6] =
 	"<<",
 	"|",
 	NULL
-}
+};
 
 char				*token_separator[4] =
 {
@@ -60,14 +60,14 @@ char				*token_separator[4] =
 	"&&",
 	";",
 	NULL
-}
+};
 
 char				*token_frame[4] =
 {
 	"\'",
 	"\"",
 	NULL
-}
+};
 
 typedef struct		s_token
 {
