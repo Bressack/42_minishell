@@ -1,18 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   defined_tokens.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/11 09:34:17 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/11 14:54:25 by tharchen         ###   ########.fr       */
+/*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/14 17:57:34 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <lexer.h>
+#include <class__token.h>
 
-void		lexer(char *line)
+t_tokens		g_defined_tokens[20] =
 {
-	char
-}
+	{DBL_AND,		"&&",	2, 0},
+	{DBL_OR,		"||",	2, 0},
+	{PIPE,			"|",	1, 0},
+	{SEMICON,		";",	1, 0},
+	{LPAREN,		"(",	1, 0},
+	{RPAREN,		")",	1, 0},
+	{REDIREC_IN,	"<",	1, 0},
+	{REDIREC_OUT,	">",	1, 0},
+	{DREDIREC_OUT,	">>",	2, 0},
+	{SQUOTE,		"\'",	1, 0},
+	{DQUOTE,		"\"",	1, 0},
+	{EOT,			NULL,	0, 0}
+};
