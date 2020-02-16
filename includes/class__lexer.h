@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/15 17:55:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/16 11:00:52 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,12 @@ typedef enum		e_char_type
 	CHR_AND,
 	CHR_PIPE,
 	CHR_SEMICON,
-	CHR_PATHSEP
+	CHR_PATH,
+	CHR_PASS,
+	CHR_DOLLAR,
+	CHR_BSLASH,
+	CHR_QUESMARK,
+	CHR_STAR
 }					t_char_type;
 extern t_char_type	g_token_ascii_table[255];
 t_lexer				lexer__new(char *line);					// init the t_lexer struct needed by all metodes of the lexer class

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:21:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/15 13:55:25 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/16 11:03:39 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,13 @@ typedef enum		e_token_type
 	DBL_AND,
 	DBL_OR,
 	PIPE,
-	SEMICON
+	SEMICON,
+	BSLASH,
+	QUESMARK,
+	DOLLAR,
+	PASS,
+	PATH,
+	STAR
 }					t_token_type;
 typedef struct		s_token
 {
