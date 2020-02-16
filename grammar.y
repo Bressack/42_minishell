@@ -20,7 +20,7 @@
 %%
 expr            : ((redirection)* cmd (redirection | (space arg))* (cmd_sep | expr_end)*)*
                 | (LPAREN expr RPAREN (cmd_sep expr | expr_end)*)*
-                |
+                | (expr_end)*
                 ;
 redirection     : REDIREC_IN file
                 | REDIREC_OUT file

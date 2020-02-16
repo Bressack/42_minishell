@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/16 11:23:40 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/16 16:13:43 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,34 @@ int					lexer__istype(char c, t_char_type type)
 
 int					lexer__advance(t_lexer *lex)
 {
+	printf("advance { from \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" } -> ", lex->current_char, lex->current_char, lex->pos);
+	if (lex->current_char == CHR_EOT)
+	{
+		printf("{ already on "C_G_RED"EOT"C_RES" }\n");
+		getchar();
+		return (0);
+	}
 	lex->pos += 1;
 	if (lex->pos > lex->len_line - 1)
 	{
-		lex->current_char = 0;
+		lex->current_char = CHR_EOT;
+		printf("{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
+		getchar();
 		return (0);
 	}
 	else
+	{
 		lex->current_char = lex->line[lex->pos];
-	return (1);
+		printf("{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
+		getchar();
+		return (1);
+	}
 }
 
 void				lexer__skip_whitespace(t_lexer *lex)
 {
-	while (lexer__istype(lex->current_char, CHR_SPACE))
+	while (lexer__istype(lex->current_char, CHR_SPACE) ||
+		lexer__istype(lex->current_char, CHR_PASS))
 		lexer__advance(lex);
 }
 
@@ -69,8 +83,27 @@ t_token				lexer__get_word_token(t_lexer *lex)
 	int				start_pos;
 
 	start_pos = lex->pos;
-	while (lexer__istype(lex->current_char, CHR_WORD))
+	while (	lexer__istype(lex->current_char, CHR_WORD)		||
+			lexer__istype(lex->current_char, CHR_BSLASH)	||
+			lexer__istype(lex->current_char, CHR_SQUOTE)	||
+			lexer__istype(lex->current_char, CHR_DQUOTE))
+	{
+		if (lexer__istype(lex->current_char, CHR_SQUOTE))
+		{
+			lexer__advance(lex);
+			while (!lexer__istype(lex->current_char, CHR_SQUOTE) && lexer__advance(lex))
+				continue ;
+		}
+		if (lexer__istype(lex->current_char, CHR_DQUOTE))
+		{
+			lexer__advance(lex);
+			while (!lexer__istype(lex->current_char, CHR_DQUOTE) && lexer__advance(lex))
+				continue ;
+		}
+		if (lexer__istype(lex->current_char, CHR_BSLASH))
+			lexer__advance(lex);
 		lexer__advance(lex);
+	}
 	new.type = WORD;
 	new.len = lex->pos - start_pos;
 	new.pos_in_line = start_pos;
@@ -81,32 +114,33 @@ t_token				lexer__get_word_token(t_lexer *lex)
 t_token				lexer__search_defined_token(t_lexer *lex)
 {
 	int				i;
-	int				j;
-	int				max_match;
-	int				longest;
+	int				j_max;
+	int				i_max;
 
-	longest = -1;	// i save
-	max_match = -1;	// j save
+	i_max = -1;	// i save
+	j_max = -1;	// j save
 	i = -1;
 	while (g_defined_tokens[++i].type != NONE) // until the end of the array
 	{
-		printf("test for >: ");
-		token__print(g_defined_tokens[i]);
 		if (g_defined_tokens[i].value == NULL)
 			continue ; // ERR or EOT
-		if (max_match > 0 && g_defined_tokens[i].len < g_defined_tokens[max_match].len)
-			continue ; // avoid useless calcules cause g_defined_tokens[i] can't match more than g_defined_tokens[max_match]
-		j = -1;
-		while (g_defined_tokens[i].value[++j] != '\0') // run through line while it's matching until the end
-			if (g_defined_tokens[i].value[j] != lex->line[lex->pos + j])
-				break ;
-		if (g_defined_tokens[i].value[j] == '\0' && j >= max_match) // if previous while statement has been run through all the string and if this new match is longer than the save 'longest'; save 'i' into 'longest'
-			longest = i;
+		if (j_max > 0 && g_defined_tokens[i].len < g_defined_tokens[j_max].len)
+			continue ; // avoid useless calcules cause g_defined_tokens[i] can't match more than g_defined_tokens[j_max]
+		if (!ft_strncmp(g_defined_tokens[i].value, &lex->line[lex->pos], g_defined_tokens[i].len))
+		{
+			if (j_max <= g_defined_tokens[i].len)
+			{
+				j_max = g_defined_tokens[i].len;
+				i_max = i;
+			}
+		}
 	}
-	printf("longest: %d\n", longest);
-	if (longest != -1) // if the while statement has found a corresponding token in the table, then return it
-		return (g_defined_tokens[longest]);
-	return (lexer__get_defined_token(ERR));
+	if (i_max == -1)
+		return (lexer__get_defined_token(ERR));
+	i = -1;
+	while (++i < g_defined_tokens[i_max].len)
+		lexer__advance(lex);
+	return (g_defined_tokens[i_max]); // if the while statement has found a corresponding token in the table, then return it
 }
 
 t_token				lexer__get_next_token(t_lexer *lex)
@@ -131,19 +165,21 @@ t_token				lexer__get_next_token(t_lexer *lex)
 	else if (lexer__istype(lex->current_char, CHR_SEMICON))		printf("type: CHR_SEMICON    \n");
 	else if (lexer__istype(lex->current_char, CHR_PATHSEP))		printf("type: CHR_PATHSEP    \n");
 	printf("\n");
-	**************************** */
+**************************** */
 
-	if (lexer__istype(lex->current_char, CHR_SPACE))
+	if (lexer__istype(lex->current_char, CHR_SPACE) ||
+		lexer__istype(lex->current_char, CHR_PASS))
 		lexer__skip_whitespace(lex);
-	if (lexer__istype(lex->current_char, CHR_EOT))
+	else if (lexer__istype(lex->current_char, CHR_EOT))
 		return (lexer__get_defined_token(EOT));
-	if (lexer__istype(lex->current_char, CHR_WORD))
+	else if (lexer__istype(lex->current_char, CHR_WORD))
 		return (lexer__get_word_token(lex));
-	if (lexer__istype(lex->current_char, CHR_ERR))
+	else if (lexer__istype(lex->current_char, CHR_ERR))
 	{
 		lexer__error(lex);
 		return (lexer__get_defined_token(ERR));
 	}
-	else
-		return (lexer__search_defined_token(lex));
+	return (lexer__search_defined_token(lex));
+	// else if (lexer__istype(lex->current_char, CHR_BSLASH))
+	// return (lexer__get_word_token(lex));
 }

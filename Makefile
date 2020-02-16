@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/15 14:06:12 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/16 12:15:00 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -55,6 +55,7 @@ SRCS_LIST			=	\
 						defined_tokens.c \
 						ft_strlen.c \
 						ft_strncpy.c \
+						ft_strncmp.c \
 						ft_strsub.c \
 						get_next_line.c \
 						main.c \
