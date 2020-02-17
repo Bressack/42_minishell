@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/17 15:51:06 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/18 00:04:56 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ typedef struct		s_lexer
 	char			*line;
 	int				len_line;
 	int				pos;
+	int				pos_start;
 	char			current_char;
 }					t_lexer;
 typedef enum		e_char_type
