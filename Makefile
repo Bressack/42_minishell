@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/17 03:29:02 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/17 23:46:46 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -28,7 +28,20 @@ NAME				=	minishell
 
 CC					=	gcc
 
-FLAGS				=	-Wall -Wextra -Werror -O3 -g3 -fsanitize=address
+FLAGS				=	\
+						-Wall -Wextra -Werror \
+						-O3 \
+						-g3 -fsanitize=address \
+
+FLAGS_WDEBUG		=	-Wanalyzer-malloc-leak \
+						-Wanalyzer-free-of-non-heap \
+						-Wanalyzer-double-free \
+						-Wanalyzer-null-argument \
+						-Wanalyzer-null-dereference \
+						-Wanalyzer-possible-null-argument \
+						-Wanalyzer-possible-null-dereference \
+						-fdump-analyzer-callgraph \
+
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -73,10 +86,12 @@ OBJS				=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 
 # *** RULES ****************************************************************** #
 
+BONUS = 0
+
 .PHONY: clean fclean all re norm
 
 all: $(OBJS) $(SRCS) $(NAME)
-
+	
 $(NAME): $(SRCS) $(OBJS)
 	@ $(CC) $(FLAGS) $(HDIR) $(OBJS) -o $@
 	@ printf "\n"
