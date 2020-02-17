@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/17 03:58:11 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/17 12:09:57 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 	['(']			= CHR_LPAREN,
 	[')']			= CHR_RPAREN,
 	['*']			= CHR_STAR,
-	['/']			= CHR_PATH,
+	['/']			= CHR_WORD,
 	[';']			= CHR_SEMICON,
 	['<']			= CHR_REDIREC_IN,
 	['>']			= CHR_REDIREC_OUT,

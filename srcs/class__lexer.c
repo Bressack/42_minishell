@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/17 04:11:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/17 16:40:34 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 t_lexer				lexer__new(char *line)
 {
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	t_lexer			lex;
 
 	lex.line = line; // not a duplicated str (if line is freed, lex.line will be freed too)
@@ -27,14 +26,12 @@ t_lexer				lexer__new(char *line)
 
 void				lexer__error(t_lexer *lex)
 {
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	printf("Invalid character \'%c\' (%#x)\n",
 		lex->current_char, lex->current_char);
 }
 
 int					lexer__istype(char c, t_char_type type)
 {
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	return (g_token_ascii_table[(int)c] == type ? 1 : 0);
 }
 
@@ -62,57 +59,51 @@ void				lexer__debug(t_lexer *lex)
 	else	printf("WTF\n");
 }
 
-// int					lexer__advance(t_lexer *lex)
-int					lexer__advance(t_lexer *lex, char *f, int l)
+// int					lexer__advance(t_lexer *lex, char *f, int l)
+int					lexer__advance(t_lexer *lex, int n)
 {
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 
-	dprintf(4, "ADVENCE - [ "C_G_RED"%s"C_RES" ] at ("C_G_WHITE"%d"C_RES
+	dprintf(1, "ADVENCE - [ "C_G_RED"%s"C_RES" ] at ("C_G_WHITE"%d"C_RES
 		") ## { from \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES
 		") at pos "C_G_YELLOW"%d"C_RES" } -> ",
-		f, l, lex->current_char, lex->current_char, lex->pos);
+		"", 666, lex->current_char, lex->current_char, lex->pos);
 	if (lex->current_char == CHR_EOT)
 	{
-		dprintf(4, "{ already on "C_G_RED"EOT"C_RES" }\n");
-		dprintf(4, "%s\n", lex->line);
-		dprintf(4, "%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_RES);
-		// getchar();
+		dprintf(1, "{ already on "C_G_RED"EOT"C_RES" }\n");
+		dprintf(1, "%s\n", lex->line);
+		dprintf(1, "%*s%s\n\n", lex->pos - 1, "", C_G_RED"^"C_RES);
 		return (0);
 	}
 	lex->pos += 1;
 	if (lex->pos > lex->len_line - 1)
 	{
 		lex->current_char = CHR_EOT;
-		dprintf(4, "{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
-		dprintf(4, "%s\n", lex->line);
-		dprintf(4, "%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_G_GREEN"^"C_RES);
-		// getchar();
+		dprintf(1, "{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
+		dprintf(1, "%s\n", lex->line);
+		dprintf(1, "%*s%s\n\n", lex->pos - 1, "", C_G_RED"^"C_G_GREEN"^"C_RES);
 		return (0);
 	}
 	else
 	{
 		lex->current_char = lex->line[lex->pos];
-		dprintf(4, "{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
-		dprintf(4, "%s\n", lex->line);
-		dprintf(4, "%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_G_GREEN"^"C_RES);
-		// getchar();
-		return (1);
+		dprintf(1, "{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
+		dprintf(1, "%s\n", lex->line);
+		dprintf(1, "%*s%s\n\n", lex->pos - 1, "", C_G_RED"^"C_G_GREEN"^"C_RES);
+		return (n - 1 ? lexer__advance(lex, n - 1) : 1);
 	}
 }
 
 void				lexer__skip_whitespace(t_lexer *lex)
 {
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	while (lexer__istype(lex->current_char, CHR_SPACE))
-		lexer__advance(lex, _FL_);
+		lexer__advance(lex, 1);
 	// while (lexer__istype(lex->current_char, CHR_SPACE) ||
 	// 	lexer__istype(lex->current_char, CHR_PASS))
-	// 	lexer__advance(lex, _FL_);
+	// 	lexer__advance(lex, 1);
 }
 
 t_token				lexer__get_defined_token(t_token_type type)
 {
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	int				i;
 
 	i = 0;
@@ -120,60 +111,51 @@ t_token				lexer__get_defined_token(t_token_type type)
 		i++;
 	return (g_defined_tokens[i]);
 }
-// echo "les amis 'je suis la' et aussi les canards" les petit 'paingouin'"des iles"aussi""des hommes"'et'des'femmes';ls
-t_token				lexer__get_word_token(t_lexer *lex)
+// echo "les amis 'je suis la' et aussi les canards"    les petit 'paingouin'"des iles"aussi"des hommes"'et'des'femmes';ls
+
+/*
+echo
+"les amis 'je suis la' et aussi les canards"
+les
+petit
+'paingouin'"des iles"aussi""des hommes"'et'des'femmes'
+;
+ls
+*/
+
+
+t_token				lexer__get_word_token(t_lexer *lex) // bugged
 {
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	t_token			new;
 	int				start_pos;
-	int				isquote;
 
 	start_pos = lex->pos;
-	isquote = 0;
 	while (	lexer__istype(lex->current_char, CHR_WORD)		||
 			lexer__istype(lex->current_char, CHR_BSLASH)	||
 			lexer__istype(lex->current_char, CHR_SQUOTE)	||
 			lexer__istype(lex->current_char, CHR_DQUOTE))
 	{
 		if (lexer__istype(lex->current_char, CHR_BSLASH))
-		{
-			lexer__advance(lex, _FL_);
-			lexer__advance(lex, _FL_);
-		}
-		else if (lexer__istype(lex->current_char, CHR_SQUOTE))
-		{
-			isquote = 0;
-			dprintf(1, "CHR_SQUOTE |%s\n", lex->line);
-			dprintf(1, "           |%*s%s\n", lex->pos, "", C_G_RED"^"C_RES);
-			lexer__advance(lex, _FL_);
-			while (!lexer__istype(lex->current_char, CHR_SQUOTE) && lexer__advance(lex, _FL_))
+			lexer__advance(lex, 2);
+		else if (lexer__istype(lex->current_char, CHR_SQUOTE) && lexer__advance(lex, 1))
+			while (!lexer__istype(lex->current_char, CHR_SQUOTE) && lexer__advance(lex, 1))
 				continue ;
-			dprintf(1, "           |%s\n", lex->line);
-			dprintf(1, "           |%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_RES);
-		}
-		else if (lexer__istype(lex->current_char, CHR_DQUOTE))
-		{
-			isquote = 0;
-			dprintf(1, "CHR_DQUOTE |%s\n", lex->line);
-			dprintf(1, "           |%*s%s\n", lex->pos, "", C_G_RED"^"C_RES);
-			lexer__advance(lex, _FL_);
-			while (!lexer__istype(lex->current_char, CHR_DQUOTE) && lexer__advance(lex, _FL_))
+		else if (lexer__istype(lex->current_char, CHR_DQUOTE) && lexer__advance(lex, 1))
+			while (!lexer__istype(lex->current_char, CHR_DQUOTE) && lexer__advance(lex, 1))
 				continue ;
-			dprintf(1, "           |%s\n", lex->line);
-			dprintf(1, "           |%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_RES);
-		}
-		lexer__advance(lex, _FL_);
+		else if (lexer__istype(lex->current_char, CHR_WORD) && lexer__advance(lex, 1))
+			while (!lexer__istype(lex->current_char, CHR_WORD) && lexer__advance(lex, 1))
+				continue ;
 	}
 	new.type = WORD;
 	new.len = lex->pos - start_pos;
 	new.pos_in_line = start_pos;
-	new.value = ft_strsub(lex->line, start_pos + isquote, new.len - (isquote * 2)); // malloc = free needed;
+	new.value = ft_strsub(lex->line, start_pos, new.len); // malloc = free needed; call token__del() to destroy
 	return (new);
 }
 
 t_token				lexer__search_defined_token(t_lexer *lex)
 {
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	int				i;
 	int				j_max;
 	int				i_max;
@@ -200,7 +182,7 @@ t_token				lexer__search_defined_token(t_lexer *lex)
 		return (lexer__get_defined_token(ERR));
 	i = -1;
 	while (++i < g_defined_tokens[i_max].len)
-		lexer__advance(lex, _FL_);
+		lexer__advance(lex, 1);
 	return (g_defined_tokens[i_max]); // if the while statement has found a corresponding token in the table, then return it
 }
 
@@ -208,7 +190,6 @@ t_token				lexer__search_defined_token(t_lexer *lex)
 t_token				lexer__get_next_token(t_lexer *lex)
 {
 	// printf("\n"C_G_WHITE"***************************************************************************"C_RES"\n");
-	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	// lexer__debug(lex);
 
 	if (lexer__istype(lex->current_char, CHR_SPACE) ||
