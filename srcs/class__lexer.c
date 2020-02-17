@@ -6,14 +6,16 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/16 16:13:43 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/17 04:11:32 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+
 t_lexer				lexer__new(char *line)
 {
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	t_lexer			lex;
 
 	lex.line = line; // not a duplicated str (if line is freed, lex.line will be freed too)
@@ -25,50 +27,92 @@ t_lexer				lexer__new(char *line)
 
 void				lexer__error(t_lexer *lex)
 {
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	printf("Invalid character \'%c\' (%#x)\n",
 		lex->current_char, lex->current_char);
 }
 
 int					lexer__istype(char c, t_char_type type)
 {
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	return (g_token_ascii_table[(int)c] == type ? 1 : 0);
 }
 
-int					lexer__advance(t_lexer *lex)
+void				lexer__debug(t_lexer *lex)
 {
-	printf("advance { from \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" } -> ", lex->current_char, lex->current_char, lex->pos);
+		 if (lexer__istype(lex->current_char, CHR_ERR))			printf("type: CHR_ERR        \n");
+	else if (lexer__istype(lex->current_char, CHR_EOT))			printf("type: CHR_EOT        \n");
+	else if (lexer__istype(lex->current_char, CHR_SPACE))		printf("type: CHR_SPACE      \n");
+	else if (lexer__istype(lex->current_char, CHR_WORD))		printf("type: CHR_WORD       \n");
+	else if (lexer__istype(lex->current_char, CHR_LPAREN))		printf("type: CHR_LPAREN     \n");
+	else if (lexer__istype(lex->current_char, CHR_RPAREN))		printf("type: CHR_RPAREN     \n");
+	else if (lexer__istype(lex->current_char, CHR_REDIREC_IN))	printf("type: CHR_REDIREC_IN \n");
+	else if (lexer__istype(lex->current_char, CHR_REDIREC_OUT))	printf("type: CHR_REDIREC_OUT\n");
+	else if (lexer__istype(lex->current_char, CHR_SQUOTE))		printf("type: CHR_SQUOTE     \n");
+	else if (lexer__istype(lex->current_char, CHR_DQUOTE))		printf("type: CHR_DQUOTE     \n");
+	else if (lexer__istype(lex->current_char, CHR_AND))			printf("type: CHR_AND        \n");
+	else if (lexer__istype(lex->current_char, CHR_PIPE))		printf("type: CHR_PIPE       \n");
+	else if (lexer__istype(lex->current_char, CHR_SEMICON))		printf("type: CHR_SEMICON    \n");
+	else if (lexer__istype(lex->current_char, CHR_PATH))		printf("type: CHR_PATH       \n");
+	else if (lexer__istype(lex->current_char, CHR_PASS))		printf("type: CHR_PASS       \n");
+	else if (lexer__istype(lex->current_char, CHR_DOLLAR))		printf("type: CHR_DOLLAR     \n");
+	else if (lexer__istype(lex->current_char, CHR_BSLASH))		printf("type: CHR_BSLASH     \n");
+	else if (lexer__istype(lex->current_char, CHR_QUESMARK))	printf("type: CHR_QUESMARK   \n");
+	else if (lexer__istype(lex->current_char, CHR_STAR))		printf("type: CHR_STAR       \n");
+	else	printf("WTF\n");
+}
+
+// int					lexer__advance(t_lexer *lex)
+int					lexer__advance(t_lexer *lex, char *f, int l)
+{
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
+
+	dprintf(4, "ADVENCE - [ "C_G_RED"%s"C_RES" ] at ("C_G_WHITE"%d"C_RES
+		") ## { from \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES
+		") at pos "C_G_YELLOW"%d"C_RES" } -> ",
+		f, l, lex->current_char, lex->current_char, lex->pos);
 	if (lex->current_char == CHR_EOT)
 	{
-		printf("{ already on "C_G_RED"EOT"C_RES" }\n");
-		getchar();
+		dprintf(4, "{ already on "C_G_RED"EOT"C_RES" }\n");
+		dprintf(4, "%s\n", lex->line);
+		dprintf(4, "%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_RES);
+		// getchar();
 		return (0);
 	}
 	lex->pos += 1;
 	if (lex->pos > lex->len_line - 1)
 	{
 		lex->current_char = CHR_EOT;
-		printf("{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
-		getchar();
+		dprintf(4, "{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
+		dprintf(4, "%s\n", lex->line);
+		dprintf(4, "%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_G_GREEN"^"C_RES);
+		// getchar();
 		return (0);
 	}
 	else
 	{
 		lex->current_char = lex->line[lex->pos];
-		printf("{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
-		getchar();
+		dprintf(4, "{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
+		dprintf(4, "%s\n", lex->line);
+		dprintf(4, "%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_G_GREEN"^"C_RES);
+		// getchar();
 		return (1);
 	}
 }
 
 void				lexer__skip_whitespace(t_lexer *lex)
 {
-	while (lexer__istype(lex->current_char, CHR_SPACE) ||
-		lexer__istype(lex->current_char, CHR_PASS))
-		lexer__advance(lex);
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
+	while (lexer__istype(lex->current_char, CHR_SPACE))
+		lexer__advance(lex, _FL_);
+	// while (lexer__istype(lex->current_char, CHR_SPACE) ||
+	// 	lexer__istype(lex->current_char, CHR_PASS))
+	// 	lexer__advance(lex, _FL_);
 }
 
 t_token				lexer__get_defined_token(t_token_type type)
 {
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	int				i;
 
 	i = 0;
@@ -76,43 +120,60 @@ t_token				lexer__get_defined_token(t_token_type type)
 		i++;
 	return (g_defined_tokens[i]);
 }
-
+// echo "les amis 'je suis la' et aussi les canards" les petit 'paingouin'"des iles"aussi""des hommes"'et'des'femmes';ls
 t_token				lexer__get_word_token(t_lexer *lex)
 {
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	t_token			new;
 	int				start_pos;
+	int				isquote;
 
 	start_pos = lex->pos;
+	isquote = 0;
 	while (	lexer__istype(lex->current_char, CHR_WORD)		||
 			lexer__istype(lex->current_char, CHR_BSLASH)	||
 			lexer__istype(lex->current_char, CHR_SQUOTE)	||
 			lexer__istype(lex->current_char, CHR_DQUOTE))
 	{
-		if (lexer__istype(lex->current_char, CHR_SQUOTE))
-		{
-			lexer__advance(lex);
-			while (!lexer__istype(lex->current_char, CHR_SQUOTE) && lexer__advance(lex))
-				continue ;
-		}
-		if (lexer__istype(lex->current_char, CHR_DQUOTE))
-		{
-			lexer__advance(lex);
-			while (!lexer__istype(lex->current_char, CHR_DQUOTE) && lexer__advance(lex))
-				continue ;
-		}
 		if (lexer__istype(lex->current_char, CHR_BSLASH))
-			lexer__advance(lex);
-		lexer__advance(lex);
+		{
+			lexer__advance(lex, _FL_);
+			lexer__advance(lex, _FL_);
+		}
+		else if (lexer__istype(lex->current_char, CHR_SQUOTE))
+		{
+			isquote = 0;
+			dprintf(1, "CHR_SQUOTE |%s\n", lex->line);
+			dprintf(1, "           |%*s%s\n", lex->pos, "", C_G_RED"^"C_RES);
+			lexer__advance(lex, _FL_);
+			while (!lexer__istype(lex->current_char, CHR_SQUOTE) && lexer__advance(lex, _FL_))
+				continue ;
+			dprintf(1, "           |%s\n", lex->line);
+			dprintf(1, "           |%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_RES);
+		}
+		else if (lexer__istype(lex->current_char, CHR_DQUOTE))
+		{
+			isquote = 0;
+			dprintf(1, "CHR_DQUOTE |%s\n", lex->line);
+			dprintf(1, "           |%*s%s\n", lex->pos, "", C_G_RED"^"C_RES);
+			lexer__advance(lex, _FL_);
+			while (!lexer__istype(lex->current_char, CHR_DQUOTE) && lexer__advance(lex, _FL_))
+				continue ;
+			dprintf(1, "           |%s\n", lex->line);
+			dprintf(1, "           |%*s%s\n", lex->pos - 1, "", C_G_RED"^"C_RES);
+		}
+		lexer__advance(lex, _FL_);
 	}
 	new.type = WORD;
 	new.len = lex->pos - start_pos;
 	new.pos_in_line = start_pos;
-	new.value = ft_strsub(lex->line, start_pos, new.len); // malloc = free needed;
+	new.value = ft_strsub(lex->line, start_pos + isquote, new.len - (isquote * 2)); // malloc = free needed;
 	return (new);
 }
 
 t_token				lexer__search_defined_token(t_lexer *lex)
 {
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
 	int				i;
 	int				j_max;
 	int				i_max;
@@ -139,40 +200,26 @@ t_token				lexer__search_defined_token(t_lexer *lex)
 		return (lexer__get_defined_token(ERR));
 	i = -1;
 	while (++i < g_defined_tokens[i_max].len)
-		lexer__advance(lex);
+		lexer__advance(lex, _FL_);
 	return (g_defined_tokens[i_max]); // if the while statement has found a corresponding token in the table, then return it
 }
 
+
 t_token				lexer__get_next_token(t_lexer *lex)
 {
-	/* ****************************
-	printf("[ %d ]", lex->pos);
-	printf("enter lexer__get_next_token\n");
-	printf("%s\n", lex->line);
-	printf("%*s\n", lex->pos + 1, "^");
-	     if (lexer__istype(lex->current_char, CHR_ERR))			printf("type: CHR_ERR        \n");
-	else if (lexer__istype(lex->current_char, CHR_EOT))			printf("type: CHR_EOT        \n");
-	else if (lexer__istype(lex->current_char, CHR_SPACE))		printf("type: CHR_SPACE      \n");
-	else if (lexer__istype(lex->current_char, CHR_WORD))		printf("type: CHR_WORD       \n");
-	else if (lexer__istype(lex->current_char, CHR_LPAREN))		printf("type: CHR_LPAREN     \n");
-	else if (lexer__istype(lex->current_char, CHR_RPAREN))		printf("type: CHR_RPAREN     \n");
-	else if (lexer__istype(lex->current_char, CHR_REDIREC_IN))	printf("type: CHR_REDIREC_IN \n");
-	else if (lexer__istype(lex->current_char, CHR_REDIREC_OUT))	printf("type: CHR_REDIREC_OUT\n");
-	else if (lexer__istype(lex->current_char, CHR_SQUOTE))		printf("type: CHR_SQUOTE     \n");
-	else if (lexer__istype(lex->current_char, CHR_DQUOTE))		printf("type: CHR_DQUOTE     \n");
-	else if (lexer__istype(lex->current_char, CHR_AND))			printf("type: CHR_AND        \n");
-	else if (lexer__istype(lex->current_char, CHR_PIPE))		printf("type: CHR_PIPE       \n");
-	else if (lexer__istype(lex->current_char, CHR_SEMICON))		printf("type: CHR_SEMICON    \n");
-	else if (lexer__istype(lex->current_char, CHR_PATHSEP))		printf("type: CHR_PATHSEP    \n");
-	printf("\n");
-**************************** */
+	// printf("\n"C_G_WHITE"***************************************************************************"C_RES"\n");
+	// printf(""C_G_WHITE"[ START ]"C_RES" "C_G_BLUE"%s"C_RES"\n", __FUNCTION__);
+	// lexer__debug(lex);
 
 	if (lexer__istype(lex->current_char, CHR_SPACE) ||
 		lexer__istype(lex->current_char, CHR_PASS))
 		lexer__skip_whitespace(lex);
-	else if (lexer__istype(lex->current_char, CHR_EOT))
+	if (lexer__istype(lex->current_char, CHR_EOT))
 		return (lexer__get_defined_token(EOT));
-	else if (lexer__istype(lex->current_char, CHR_WORD))
+	else if (lexer__istype(lex->current_char, CHR_WORD)	||
+		lexer__istype(lex->current_char, CHR_BSLASH)	||
+		lexer__istype(lex->current_char, CHR_SQUOTE)	||
+		lexer__istype(lex->current_char, CHR_DQUOTE))
 		return (lexer__get_word_token(lex));
 	else if (lexer__istype(lex->current_char, CHR_ERR))
 	{

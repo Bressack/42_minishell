@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/16 12:29:57 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/17 03:43:48 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int		main(void)
 	t_lexer			lex;
 	t_token			current_token;
 
+	close(4);
 	while (1)
 	{
 		dprintf(1, ">: ");

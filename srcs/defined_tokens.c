@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/16 13:39:38 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/17 03:58:11 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 {
 	[128 ... 254]	= CHR_PASS,
 	['\0']			= CHR_EOT,
-	[0x01]			= CHR_PASS,
+	[0x01]			= CHR_EOT,
 	[0x02]			= CHR_PASS,
 	[0x03]			= CHR_PASS,
 	[0x04]			= CHR_PASS,
@@ -82,8 +82,6 @@ t_token				g_defined_tokens[20] =
 	{REDIREC_IN,	"<",	1, 0},
 	{REDIREC_OUT,	">",	1, 0},
 	{DREDIREC_OUT,	">>",	2, 0},
-	{SQUOTE,		"\'",	1, 0},
-	{DQUOTE,		"\"",	1, 0},
 	{STAR,			"*",	1, 0},
 	{DOLLAR,		"$",	1, 0},
 	{NONE,			NULL,	0, 0}

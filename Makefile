@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/16 12:15:00 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/17 03:29:02 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -79,6 +79,7 @@ all: $(OBJS) $(SRCS) $(NAME)
 
 $(NAME): $(SRCS) $(OBJS)
 	@ $(CC) $(FLAGS) $(HDIR) $(OBJS) -o $@
+	@ printf "\n"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@ mkdir -p $(OBJS_DIR)
@@ -96,5 +97,9 @@ fclean: clean
 
 re: fclean
 	@ make -j
+
+real: re
+	@ $(shell clear)
+	@ $(shell ./$(NAME))
 
 # **************************************************************************** #
