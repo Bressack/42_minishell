@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 16:27:57 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/18 17:02:03 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,36 +58,28 @@ void				lexer__debug(t_lexer *lex)
 	else	printf("WTF\n");
 }
 
-// int					lexer__advance(t_lexer *lex, char *f, int l)
+
+/*
+** lexer__advance:
+**
+** moves the read head by n
+** cannot move after the end of line (PROTECTED)
+** 
+**
+*/
 int					lexer__advance(t_lexer *lex, int n)
 {
-
-	dprintf(4, "ADVENCE - [ "C_G_RED"%s"C_RES" ] at ("C_G_WHITE"%d"C_RES
-		") ## { from \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES
-		") at pos "C_G_YELLOW"%d"C_RES" } -> ",
-		"", 666, lex->current_char, lex->current_char, lex->pos);
 	if (lex->current_char == CHR_EOT)
-	{
-		dprintf(4, "{ already on "C_G_RED"EOT"C_RES" }\n");
-		dprintf(4, "%s\n", lex->line);
-		dprintf(4, "%*s%s\n\n", lex->pos - 1, "", C_G_RED"^"C_RES);
 		return (0);
-	}
 	lex->pos += 1;
 	if (lex->pos > lex->len_line - 1)
 	{
 		lex->current_char = CHR_EOT;
-		dprintf(4, "{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
-		dprintf(4, "%s\n", lex->line);
-		dprintf(4, "%*s%s\n\n", lex->pos - 1, "", C_G_RED"^"C_G_GREEN"^"C_RES);
 		return (0);
 	}
 	else
 	{
 		lex->current_char = lex->line[lex->pos];
-		dprintf(4, "{ to \'"C_G_CYAN"%c"C_RES"\' ("C_G_MAGENTA"%3d"C_RES") at pos "C_G_YELLOW"%d"C_RES" }\n", lex->current_char, lex->current_char, lex->pos);
-		dprintf(4, "%s\n", lex->line);
-		dprintf(4, "%*s%s\n\n", lex->pos - 1, "", C_G_RED"^"C_G_GREEN"^"C_RES);
 		return (n - 1 ? lexer__advance(lex, n - 1) : 1);
 	}
 }
@@ -116,7 +108,6 @@ t_token				lexer__get_word_token(t_lexer *lex)
 {
 	t_token			new;
 	int				start_pos;
-	int				isquote;
 
 	start_pos = lex->pos;
 	while (	lexer__istype(lex->current_char, CHR_WORD)		||
@@ -124,20 +115,19 @@ t_token				lexer__get_word_token(t_lexer *lex)
 			lexer__istype(lex->current_char, CHR_SQUOTE)	||
 			lexer__istype(lex->current_char, CHR_DQUOTE))
 	{
-		isquote = 0;
 		if (lexer__istype(lex->current_char, CHR_BSLASH))
 			lexer__advance(lex, 2);
 		else if (lexer__istype(lex->current_char, CHR_SQUOTE))
 		{
 			while (lexer__advance(lex, 1) && !lexer__istype(lex->current_char,
-				CHR_SQUOTE) && (isquote = 1))
+				CHR_SQUOTE))
 				continue ;
 			lexer__advance(lex, 1);
 		}
 		else if (lexer__istype(lex->current_char, CHR_DQUOTE))
 		{
 			while (lexer__advance(lex, 1) && !lexer__istype(lex->current_char,
-				CHR_DQUOTE) && (isquote = 1))
+				CHR_DQUOTE))
 				continue ;
 			lexer__advance(lex, 1);
 		}
@@ -147,7 +137,7 @@ t_token				lexer__get_word_token(t_lexer *lex)
 	new.type = WORD;
 	new.len = lex->pos - start_pos;
 	new.pos_in_line = start_pos;
-	new.value = ft_strsub(lex->line, start_pos, new.len - isquote); // malloc = free needed; call token__del() to destroy
+	new.value = ft_strsub(lex->line, start_pos, new.len); // malloc = free needed; call token__del() to destroy
 	return (new);
 }
 
@@ -170,3 +160,8 @@ t_token				lexer__get_next_token(t_lexer *lex)
 	}
 	return (lexer__search_defined_token(lex));
 }
+
+// "les 'enfants' des 'ville' " sont" petits"
+// "les 'enfants' des 'ville' \" sont \" petits"
+
+
