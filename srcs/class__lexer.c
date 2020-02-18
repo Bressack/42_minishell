@@ -6,12 +6,11 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 00:14:39 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/18 02:03:11 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
 
 t_lexer				lexer__new(char *line)
 {
@@ -101,16 +100,6 @@ void				lexer__skip_whitespace(t_lexer *lex)
 	// 	lexer__istype(lex->current_char, CHR_PASS))
 	// 	lexer__advance(lex, 1);
 }
-
-t_token				lexer__get_defined_token(t_token_type type)
-{
-	int				i;
-
-	i = 0;
-	while (g_defined_tokens[i].type != NONE && g_defined_tokens[i].type != type)
-		i++;
-	return (g_defined_tokens[i]);
-}
 // echo "les amis 'je suis la' et aussi les canards"    les petit 'paingouin'"des iles"aussi"des hommes"'et'des'femmes';ls
 
 /*
@@ -123,12 +112,13 @@ petit
 ls
 */
 
-
 t_token				lexer__get_word_token(t_lexer *lex) // bugged
 {
 	t_token			new;
+	int				start_pos;
 	int				isquote;
 
+	start_pos = lex->pos;
 	while (	lexer__istype(lex->current_char, CHR_WORD)		||
 			lexer__istype(lex->current_char, CHR_BSLASH)	||
 			lexer__istype(lex->current_char, CHR_SQUOTE)	||
@@ -155,55 +145,20 @@ t_token				lexer__get_word_token(t_lexer *lex) // bugged
 			lexer__advance(lex, 1);
 	}
 	new.type = WORD;
-	new.len = lex->pos - lex->pos_start;
-	new.pos_in_line = lex->pos_start;
-	new.value = ft_strsub(lex->line, lex->pos_start, new.len - isquote); // malloc = free needed; call token__del() to destroy
+	new.len = lex->pos - start_pos;
+	new.pos_in_line = start_pos;
+	new.value = ft_strsub(lex->line, start_pos, new.len - isquote); // malloc = free needed; call token__del() to destroy
 	return (new);
 }
 
-t_token				lexer__search_defined_token(t_lexer *lex)
-{
-	int				i;
-	int				j_max;
-	int				i_max;
-
-	i_max = -1;	// i save
-	j_max = -1;	// j save
-	i = -1;
-	while (g_defined_tokens[++i].type != NONE) // until the end of the array
-	{
-		if (g_defined_tokens[i].value == NULL)
-			continue ; // ERR or EOT
-		if (j_max > 0 && g_defined_tokens[i].len < g_defined_tokens[j_max].len)
-			continue ; // avoid useless calcules cause g_defined_tokens[i] can't match more than g_defined_tokens[j_max]
-		if (!ft_strncmp(g_defined_tokens[i].value, &lex->line[lex->pos], g_defined_tokens[i].len))
-		{
-			if (j_max <= g_defined_tokens[i].len)
-			{
-				j_max = g_defined_tokens[i].len;
-				i_max = i;
-			}
-		}
-	}
-	if (i_max == -1)
-	{
-		lexer__advance(lex, 1);
-		return (lexer__get_word_token(lex));
-	}
-	// return (lexer__get_defined_token(ERR));
-	i = -1;
-	while (++i < g_defined_tokens[i_max].len)
-		lexer__advance(lex, 1);
-	return (g_defined_tokens[i_max]); // if the while statement has found a corresponding token in the table, then return it
-}
-
-
 t_token				lexer__get_next_token(t_lexer *lex)
 {
+	// printf("\n"C_G_WHITE"***************************************************************************"C_RES"\n");
+	// lexer__debug(lex);
+
 	if (lexer__istype(lex->current_char, CHR_SPACE) ||
 		lexer__istype(lex->current_char, CHR_PASS))
 		lexer__skip_whitespace(lex);
-	lex->pos_start = lex->pos;
 	if (lexer__istype(lex->current_char, CHR_EOT))
 		return (lexer__get_defined_token(EOT));
 	else if (lexer__istype(lex->current_char, CHR_WORD)	||
@@ -217,4 +172,6 @@ t_token				lexer__get_next_token(t_lexer *lex)
 		return (lexer__get_defined_token(ERR));
 	}
 	return (lexer__search_defined_token(lex));
+	// else if (lexer__istype(lex->current_char, CHR_BSLASH))
+	// return (lexer__get_word_token(lex));
 }
