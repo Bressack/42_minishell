@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 02:03:11 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/18 16:27:57 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ petit
 ls
 */
 
-t_token				lexer__get_word_token(t_lexer *lex) // bugged
+t_token				lexer__get_word_token(t_lexer *lex)
 {
 	t_token			new;
 	int				start_pos;
@@ -153,9 +153,6 @@ t_token				lexer__get_word_token(t_lexer *lex) // bugged
 
 t_token				lexer__get_next_token(t_lexer *lex)
 {
-	// printf("\n"C_G_WHITE"***************************************************************************"C_RES"\n");
-	// lexer__debug(lex);
-
 	if (lexer__istype(lex->current_char, CHR_SPACE) ||
 		lexer__istype(lex->current_char, CHR_PASS))
 		lexer__skip_whitespace(lex);
@@ -172,6 +169,4 @@ t_token				lexer__get_next_token(t_lexer *lex)
 		return (lexer__get_defined_token(ERR));
 	}
 	return (lexer__search_defined_token(lex));
-	// else if (lexer__istype(lex->current_char, CHR_BSLASH))
-	// return (lexer__get_word_token(lex));
 }

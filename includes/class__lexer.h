@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 00:17:36 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/18 16:25:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,10 @@ int					lexer__advance(t_lexer *lex, int n);	// go to the next character in the 
 // int					lexer__advance(t_lexer *lex, char *f, int l);
 void				lexer__skip_whitespace(t_lexer *lex);	// skip all whitespaces listed by the grammar from line
 t_token				lexer__get_next_token(t_lexer *lex);	// get the next token from line and return it into a token node
+int					lexer__istype(char c, t_char_type type);
+void				lexer__debug(t_lexer *lex);
+t_token				lexer__get_word_token(t_lexer *lex);
+t_token				lexer__get_defined_token(t_token_type type);
+int					lexer__isdefined_token(t_lexer *lex);
+t_token				lexer__search_defined_token(t_lexer *lex);
 #endif

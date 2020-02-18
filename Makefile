@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/17 23:46:46 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/18 12:08:21 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -40,8 +40,6 @@ FLAGS_WDEBUG		=	-Wanalyzer-malloc-leak \
 						-Wanalyzer-null-dereference \
 						-Wanalyzer-possible-null-argument \
 						-Wanalyzer-possible-null-dereference \
-						-fdump-analyzer-callgraph \
-
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -65,7 +63,8 @@ SRCS_DIR			=	./srcs/
 SRCS_LIST			=	\
 						class__lexer.c \
 						class__token.c \
-						defined_tokens.c \
+						class__lexer__defined_tokens.c \
+						class__token__global_arrays.c \
 						ft_strlen.c \
 						ft_strncpy.c \
 						ft_strncmp.c \
@@ -91,7 +90,7 @@ BONUS = 0
 .PHONY: clean fclean all re norm
 
 all: $(OBJS) $(SRCS) $(NAME)
-	
+
 $(NAME): $(SRCS) $(OBJS)
 	@ $(CC) $(FLAGS) $(HDIR) $(OBJS) -o $@
 	@ printf "\n"
@@ -114,7 +113,7 @@ re: fclean
 	@ make -j
 
 real: re
-	@ $(shell clear)
+	@ $(shell ls)
 	@ $(shell ./$(NAME))
 
 # **************************************************************************** #

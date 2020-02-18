@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:35:06 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 02:06:01 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/18 14:34:03 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,13 @@ void		node__print(t_node node)
 	printf("{ parent: %016p } ", node.parent);
 	printf("{ left  : %016p }\n", node.left);
 	printf("{ right : %016p } ", node.right);
+}
 
+
+void		node__add_child(t_ast *parent, t_node child, int rl_lever)
+{
+	if (rl_lever == RIGHT_CHILD)
+		ast->tree->
+	if (rl_lever == LEFT_CHILD)
+		ast->tree->
 }

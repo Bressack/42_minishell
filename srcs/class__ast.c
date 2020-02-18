@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:31:14 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 02:09:07 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/18 14:16:31 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,4 @@ void		ast__del(t_ast ast)
 void		ast__print()
 {
 	// TODO
-}
-
-void		ast__add_child()
-{
-
 }

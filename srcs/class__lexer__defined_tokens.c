@@ -6,11 +6,22 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 00:59:53 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/18 14:12:02 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+/*
+** return: t_token
+** lexer__get_defined_token()
+** parameter: t_token_type, type of the desired token
+**
+** return a token who match with type parameter
+**
+** if lexer__get_defined_token return a token typed NONE that is meaning the
+** desired type is not a defined token (see also: class__token__global_arrays.c)
+*/
 
 t_token				lexer__get_defined_token(t_token_type type)
 {
@@ -22,6 +33,16 @@ t_token				lexer__get_defined_token(t_token_type type)
 	return (g_defined_tokens[i]);
 }
 
+/*
+** return: int
+** lexer__isdefined_token()
+** parameter: t_lexer, (see class__lexer.h)
+**
+** return the an index of the global array g_defined_tokens
+** this index point on the defined token corresponding to lex->current_char
+**
+** return -1 if no match
+*/
 int					lexer__isdefined_token(t_lexer *lex)
 {
 	int				i;
@@ -49,12 +70,17 @@ int					lexer__isdefined_token(t_lexer *lex)
 	return (i_max);
 }
 
+/*
+**
+**
+**
+*/
 t_token				lexer__search_defined_token(t_lexer *lex)
 {
 	int				i;
 	int				token_idx;
 
-	if (i = lexer__isdefined_token == -1)
+	if ((token_idx = lexer__isdefined_token(lex)) == -1)
 		return (lexer__get_word_token(lex));
 	// return (lexer__get_defined_token(ERR));
 	i = -1;
