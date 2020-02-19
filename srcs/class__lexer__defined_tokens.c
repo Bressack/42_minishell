@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 15:07:08 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/19 21:35:50 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,28 +46,24 @@ t_token				lexer__get_defined_token(t_token_type type)
 int					lexer__isdefined_token(t_lexer *lex)
 {
 	int				i;
-	int				j_max;
-	int				i_max;
+	int				j;
+	int				match;
 
-	i_max = -1;	// i save
-	j_max = -1;	// j save
+	match = -1;	// i save
+	j = -1;	// j save
 	i = -1;
 	while (g_defined_tokens[++i].type != NONE) // until the end of the array
 	{
-		if (g_defined_tokens[i].value == NULL)
+		if (g_defined_tokens[i].value == NULL || !g_defined_tokens[i].value[0])
 			continue ; // ERR or EOT
-		if (j_max > 0 && g_defined_tokens[i].len < g_defined_tokens[j_max].len)
-			continue ; // avoid useless calcules cause g_defined_tokens[i] can't match more than g_defined_tokens[j_max]
-		if (!ft_strncmp(g_defined_tokens[i].value, &lex->line[lex->pos], g_defined_tokens[i].len))
-		{
-			if (j_max <= g_defined_tokens[i].len)
-			{
-				j_max = g_defined_tokens[i].len;
-				i_max = i;
-			}
-		}
+		j = 0;
+		while (g_defined_tokens[i].value[j] && g_defined_tokens[i].value[j] ==
+			lex->line[lex->start + j]) // compare the two string until the end of g_defined_tokens[i].value
+			j++;
+		if (j == g_defined_tokens[i].len)
+			match = i;
 	}
-	return (i_max);
+	return (match);
 }
 
 /*
@@ -86,7 +82,7 @@ int					lexer__isdefined_token(t_lexer *lex)
 **          ^
 ** there, '&' is not in the global array g_defined_tokens, so le lexer will
 ** read it as a word character.
-
+**
 ** if no match, current_char is taken as a word and lexer__search_defined_token
 ** call lexer__get_word_token to found a word token who start by this char
 */
