@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:27:40 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 21:12:52 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/19 21:52:58 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 ** 'ERR' must be the first one och
 ** 'NONE' must be the last one
 */
-t_token				g_defined_tokens[20] =
+t_token				g_defined_tokens[22] =
 {
 	{ ERR          , ""   , 0, 0 },
 	{ EOT          , ""   , 0, 0 },

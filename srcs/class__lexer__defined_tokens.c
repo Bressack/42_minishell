@@ -6,11 +6,26 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 21:35:50 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/19 22:22:21 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+/*
+** return: t_token
+** lexer__get_defined_token_with_index()
+** parameter: int index, an index of the global array g_defined_tokens
+**
+** value must be in range 0 to NB_DEFINED_TOKEN
+** return the defined token NONE else
+*/
+t_token				lexer__get_defined_token_with_index(int index)
+{
+	if (index => 0 && index <= NB_DEFINED_TOKEN)
+		return (g_defined_tokens[index]);
+	return (g_defined_tokens[NONE]);
+}
 
 /*
 ** return: t_token
@@ -45,23 +60,26 @@ t_token				lexer__get_defined_token(t_token_type type)
 */
 int					lexer__isdefined_token(t_lexer *lex)
 {
+	t_token			tmp;
 	int				i;
 	int				j;
 	int				match;
 
 	match = -1;	// i save
 	j = -1;	// j save
-	i = -1;
-	while (g_defined_tokens[++i].type != NONE) // until the end of the array
+	i = 0;
+	tmp = lexer__get_defined_token_with_index(i);
+	while (tmp.type != NONE) // until the end of the array
 	{
-		if (g_defined_tokens[i].value == NULL || !g_defined_tokens[i].value[0])
+		if (tmp.value == NULL || !tmp.value[0])
 			continue ; // ERR or EOT
 		j = 0;
-		while (g_defined_tokens[i].value[j] && g_defined_tokens[i].value[j] ==
-			lex->line[lex->start + j]) // compare the two string until the end of g_defined_tokens[i].value
+		while (tmp.value[j] && tmp.value[j] ==
+			lex->line[lex->start + j]) // compare the two string until the end of tmp.value
 			j++;
-		if (j == g_defined_tokens[i].len)
+		if (j == tmp.len)
 			match = i;
+		tmp = lexer__get_defined_token_with_index(++i);
 	}
 	return (match);
 }
@@ -89,14 +107,14 @@ int					lexer__isdefined_token(t_lexer *lex)
 
 t_token				lexer__search_defined_token(t_lexer *lex)
 {
+	t_token			ret;
 	int				i;
 	int				token_idx;
 
-	if ((token_idx = lexer__isdefined_token(lex)) == -1)
-		return (lexer__get_word_token(lex));
-	// return (lexer__get_defined_token(ERR));
-	i = -1;
-	while (++i < g_defined_tokens[token_idx].len)
-		lexer__advance(lex, 1);
+	if ((token_idx = lexer__isdefined_token(lex)) != -1)
+		ret = lexer__get_defined_token_with_index(token_idx);
+	else
+		ret = lexer__get_word_token(lex);
+	lexer__advance(lex, ret.len);
 	return (g_defined_tokens[token_idx]); // if the while statement has found a corresponding token in the table, then return it
 }
