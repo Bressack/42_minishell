@@ -6,17 +6,23 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:21:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 16:44:14 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/19 19:36:37 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLASS__TOKEN_H
 # define CLASS__TOKEN_H
 # include <minishell.h>
+
+/*
+** this following enum e_token_type MUST to be sorted exactly like the
+** global array g_defined_tokens
+** 'ERR' must be the first one och
+** 'NONE' must be the last one
+*/
 typedef enum		e_token_type
 {
-	NONE = -1,
-	ERR = 0,
+	ERR,
 	EOT,
 	SPACE,
 	WORD,
@@ -36,12 +42,13 @@ typedef enum		e_token_type
 	DOLLAR,
 	PASS,
 	PATH,
-	STAR
+	STAR,
+	NONE
 }					t_token_type;
 typedef struct		s_token
 {
 	t_token_type	type;
-	char			*value;
+	char			value[LINE_MAX];
 	int				len;
 	int				pos_in_line;
 }					t_token;

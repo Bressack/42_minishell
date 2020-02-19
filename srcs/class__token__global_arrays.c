@@ -6,17 +6,36 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:27:40 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 01:03:31 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/19 20:14:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+/*
+** this array tag all ascii character with en kod used to group characters
+** having the same sence (in our lexicon)
+**
+** to see tag given to the '#' character, do g_token_ascii_table['#'];
+**
+** /!\ g_token_ascii_table need an unsigned char index /!\
+**
+** ex:
+**		unsigned char	c;
+**
+**		c = 'A';
+**      if (g_token_ascii_table[c] == CHR_WORD)
+**			return (SUCCESS);
+**
+** see also: class__token.h
+**
+*/
 t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 {
-	[128 ... 254]	= CHR_PASS,
 	['\0']			= CHR_EOT,
 	[0x01]			= CHR_EOT,
+	/* *********************** */
+	[128 ... 254]	= CHR_PASS,
 	[0x02]			= CHR_PASS,
 	[0x03]			= CHR_PASS,
 	[0x04]			= CHR_PASS,
@@ -26,6 +45,35 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 	['\b']			= CHR_PASS,
 	[0x0e ... 0x1f]	= CHR_PASS,
 	[0x7f]			= CHR_PASS,
+	/* *********************** */
+	['\t']			= CHR_SPACE,
+	['\n']			= CHR_SPACE,
+	['\v']			= CHR_SPACE,
+	['\f']			= CHR_SPACE,
+	['\r']			= CHR_SPACE,
+	[' ']			= CHR_SPACE,
+	/* *********************** */
+	['\"']			= CHR_DQUOTE,
+	['\'']			= CHR_SQUOTE,
+	/* *********************** */
+	['(']			= CHR_LPAREN,
+	[')']			= CHR_RPAREN,
+	/* *********************** */
+	['&']			= CHR_AND,
+	['|']			= CHR_PIPE
+	/* *********************** */
+	['<']			= CHR_REDIREC_IN,
+	['>']			= CHR_REDIREC_OUT,
+	/* *********************** */
+	['$']			= CHR_DOLLAR,
+	['*']			= CHR_STAR,
+	['?']			= CHR_QUESMARK,
+	/* *********************** */
+	[';']			= CHR_SEMICON,
+	/* *********************** */
+	['0' ... '9']	= CHR_WORD,
+	['a' ... 'z']	= CHR_WORD,
+	['A' ... 'Z']	= CHR_WORD,
 	['!']			= CHR_WORD,
 	['#']			= CHR_WORD,
 	['%']			= CHR_WORD,
@@ -33,56 +81,49 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 	[',']			= CHR_WORD,
 	['-']			= CHR_WORD,
 	['.']			= CHR_WORD,
-	['0' ... '9']	= CHR_WORD,
 	[':']			= CHR_WORD,
 	['=']			= CHR_WORD,
 	['@']			= CHR_WORD,
-	['A' ... 'Z']	= CHR_WORD,
 	['[']			= CHR_WORD,
 	[']']			= CHR_WORD,
 	['^']			= CHR_WORD,
 	['_']			= CHR_WORD,
 	['`']			= CHR_WORD,
-	['a' ... 'z']	= CHR_WORD,
 	['{']			= CHR_WORD,
 	['}']			= CHR_WORD,
-	['~']			= CHR_WORD,
-	['\t']			= CHR_SPACE,
-	['\n']			= CHR_SPACE,
-	['\v']			= CHR_SPACE,
-	['\f']			= CHR_SPACE,
-	['\r']			= CHR_SPACE,
-	[' ']			= CHR_SPACE,
-	['\"']			= CHR_DQUOTE,
-	['$']			= CHR_DOLLAR,
-	['&']			= CHR_AND,
-	['\'']			= CHR_SQUOTE,
-	['(']			= CHR_LPAREN,
-	[')']			= CHR_RPAREN,
-	['*']			= CHR_STAR,
 	['/']			= CHR_WORD,
-	[';']			= CHR_SEMICON,
-	['<']			= CHR_REDIREC_IN,
-	['>']			= CHR_REDIREC_OUT,
-	['?']			= CHR_QUESMARK,
+	['~']			= CHR_WORD,
 	['\\']			= CHR_WORD,
-	['|']			= CHR_PIPE
 };
 
+/*
+** this following array g_defined_tokens MUST to be sorted exactly
+** like the enum e_token_type
+** 'ERR' must be the first one och
+** 'NONE' must be the last one
+*/
 t_token				g_defined_tokens[20] =
 {
-	{ERR,			NULL,	0, 0},
-	{EOT,			NULL,	0, 0},
-	{DBL_AND,		"&&",	2, 0},
-	{DBL_OR,		"||",	2, 0},
-	{PIPE,			"|",	1, 0},
-	{SEMICON,		";",	1, 0},
-	{LPAREN,		"(",	1, 0},
-	{RPAREN,		")",	1, 0},
-	{REDIREC_IN,	"<",	1, 0},
-	{REDIREC_OUT,	">",	1, 0},
-	{DREDIREC_OUT,	">>",	2, 0},
-	{STAR,			"*",	1, 0},
-	{DOLLAR,		"$",	1, 0},
-	{NONE,			NULL,	0, 0}
+	{ ERR          , ""   , 0, 0 },
+	{ EOT          , ""   , 0, 0 },
+	{ SPACE        , ""   , 0, 0 },
+	{ PASS         , ""   , 0, 0 },
+	{ WORD         , ""   , 0, 0 },
+	{ LPAREN       , "("  , 0, 0 },
+	{ RPAREN       , ")"  , 0, 0 },
+	{ REDIREC_IN   , "<"  , 0, 0 },
+	{ REDIREC_OUT  , ">"  , 0, 0 },
+	{ DREDIREC_OUT , ">>" , 0, 0 },
+	{ SQUOTE       , "\'" , 0, 0 },
+	{ DQUOTE       , "\"" , 0, 0 },
+	{ DBL_AND      , "&&" , 0, 0 },
+	{ DBL_OR       , "||" , 0, 0 },
+	{ PIPE         , "|"  , 0, 0 },
+	{ SEMICON      , ";"  , 0, 0 },
+	{ BSLASH       , "\\" , 0, 0 },
+	{ QUESMARK     , "?"  , 0, 0 },
+	{ DOLLAR       , "$"  , 0, 0 },
+	{ SLASH        , "/"  , 0, 0 },
+	{ STAR         , "*"  , 0, 0 },
+	{ NONE         , ""   , 0, 0 },
 };

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 17:02:03 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/19 19:29:22 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void				lexer__error(t_lexer *lex)
 		lex->current_char, lex->current_char);
 }
 
-int					lexer__istype(char c, t_char_type type)
+inline int			lexer__istype(char c, t_char_type type)
 {
-	return (g_token_ascii_table[(int)c] == type ? 1 : 0);
+	return (type & g_token_ascii_table[c]);
 }
 
 void				lexer__debug(t_lexer *lex)
@@ -64,7 +64,7 @@ void				lexer__debug(t_lexer *lex)
 **
 ** moves the read head by n
 ** cannot move after the end of line (PROTECTED)
-** 
+**
 **
 */
 int					lexer__advance(t_lexer *lex, int n)
@@ -84,15 +84,12 @@ int					lexer__advance(t_lexer *lex, int n)
 	}
 }
 
-void				lexer__skip_whitespace(t_lexer *lex)
+void				lexer__advence_foreach(t_lexer *lex, t_char_type type)
 {
-	while (lexer__istype(lex->current_char, CHR_SPACE))
+	while (lexer__istype(lex->current_char, type))
 		lexer__advance(lex, 1);
-	// while (lexer__istype(lex->current_char, CHR_SPACE) ||
-	// 	lexer__istype(lex->current_char, CHR_PASS))
-	// 	lexer__advance(lex, 1);
 }
-// echo "les amis 'je suis la' et aussi les canards"    les petit 'paingouin'"des iles"aussi"des hommes"'et'des'femmes';ls
+// echo "1111 ' 111 11111 11' 111 1 1 1 '1'" 2222"222" '333' 4444 5 6 7 "888'8'"88"8"8;10;12
 
 /*
 echo
@@ -141,17 +138,68 @@ t_token				lexer__get_word_token(t_lexer *lex)
 	return (new);
 }
 
+/*
+&&
+
+0: prev_is_word
+0: prev_is_spec
+0: prev_is_space
+0:
+0:
+0:
+0:
+0:
+
+0: do_skip_space
+0: do_skip_pass
+0:
+0:
+0:
+0:
+0:
+0:
+
+0:
+0:
+0:
+0:
+0:
+0:
+0:
+0:
+
+0:
+0:
+0:
+0:
+0:
+0:
+0:
+0:
+*/
+
+t_token				lexer__get_next_token(t_lexer *lex, int opt)
+{
+	token			ret;
+	int				rtype;
+
+	ret = g_defined_tokens[EOT];
+	lexer__advence_foreach(lex, CHR_SPACE | CHR_PASS);
+	if ((rtype = lexer__istype(lex->current_char, CHR_ERR | CHR_EOT)))
+		return (g_defined_tokens[rtype]);
+	if ((idx = lexer__isdefined_token(lex)) != -1)
+		return (lexer__get_defined_token(lex));
+	else
+		return (lexer__get_word_token);
+}
+
 t_token				lexer__get_next_token(t_lexer *lex)
 {
-	if (lexer__istype(lex->current_char, CHR_SPACE) ||
-		lexer__istype(lex->current_char, CHR_PASS))
-		lexer__skip_whitespace(lex);
+	lexer__advence_foreach(lex, CHR_SPACE | CHR_PASS);
 	if (lexer__istype(lex->current_char, CHR_EOT))
 		return (lexer__get_defined_token(EOT));
-	else if (lexer__istype(lex->current_char, CHR_WORD)	||
-		lexer__istype(lex->current_char, CHR_BSLASH)	||
-		lexer__istype(lex->current_char, CHR_SQUOTE)	||
-		lexer__istype(lex->current_char, CHR_DQUOTE))
+	else if (lexer__istype(lex->current_char,
+		CHR_WORD | CHR_BSLASH | CHR_SQUOTE | CHR_DQUOTE))
 		return (lexer__get_word_token(lex));
 	else if (lexer__istype(lex->current_char, CHR_ERR))
 	{
