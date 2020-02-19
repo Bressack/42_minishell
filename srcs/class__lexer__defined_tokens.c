@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 14:12:02 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/19 15:07:08 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,26 @@ int					lexer__isdefined_token(t_lexer *lex)
 }
 
 /*
+** return: t_token
+** lexer__search_defined_token
+** parameter: t_lexer
+**
+** retuen a token corresponding to the matched token found in line
+** ex: line: ls && echo
+**              ^~
+** there is a token '&&' so return the token '&&' who is in the global array
+** g_defined_tokens.
 **
 **
-**
+** ex: line & echo
+**          ^
+** there, '&' is not in the global array g_defined_tokens, so le lexer will
+** read it as a word character.
+
+** if no match, current_char is taken as a word and lexer__search_defined_token
+** call lexer__get_word_token to found a word token who start by this char
 */
+
 t_token				lexer__search_defined_token(t_lexer *lex)
 {
 	int				i;
