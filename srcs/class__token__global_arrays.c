@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:27:40 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 01:32:55 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 11:55:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 	['}']			= CHR_WORD,
 	['/']			= CHR_WORD,
 	['~']			= CHR_WORD,
-	['\\']			= CHR_WORD
+	['\\']			= CHR_BSLASH
 };
 
 /*
@@ -128,3 +128,4 @@ t_token				g_defined_tokens[NB_DEFINED_TOKEN] =
 	{ STAR         , "*"  , 1, 0 },
 	{ NONE         , ""   , 0, 0 }
 };
+// echo ! # % + , - . : = @ [ ] ^ _ ` { } / ~ ( ) & | < > $ * ? ;

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 01:36:50 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 11:32:05 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ int					lexer__isdefined_token(t_lexer *lex)
 		}
 		tmp = lexer__get_defined_token_with_index(++i);
 	}
+	if (match == -1)
+		lexer__advance(lex, 1);
 	return (match);
 }
 
@@ -96,10 +98,9 @@ int					lexer__isdefined_token(t_lexer *lex)
 ** there is a token '&&' so return the token '&&' who is in the global array
 ** g_defined_tokens.
 **
-**
 ** ex: line & echo
 **          ^
-** there, '&' is not in the global array g_defined_tokens, so le lexer will
+** there, '&' is not in the global array g_defined_tokens, so the lexer will
 ** read it as a word character.
 **
 ** if no match, current_char is taken as a word and lexer__search_defined_token
@@ -112,8 +113,8 @@ t_token				lexer__search_defined_token(t_lexer *lex)
 	int				token_idx;
 
 	if (!lexer__istype(lex->current_char,
-		ERR|EOT|SPACE|PASS|WORD|SQUOTE|DQUOTE &&
-		(token_idx = lexer__isdefined_token(lex)) != -1))
+		CHR_ERR|CHR_EOT|CHR_SPACE|CHR_PASS|CHR_WORD|CHR_SQUOTE|CHR_DQUOTE) &&
+		(token_idx = lexer__isdefined_token(lex)) != -1)
 	{
 		ret = lexer__get_defined_token_with_index(token_idx);
 		lexer__advance(lex, ret.len);

@@ -6,13 +6,16 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 15:51:48 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 17:55:18 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLASS__LEXER_H
 # define CLASS__LEXER_H
 # include <minishell.h>
+
+# define DEBUG_CHAR_TYPE	0
+# define DEBUG_POS			1
 
 typedef struct		s_lexer
 {
@@ -52,7 +55,7 @@ int					lexer__advance(t_lexer *lex, int n);	// go to the next character in the 
 void				lexer__skip_whitespace(t_lexer *lex);	// skip all whitespaces listed by the grammar from line
 t_token				lexer__get_next_token(t_lexer *lex);	// get the next token from line and return it into a token node
 int					lexer__istype(char c, t_char_type type);
-void				lexer__debug(t_lexer *lex);
+void				lexer__debug(t_lexer *lex, int opt);
 t_token				lexer__get_word_token(t_lexer *lex);
 t_token				lexer__get_defined_token(t_token_type type);
 int					lexer__isdefined_token(t_lexer *lex);

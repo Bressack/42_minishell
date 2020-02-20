@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/19 11:51:25 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/20 18:15:59 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -61,17 +61,21 @@ HEADER				=	\
 SRCS_DIR			=	./srcs/
 
 SRCS_LIST			=	\
+						main.c \
 						class__lexer.c \
-						class__token.c \
 						class__lexer__defined_tokens.c \
+						class__token.c \
 						class__token__global_arrays.c \
+						ft_memcpy.c \
+						ft_strdup.c \
+						ft_strjoin.c \
 						ft_strlen.c \
-						ft_strncpy.c \
 						ft_strncmp.c \
+						ft_strncpy.c \
 						ft_strsub.c \
 						get_next_line.c \
-						main.c \
 						try_malloc.c \
+						ft_strcpy.c \
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
@@ -84,8 +88,6 @@ OBJS_LIST			=	$(patsubst %.c, %.o, $(SRCS_LIST))
 OBJS				=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 
 # *** RULES ****************************************************************** #
-
-BONUS = 0
 
 .PHONY: clean fclean all re norm
 

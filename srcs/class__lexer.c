@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 01:40:38 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 18:19:35 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,28 +41,37 @@ inline int			lexer__istype(char c, t_char_type type)
 ** stderr about the character type of lex->current_char
 ** if the type of lex->current_char is unknown, print '/!\ UNKNOWN CHARACTER TYPE /!\' on stderr
 */
-void				lexer__debug(t_lexer *lex)
+void				lexer__debug(t_lexer *lex, int opt)
 {
-		 if (lexer__istype(lex->current_char, CHR_ERR))			dprintf(2, "type: CHR_ERR        \n");
-	else if (lexer__istype(lex->current_char, CHR_EOT))			dprintf(2, "type: CHR_EOT        \n");
-	else if (lexer__istype(lex->current_char, CHR_SPACE))		dprintf(2, "type: CHR_SPACE      \n");
-	else if (lexer__istype(lex->current_char, CHR_WORD))		dprintf(2, "type: CHR_WORD       \n");
-	else if (lexer__istype(lex->current_char, CHR_LPAREN))		dprintf(2, "type: CHR_LPAREN     \n");
-	else if (lexer__istype(lex->current_char, CHR_RPAREN))		dprintf(2, "type: CHR_RPAREN     \n");
-	else if (lexer__istype(lex->current_char, CHR_REDIREC_IN))	dprintf(2, "type: CHR_REDIREC_IN \n");
-	else if (lexer__istype(lex->current_char, CHR_REDIREC_OUT))	dprintf(2, "type: CHR_REDIREC_OUT\n");
-	else if (lexer__istype(lex->current_char, CHR_SQUOTE))		dprintf(2, "type: CHR_SQUOTE     \n");
-	else if (lexer__istype(lex->current_char, CHR_DQUOTE))		dprintf(2, "type: CHR_DQUOTE     \n");
-	else if (lexer__istype(lex->current_char, CHR_AND))			dprintf(2, "type: CHR_AND        \n");
-	else if (lexer__istype(lex->current_char, CHR_PIPE))		dprintf(2, "type: CHR_PIPE       \n");
-	else if (lexer__istype(lex->current_char, CHR_SEMICON))		dprintf(2, "type: CHR_SEMICON    \n");
-	else if (lexer__istype(lex->current_char, CHR_PATH))		dprintf(2, "type: CHR_PATH       \n");
-	else if (lexer__istype(lex->current_char, CHR_PASS))		dprintf(2, "type: CHR_PASS       \n");
-	else if (lexer__istype(lex->current_char, CHR_DOLLAR))		dprintf(2, "type: CHR_DOLLAR     \n");
-	else if (lexer__istype(lex->current_char, CHR_BSLASH))		dprintf(2, "type: CHR_BSLASH     \n");
-	else if (lexer__istype(lex->current_char, CHR_QUESMARK))	dprintf(2, "type: CHR_QUESMARK   \n");
-	else if (lexer__istype(lex->current_char, CHR_STAR))		dprintf(2, "type: CHR_STAR       \n");
-	else	dprintf(2, "/!\\ UNKNOWN CHARACTER TYPE /!\\\n");
+	if (opt == DEBUG_CHAR_TYPE)
+	{
+			 if (lexer__istype(lex->current_char, CHR_ERR))			dprintf(2, "type: CHR_ERR        \n");
+		else if (lexer__istype(lex->current_char, CHR_EOT))			dprintf(2, "type: CHR_EOT        \n");
+		else if (lexer__istype(lex->current_char, CHR_SPACE))		dprintf(2, "type: CHR_SPACE      \n");
+		else if (lexer__istype(lex->current_char, CHR_WORD))		dprintf(2, "type: CHR_WORD       \n");
+		else if (lexer__istype(lex->current_char, CHR_LPAREN))		dprintf(2, "type: CHR_LPAREN     \n");
+		else if (lexer__istype(lex->current_char, CHR_RPAREN))		dprintf(2, "type: CHR_RPAREN     \n");
+		else if (lexer__istype(lex->current_char, CHR_REDIREC_IN))	dprintf(2, "type: CHR_REDIREC_IN \n");
+		else if (lexer__istype(lex->current_char, CHR_REDIREC_OUT))	dprintf(2, "type: CHR_REDIREC_OUT\n");
+		else if (lexer__istype(lex->current_char, CHR_SQUOTE))		dprintf(2, "type: CHR_SQUOTE     \n");
+		else if (lexer__istype(lex->current_char, CHR_DQUOTE))		dprintf(2, "type: CHR_DQUOTE     \n");
+		else if (lexer__istype(lex->current_char, CHR_AND))			dprintf(2, "type: CHR_AND        \n");
+		else if (lexer__istype(lex->current_char, CHR_PIPE))		dprintf(2, "type: CHR_PIPE       \n");
+		else if (lexer__istype(lex->current_char, CHR_SEMICON))		dprintf(2, "type: CHR_SEMICON    \n");
+		else if (lexer__istype(lex->current_char, CHR_PATH))		dprintf(2, "type: CHR_PATH       \n");
+		else if (lexer__istype(lex->current_char, CHR_PASS))		dprintf(2, "type: CHR_PASS       \n");
+		else if (lexer__istype(lex->current_char, CHR_DOLLAR))		dprintf(2, "type: CHR_DOLLAR     \n");
+		else if (lexer__istype(lex->current_char, CHR_BSLASH))		dprintf(2, "type: CHR_BSLASH     \n");
+		else if (lexer__istype(lex->current_char, CHR_QUESMARK))	dprintf(2, "type: CHR_QUESMARK   \n");
+		else if (lexer__istype(lex->current_char, CHR_STAR))		dprintf(2, "type: CHR_STAR       \n");
+		else	dprintf(2, "/!\\ UNKNOWN CHARACTER TYPE /!\\\n");
+	}
+	else if (opt == DEBUG_POS)
+	{
+		printf("[ DEBUG ] %s\n", lex->line);
+		printf("[ start ] %*s%c\n", lex->start, "", '^');
+		printf("[ pos   ] %*s%c\n", lex->pos, "", '^');
+	}
 }
 
 
@@ -110,6 +119,47 @@ void				lexer__advence_foreach(t_lexer *lex, t_char_type type)
 		lexer__advance(lex, 1);
 }
 
+void				lexer__refill_line(t_lexer *lex, int join_nl)
+{
+	char			*line;
+	char			*tmp;
+
+	while (1)
+	{
+		dprintf(1, "> ");
+		get_next_line(0, &line);
+		if (line)
+			break ;
+	}
+	if (join_nl)
+		tmp = ft_strjoin(3, lex->line, "\n", line);
+	else
+		tmp = ft_strjoin(2, lex->line, line);
+	try_free_((void **)&lex->line, _FL_);
+	try_free_((void **)&line, _FL_);
+	lex->line = tmp;
+	lex->len_line = ft_strlen(lex->line);
+	lex->current_char = lex->line[lex->pos];
+}
+
+
+void				lexer__get_word_quote_token(t_lexer *lex, t_char_type ct)
+{
+	while (1)
+	{
+		if (!lexer__advance(lex, 1))
+			lexer__refill_line(lex, 1);
+		if (lexer__istype(lex->current_char, CHR_BSLASH))
+		{
+			if (!lexer__advance(lex, 1))
+				lexer__refill_line(lex, 0);
+		}
+		else if (lexer__istype(lex->current_char, ct))
+			break ;
+	}
+	lexer__advance(lex, 1);
+}
+
 /*
 ** return: t_token
 ** lexer__get_word_token
@@ -139,14 +189,13 @@ t_token				lexer__get_word_token(t_lexer *lex)
 		CHR_WORD | CHR_BSLASH | CHR_SQUOTE | CHR_DQUOTE))
 	{
 		if (lexer__istype(lex->current_char, CHR_BSLASH))
-			lexer__advance(lex, 2);
-		else if ((ct = lexer__istype(lex->current_char, CHR_SQUOTE | CHR_DQUOTE)))
 		{
-			while (lexer__advance(lex, 1) &&
-				!lexer__istype(lex->current_char, ct))
-				continue ;
-			lexer__advance(lex, 1);
+			if (!lexer__advance(lex, 2))
+				lexer__refill_line(lex, 0);
+			lexer__debug(lex, DEBUG_POS);
 		}
+		else if ((ct = lexer__istype(lex->current_char, CHR_SQUOTE | CHR_DQUOTE)))
+			lexer__get_word_quote_token(lex, ct);
 		else
 			lexer__advance(lex, 1);
 	}
@@ -197,26 +246,3 @@ t_token				lexer__get_next_token(t_lexer *lex)
 // "les 'enfants' des 'ville' " sont" petits"
 // "les 'enfants' des 'ville' \" sont \" petits"
 
-
-
-/*
-	message du soir (1:40am)
-
-	bug:
-	>: ls|cat -e
-	[ TOKEN ] { type: INVALID       } { value: [NULL] }
-	>: ls
-	[ TOKEN ] { type: INVALID       } { value: [NULL] }
-	>: l
-	[ TOKEN ] { type: INVALID       } { value: [NULL] }
-	>: l
-	[ TOKEN ] { type: INVALID       } { value: [NULL] }
-	>:
-	[ TOKEN ] { type: EOT           } { value: [] }
-	>:
-	[ TOKEN ] { type: EOT           } { value: [] }
-	>:
-	[ TOKEN ] { type: EOT           } { value: [] }
-	>:
-	bonne journee a toi :) j'espere mettre lever pour 9h ;) et manger avec elle a midi :p
-*/

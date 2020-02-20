@@ -6,11 +6,13 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 01:18:35 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 16:15:30 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+
 
 int		main(void)
 {
@@ -22,7 +24,7 @@ int		main(void)
 	line = NULL;
 	while (1)
 	{
-		dprintf(1, ">: ");
+		dprintf(1, "<minishell-0.1>: ");
 		res = get_next_line(0, &line);
 		if (!line)
 			continue ;
