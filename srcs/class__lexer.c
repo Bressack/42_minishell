@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 23:14:37 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 01:40:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_lexer				lexer__new(char *line)
 	return (lex);
 }
 
-void				lexer__error(t_lexer *lex)
+inline void			lexer__error(t_lexer *lex)
 {
 	printf("Invalid character \'%c\' (%#x)\n",
 		lex->current_char, lex->current_char);
@@ -31,7 +31,7 @@ void				lexer__error(t_lexer *lex)
 
 inline int			lexer__istype(char c, t_char_type type)
 {
-	return (type & g_token_ascii_table[c]);
+	return (type & g_token_ascii_table[(int)c]);
 }
 
 /*
@@ -92,7 +92,7 @@ int					lexer__advance(t_lexer *lex, int n)
 	else
 	{
 		lex->current_char = lex->line[lex->pos];
-		return (n - 1 ? lexer__advance(lex, n - 1) : 1);
+		return (n - 1 > 0 ? lexer__advance(lex, n - 1) : 1);
 	}
 }
 
@@ -136,11 +136,11 @@ t_token				lexer__get_word_token(t_lexer *lex)
 	t_char_type		ct; // char type
 
 	while (lexer__istype(lex->current_char,
-		CHR_WORD | CHR_BSLASH | CHR_SQUOTE | CHR_DQUOTE)
+		CHR_WORD | CHR_BSLASH | CHR_SQUOTE | CHR_DQUOTE))
 	{
 		if (lexer__istype(lex->current_char, CHR_BSLASH))
 			lexer__advance(lex, 2);
-		else if (ct = lexer__istype(lex->current_char, CHR_SQUOTE | CHR_DQUOTE))
+		else if ((ct = lexer__istype(lex->current_char, CHR_SQUOTE | CHR_DQUOTE)))
 		{
 			while (lexer__advance(lex, 1) &&
 				!lexer__istype(lex->current_char, ct))
@@ -153,7 +153,7 @@ t_token				lexer__get_word_token(t_lexer *lex)
 	new = lexer__get_defined_token(WORD);
 	new.len = lex->pos - lex->start;
 	new.pos_in_line = lex->start;
-	new.value = ft_strsub(lex->line, lex->start, new.len); // malloc = free needed; call token__del() on the token to destroy this string
+	ft_strncpy(new.value, &lex->line[lex->start], new.len);
 	return (new);
 }
 
@@ -186,10 +186,11 @@ t_token				lexer__get_next_token(t_lexer *lex)
 
 	ret = g_defined_tokens[EOT];
 	lexer__advence_foreach(lex, CHR_SPACE | CHR_PASS);
+	lex->start = lex->pos;
 	if ((rtype = lexer__istype(lex->current_char, CHR_ERR | CHR_EOT)))
-		return (g_defined_tokens[rtype]);
-	ret = lexer__search_defined_token(lex);
-	lex.start += ret.len;
+		ret = g_defined_tokens[rtype];
+	else
+		ret = lexer__search_defined_token(lex);
 	return (ret);
 }
 
@@ -197,3 +198,25 @@ t_token				lexer__get_next_token(t_lexer *lex)
 // "les 'enfants' des 'ville' \" sont \" petits"
 
 
+
+/*
+	message du soir (1:40am)
+
+	bug:
+	>: ls|cat -e
+	[ TOKEN ] { type: INVALID       } { value: [NULL] }
+	>: ls
+	[ TOKEN ] { type: INVALID       } { value: [NULL] }
+	>: l
+	[ TOKEN ] { type: INVALID       } { value: [NULL] }
+	>: l
+	[ TOKEN ] { type: INVALID       } { value: [NULL] }
+	>:
+	[ TOKEN ] { type: EOT           } { value: [] }
+	>:
+	[ TOKEN ] { type: EOT           } { value: [] }
+	>:
+	[ TOKEN ] { type: EOT           } { value: [] }
+	>:
+	bonne journee a toi :) j'espere mettre lever pour 9h ;) et manger avec elle a midi :p
+*/

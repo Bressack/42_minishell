@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:27:40 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 21:52:58 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 01:32:55 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 	[')']			= CHR_RPAREN,
 	/* *********************** */
 	['&']			= CHR_AND,
-	['|']			= CHR_PIPE
+	['|']			= CHR_PIPE,
 	/* *********************** */
 	['<']			= CHR_REDIREC_IN,
 	['>']			= CHR_REDIREC_OUT,
@@ -93,7 +93,7 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 	['}']			= CHR_WORD,
 	['/']			= CHR_WORD,
 	['~']			= CHR_WORD,
-	['\\']			= CHR_WORD,
+	['\\']			= CHR_WORD
 };
 
 /*
@@ -102,20 +102,21 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 ** 'ERR' must be the first one och
 ** 'NONE' must be the last one
 */
-t_token				g_defined_tokens[22] =
+t_token				g_defined_tokens[NB_DEFINED_TOKEN] =
 {
 	{ ERR          , ""   , 0, 0 },
 	{ EOT          , ""   , 0, 0 },
 	{ SPACE        , ""   , 0, 0 },
 	{ PASS         , ""   , 0, 0 },
 	{ WORD         , ""   , 0, 0 },
+	{ SQUOTE       , "\'" , 1, 0 },
+	{ DQUOTE       , "\"" , 1, 0 },
+	/* ************************* */
 	{ LPAREN       , "("  , 1, 0 },
 	{ RPAREN       , ")"  , 1, 0 },
 	{ REDIREC_IN   , "<"  , 1, 0 },
 	{ REDIREC_OUT  , ">"  , 1, 0 },
 	{ DREDIREC_OUT , ">>" , 2, 0 },
-	{ SQUOTE       , "\'" , 1, 0 },
-	{ DQUOTE       , "\"" , 1, 0 },
 	{ DBL_AND      , "&&" , 2, 0 },
 	{ DBL_OR       , "||" , 2, 0 },
 	{ PIPE         , "|"  , 1, 0 },
@@ -125,5 +126,5 @@ t_token				g_defined_tokens[22] =
 	{ DOLLAR       , "$"  , 1, 0 },
 	{ SLASH        , "/"  , 1, 0 },
 	{ STAR         , "*"  , 1, 0 },
-	{ NONE         , ""   , 0, 0 },
+	{ NONE         , ""   , 0, 0 }
 };

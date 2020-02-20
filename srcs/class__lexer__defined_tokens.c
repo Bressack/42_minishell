@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 22:22:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 01:36:50 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 */
 t_token				lexer__get_defined_token_with_index(int index)
 {
-	if (index => 0 && index <= NB_DEFINED_TOKEN)
+	if (index >= 0 && index < NB_DEFINED_TOKEN)
 		return (g_defined_tokens[index]);
 	return (g_defined_tokens[NONE]);
 }
@@ -71,14 +71,15 @@ int					lexer__isdefined_token(t_lexer *lex)
 	tmp = lexer__get_defined_token_with_index(i);
 	while (tmp.type != NONE) // until the end of the array
 	{
-		if (tmp.value == NULL || !tmp.value[0])
-			continue ; // ERR or EOT
-		j = 0;
-		while (tmp.value[j] && tmp.value[j] ==
-			lex->line[lex->start + j]) // compare the two string until the end of tmp.value
-			j++;
-		if (j == tmp.len)
-			match = i;
+		if (tmp.len > 0)
+		{
+			j = 0;
+			while (tmp.value[j] && tmp.value[j] ==
+				lex->line[lex->start + j]) // compare the two string until the end of tmp.value
+				j++;
+			if (j == tmp.len)
+				match = i;
+		}
 		tmp = lexer__get_defined_token_with_index(++i);
 	}
 	return (match);
@@ -108,13 +109,16 @@ int					lexer__isdefined_token(t_lexer *lex)
 t_token				lexer__search_defined_token(t_lexer *lex)
 {
 	t_token			ret;
-	int				i;
 	int				token_idx;
 
-	if ((token_idx = lexer__isdefined_token(lex)) != -1)
+	if (!lexer__istype(lex->current_char,
+		ERR|EOT|SPACE|PASS|WORD|SQUOTE|DQUOTE &&
+		(token_idx = lexer__isdefined_token(lex)) != -1))
+	{
 		ret = lexer__get_defined_token_with_index(token_idx);
+		lexer__advance(lex, ret.len);
+	}
 	else
 		ret = lexer__get_word_token(lex);
-	lexer__advance(lex, ret.len);
-	return (g_defined_tokens[token_idx]); // if the while statement has found a corresponding token in the table, then return it
+	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:21:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 19:36:37 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 01:32:58 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CLASS__TOKEN_H
 # include <minishell.h>
 
+# define NB_DEFINED_TOKEN 22
 /*
 ** this following enum e_token_type MUST to be sorted exactly like the
 ** global array g_defined_tokens
@@ -41,7 +42,7 @@ typedef enum		e_token_type
 	QUESMARK,
 	DOLLAR,
 	PASS,
-	PATH,
+	SLASH,
 	STAR,
 	NONE
 }					t_token_type;
@@ -52,7 +53,7 @@ typedef struct		s_token
 	int				len;
 	int				pos_in_line;
 }					t_token;
-extern t_token		g_defined_tokens[20];
+extern t_token		g_defined_tokens[NB_DEFINED_TOKEN];
 t_token				token__new(t_token_type type, char *value, int pos);
 void				token__del(t_token token);
 void				token__print(t_token token);

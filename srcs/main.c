@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 14:47:27 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/20 01:18:35 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ int		main(void)
 				lexer__error(&lex);
 			token__print(current_token);
 			token__del(current_token);
-			if (current_token.type == EOT || current_token.type == ERR || current_token.type == NONE)
+			if (current_token.type == EOT ||
+				current_token.type == ERR ||
+				current_token.type == NONE)
 				break ;
 		}
 		try_free_((void **)&line, _FL_);

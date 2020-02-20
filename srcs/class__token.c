@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/19 23:34:07 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/19 23:53:20 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,18 @@
 **
 ** token__new creat ans return a new token and init the token values
 */
-t_token			token__new(t_token_type type, char *value, int pos)
-{
-	t_token		new;
-
-	new.type = type;
-	new.pos_in_line = pos;
-	new.len = 0;
-	new.value = value; // not a copy (if origin is freed, new.value will be freed too)
-	if (value)
-		new.len = ft_strlen(value);
-	return (new);
-}
+// t_token			token__new(t_token_type type, char *value, int pos)
+// {
+// 	t_token		new;
+//
+// 	new.type = type;
+// 	new.pos_in_line = pos;
+// 	new.len = 0;
+// 	new.value = value; // not a copy (if origin is freed, new.value will be freed too)
+// 	if (value)
+// 		new.len = ft_strlen(value);
+// 	return (new);
+// }
 
 /*
 ** return: void
@@ -42,8 +42,7 @@ t_token			token__new(t_token_type type, char *value, int pos)
 */
 void			token__del(t_token token)
 {
-	if (token.type == WORD)
-		free(token.value);
+	(void)token;
 }
 
 void			token__print(t_token t) // for the moment, just for debug (yes it's ugly)
