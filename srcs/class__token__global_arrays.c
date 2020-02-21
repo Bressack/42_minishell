@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:27:40 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 11:55:38 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/21 12:44:29 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,28 +104,29 @@ t_char_type			g_token_ascii_table[255] = // t_char_type aka int
 */
 t_token				g_defined_tokens[NB_DEFINED_TOKEN] =
 {
-	{ ERR          , ""   , 0, 0 },
-	{ EOT          , ""   , 0, 0 },
-	{ SPACE        , ""   , 0, 0 },
-	{ PASS         , ""   , 0, 0 },
-	{ WORD         , ""   , 0, 0 },
-	{ SQUOTE       , "\'" , 1, 0 },
-	{ DQUOTE       , "\"" , 1, 0 },
+	{ ERR          , ""   , 0, 0, 0 },
+	{ EOT          , ""   , 0, 0, 0 },
+	{ SPACE        , ""   , 0, 0, 0 },
+	{ PASS         , ""   , 0, 0, 0 },
+	{ WORD         , ""   , 0, 0, 0 },
+	{ SQUOTE       , "\'" , 1, 0, 0 },
+	{ DQUOTE       , "\"" , 1, 0, 0 },
 	/* ************************* */
-	{ LPAREN       , "("  , 1, 0 },
-	{ RPAREN       , ")"  , 1, 0 },
-	{ REDIREC_IN   , "<"  , 1, 0 },
-	{ REDIREC_OUT  , ">"  , 1, 0 },
-	{ DREDIREC_OUT , ">>" , 2, 0 },
-	{ DBL_AND      , "&&" , 2, 0 },
-	{ DBL_OR       , "||" , 2, 0 },
-	{ PIPE         , "|"  , 1, 0 },
-	{ SEMICON      , ";"  , 1, 0 },
-	{ BSLASH       , "\\" , 1, 0 },
-	{ QUESMARK     , "?"  , 1, 0 },
-	{ DOLLAR       , "$"  , 1, 0 },
-	{ SLASH        , "/"  , 1, 0 },
-	{ STAR         , "*"  , 1, 0 },
-	{ NONE         , ""   , 0, 0 }
+	{ LPAREN       , "("  , 1, 0, 1 },
+	{ RPAREN       , ")"  , 1, 0, 1 },
+	{ REDIREC_IN   , "<"  , 1, 0, 1 },
+	{ REDIREC_OUT  , ">"  , 1, 0, 1 },
+	{ DREDIREC_OUT , ">>" , 2, 0, 1 },
+	{ DBL_AND      , "&&" , 2, 0, 1 },
+	{ SGL_AND      , "&"  , 1, 0, 1 },
+	{ DBL_OR       , "||" , 2, 0, 1 },
+	{ PIPE         , "|"  , 1, 0, 1 },
+	{ SEMICON      , ";"  , 1, 0, 1 },
+	{ BSLASH       , "\\" , 1, 0, 0 },
+	{ QUESMARK     , "?"  , 1, 0, 1 },
+	{ DOLLAR       , "$"  , 1, 0, 0 },
+	{ SLASH        , "/"  , 1, 0, 0 },
+	{ STAR         , "*"  , 1, 0, 0 },
+	{ NONE         , ""   , 0, 0, 1 }
 };
 // echo ! # % + , - . : = @ [ ] ^ _ ` { } / ~ ( ) & | < > $ * ? ;

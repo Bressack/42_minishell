@@ -1,0 +1,17 @@
+total 488
+drwxr-xr-x  16 tharchen  2019_paris     544 Feb 20 17:03 .
+drwxr-xr-x   4 tharchen  2019_paris     136 Feb 13 09:34 ..
+drwxr-xr-x  16 tharchen  2019_paris     544 Feb 20 17:03 .git
+-rw-r--r--   1 tharchen  2019_paris       0 Feb 20 17:03 JEsuis
+-rw-r--r--   1 tharchen  2019_paris    4125 Feb 20 16:30 Makefile
+drwxr-xr-x   3 tharchen  2019_paris     102 Feb 17 11:46 a.out.dSYM
+-rw-r--r--   1 tharchen  2019_paris    1539 Feb 18 10:53 grammar.y
+-rw-r--r--   1 tharchen  2019_paris    1584 Feb 18 10:53 idea.c
+drwxr-xr-x  11 tharchen  2019_paris     374 Feb 20 10:06 includes
+-rw-r--r--   1 tharchen  2019_paris    1868 Feb 16 17:48 mainbite.c
+-rwxr-xr-x   1 tharchen  2019_paris  140580 Feb 20 17:01 minishell
+drwxr-xr-x  17 tharchen  2019_paris     578 Feb 20 17:01 objs
+drwxr-xr-x  20 tharchen  2019_paris     680 Feb 20 16:30 srcs
+-rw-r--r--   1 tharchen  2019_paris       0 Feb 20 17:03 test
+-rw-r--r--   1 tharchen  2019_paris   77997 Feb 16 16:45 test.txt
+-rw-r--r--   1 tharchen  2019_paris    1435 Feb 18 15:33 tester.sh

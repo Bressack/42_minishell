@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 11:32:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/21 15:23:13 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int					lexer__isdefined_token(t_lexer *lex)
 	tmp = lexer__get_defined_token_with_index(i);
 	while (tmp.type != NONE) // until the end of the array
 	{
-		if (tmp.len > 0)
+		if (tmp.len > 0 && tmp.isunique)
 		{
 			j = 0;
 			while (tmp.value[j] && tmp.value[j] ==
@@ -112,9 +112,9 @@ t_token				lexer__search_defined_token(t_lexer *lex)
 	t_token			ret;
 	int				token_idx;
 
-	if (!lexer__istype(lex->current_char,
-		CHR_ERR|CHR_EOT|CHR_SPACE|CHR_PASS|CHR_WORD|CHR_SQUOTE|CHR_DQUOTE) &&
-		(token_idx = lexer__isdefined_token(lex)) != -1)
+	if (lexer__istype(lex->current_char, CHR_LPAREN | CHR_RPAREN |
+		CHR_REDIREC_IN | CHR_REDIREC_OUT | CHR_AND | CHR_PIPE | CHR_SEMICON)
+		&& (token_idx = lexer__isdefined_token(lex)) != -1)
 	{
 		ret = lexer__get_defined_token_with_index(token_idx);
 		lexer__advance(lex, ret.len);

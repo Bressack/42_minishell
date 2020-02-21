@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/22 01:31:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 16:29:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/21 16:55:28 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	*join(char **ret, char *arg, int *retsize)
 	ft_memcpy(tmp + *retsize, arg, size);
 	*retsize += size;
 	tmp[*retsize] = '\0';
-	free(*ret);
+	try_free_((void **)ret, _FL_);
 	*ret = tmp;
 	return (tmp);
 }

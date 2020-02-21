@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 16:15:30 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/21 16:56:05 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int		main(void)
 	line = NULL;
 	while (1)
 	{
-		dprintf(1, "<minishell-0.1>: ");
+		print_mem__();
+		dprintf(1, "%s> ", lexer__get_prompt(PROMPT_CASUAL));
 		res = get_next_line(0, &line);
 		if (!line)
 			continue ;

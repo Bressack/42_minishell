@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 00:38:51 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/15 13:47:30 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/21 16:57:34 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,14 @@
 # define _FL_ (char *)__FUNCTION__, (int)__LINE__
 # define MEM_USED_BY_DEBUG (size_t)(sizeof(t_debug_malloc) * __SIZE_MALLOC_DEBUG) + sizeof(t_debug_malloc) + (sizeof(size_t) * 2)
 # define GDM g_debug_malloc[i]
+typedef enum			e_opt_print_mem
+{
+	PRINT_ALL,
+	PRINT_ERR,
+	PRINT_DBLFREE,
+	PRINT_NULLFREE,
+	PRINT_OK,
+}						t_opt_print_mem;
 typedef struct			s_debug_malloc
 {
 	void				*mem;

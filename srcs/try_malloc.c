@@ -6,7 +6,7 @@
 /*   By: tarchen <tarchen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/14 12:09:53 by tarchen           #+#    #+#             */
-/*   Updated: 2020/02/15 13:45:24 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/21 16:58:23 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,13 @@
 t_debug_malloc	g_debug_malloc[__SIZE_MALLOC_DEBUG];
 size_t			g_i_malloc = 1;
 
-void		print_mem__(void)
+PRINT_ALL,
+PRINT_ERR,
+PRINT_DBLFREE,
+PRINT_NULLFREE,
+PRINT_OK
+
+void		print_mem__(int opt)
 {
 	int		total_node_leaked = 0;
 	int		total_mem_leaked = 0;
@@ -58,6 +64,8 @@ void		print_mem__(void)
 	dprintf(2, "-------------------------------------------------------------------------------------------------------------------------------\n");
 	for (i = 0; i < g_i_malloc; i++)
 	{
+		if (opt == PRINT_ERR && )
+			continue ;
 		dprintf(2, " %-15p || %-20.20s | %-6d | %-9d | %-9d || %-20.20s | %-6d | %-2d         || %s"C_RES"\n",
 			GDM.mem,
 			i ? GDM.f_malloc : "(null pointer)",
@@ -148,7 +156,7 @@ void		try_free_all(char *f, int l)
 	{
 		if (g_debug_malloc[i].mem && !g_debug_malloc[i].nb_free)
 		{
-			free(g_debug_malloc[i].mem);
+			try_free_(&g_debug_malloc[i].mem, _FL_);
 			g_debug_malloc[i].f_free = f;
 			g_debug_malloc[i].l_free = l;
 			g_debug_malloc[i].nb_free++;

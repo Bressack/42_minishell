@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/20 18:15:59 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/21 16:49:36 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -26,20 +26,12 @@
 
 NAME				=	minishell
 
-CC					=	gcc
+CC					=	clang
 
 FLAGS				=	\
 						-Wall -Wextra -Werror \
 						-O3 \
-						-g3 -fsanitize=address \
-
-FLAGS_WDEBUG		=	-Wanalyzer-malloc-leak \
-						-Wanalyzer-free-of-non-heap \
-						-Wanalyzer-double-free \
-						-Wanalyzer-null-argument \
-						-Wanalyzer-null-dereference \
-						-Wanalyzer-possible-null-argument \
-						-Wanalyzer-possible-null-dereference \
+						# -g3 -fsanitize=address \
 
 # *** PROJECT HEADER ********************************************************* #
 
