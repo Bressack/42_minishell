@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 01:27:07 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 02:51:18 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,6 @@ void	xecho(int fd, char **args)
 
 	if (ft_strcmp(*args, "-n") == 0 && (n = 1) == 1)
 		args++;
-/*
-** 	if (args > 2)
-** 		ft_fprintf(2, "cd: too many arguments\n");
-*/
 	while (*args != NULL)
 		ft_fprintf(fd, "%s", *args++);
 	if (n != 1)
@@ -57,14 +53,20 @@ void	xpwd(int fd, char **args)
 
 void	xexit()
 {
-	ft_fprintf(1, "exit");
+	ft_fprintf(1, "exit\n");
 	exit (0);
 }
 
 void	xcd(char *args)
 {
+	char *tmp;
+
 	if (args == NULL)
-		chdir("/Users/frlindh"); // get from env list
+	{
+		tmp = ret_env("HOME")
+		chdir(tmp[0]);
+		// chdir(*ret_env("HOME")); // get from env list | is too many args here?
+	}
 	else
 		if (chdir(args) != 0)
 			ft_fprintf(2, "%s\n", (strerror(errno)));
@@ -89,7 +91,7 @@ int		launch(char **args)
 	else
 	{
 		wpid = waitpid(pid, &status, WUNTRACTED);
-		while (!WIFEXITED(status) && !WIFSIGNALED(status)) // dooo smth killlll here?
+		while (!WIFEXITED(status) && !WIFSIGNALED(status)) // dooo smth, killlll here?
 			;
 	}
 	return (1);

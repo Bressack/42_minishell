@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:47:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 02:28:58 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 02:41:50 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 ** 		unset	=	list_remove_if
 ** 		env		=	print_env
 */
-
 
 typedef struct	s_env
 {
@@ -113,6 +112,19 @@ void	get_env(int ac, char **av, char **env)
 			prev->next = new;
 		prev = new;
 	}
+}
+
+void	env_destructor()
+{
+	if (g_env)
+	{
+		free(g_env->name);
+		while (g_env->value)
+			free(*g_env->value++)
+		free(g_env->value)
+	}
+	env_destructor(g_env->next);
+	free(g_env);
 }
 
 /*

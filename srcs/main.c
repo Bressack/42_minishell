@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/21 01:51:50 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 02:46:45 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,31 @@ char	*get_prompt(void)
 {
 /*
 ** 	check either PS1 or get cwd
+**	char **prompt = ret_env("PS1");
+**	return (prompt[0]);
 */
 
 	return ("mysh$ ");
+}
+
+void	ps_sig_handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		write(1, "\n", 1);
+		get_prompt();
+		signal(SIGINT, sig_handler);
+	}
+}
+
+void	sig_handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		write(1, "\n", 1);
+		get_prompt();
+		signal(SIGINT, sig_handler);
+	}
 }
 
 int		main(int ac, char **av, char **env)
@@ -67,8 +89,9 @@ int		main(int ac, char **av, char **env)
 	while (1)
 	{
 		ft_fprintf(1, "%s", get_prompt());
+		signal(SIGINT, sig_handler);
 		get_next_line(0, &lex);
-		if (!strcmp(lex.line, "exit"))
+		if (!strcmp(lex.line, "exit") || lex.line[0] < 0)
 			break ;
 		while (1)
 		{
