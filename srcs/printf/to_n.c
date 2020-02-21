@@ -6,11 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/08 11:43:30 by frlindh           #+#    #+#             */
-/*   Updated: 2019/12/09 11:33:45 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/21 13:44:26 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft.h"
+#include <printf.h>
 
 void	to_n(int printed, int *dir, va_list ap)
 {

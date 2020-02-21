@@ -6,11 +6,14 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:47:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 02:41:50 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 14:04:49 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include <minishell.h>
+#include "../includes/printf.h"
+int	ft_strcmp(char *s1, char *s2);
+
 
 /*
 ** So	export	=	list_push_back
@@ -20,8 +23,8 @@
 
 typedef struct	s_env
 {
-	const char		*name;
-	char			*value;
+	char			*name;
+	char			**value;
 	struct s_env	*next;
 }				t_env;
 
@@ -41,7 +44,7 @@ void	print_env()
 	}
 }
 
-char	**ret_env(const char *name)
+char	**ret_env(char *name)
 {
 	t_env *trav;
 
@@ -61,6 +64,7 @@ char	*ft_copsep(char **e, char sep)
 	char	*ret;
 
 	i = 0;
+	ft_fprintf(1, "E: [%s]\n", *e);
 	while (e && e[0][i] && e[0][i] != '\n' && e[0][i] != sep)
 		i++;
 	if (!(ret = (char *)malloc(i + 1)))
@@ -79,16 +83,17 @@ void	set_env(t_env *e, char *env)
 
 	i = -1;
 	c = 0;
+	ft_fprintf(1, "%s\n", env);
 	while (env && env[++i] && env[i] != '\n')
 		if (env[i] == '=' || env[i] == ':')
 			c++;
-	t_env->name = ft_copsep(&env, '=');
-	if (!(t_env->value = (char **)malloc(sizeof(char *) * c)))
+	e->name = ft_copsep(&env, '=');
+	if (!(e->value = (char **)malloc((c + 1) * sizeof(char *))))
 		return ;
 	i = 0;
-	while (env && *env)
-		t_env->value[i++] = ft_copsep(&env, ':');
-	t_env->value[i] = NULL;
+	while (env && *env && i <= c)
+		e->value[i++] = ft_copsep(&env, ':');
+	e->value[i] = NULL;
 }
 
 void	get_env(int ac, char **av, char **env)
@@ -106,7 +111,7 @@ void	get_env(int ac, char **av, char **env)
 		if (!(new = (t_env *)malloc(sizeof(t_env))))
 			return ;
 		set_env(new, env[i]);
-		if (prev == NULL) // must be more elegant way?
+		if (prev == NULL && (new->next = NULL) == NULL) // must be more elegant way?
 			g_env = new;
 		else
 			prev->next = new;
@@ -120,8 +125,8 @@ void	env_destructor()
 	{
 		free(g_env->name);
 		while (g_env->value)
-			free(*g_env->value++)
-		free(g_env->value)
+			free(*g_env->value++);
+		free(g_env->value);
 	}
 	env_destructor(g_env->next);
 	free(g_env);
@@ -134,5 +139,5 @@ void	env_destructor()
 int		main(int ac, char **av, char **env)
 {
 	get_env(ac, av, env);
-	print_env();
+	// print_env();
 }

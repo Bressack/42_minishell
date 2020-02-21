@@ -6,11 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/03 12:05:29 by frlindh           #+#    #+#             */
-/*   Updated: 2019/12/09 12:35:10 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/21 13:44:40 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft.h"
+#include <printf.h>
 
 static void			ft_itoa_b(char *addr, unsigned long long nbr, int *dir)
 {

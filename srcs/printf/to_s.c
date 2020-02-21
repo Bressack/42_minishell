@@ -6,11 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/03 12:06:13 by frlindh           #+#    #+#             */
-/*   Updated: 2019/12/09 11:53:33 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/21 13:44:47 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft.h"
+#include <printf.h>
 
 int			to_s(char *buf, int *dir, va_list ap)
 {

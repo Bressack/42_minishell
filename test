@@ -1,12 +1,8 @@
 Makefile
-a.out
-a.out.dSYM
 grammar.y
 idea.c
 includes
-mainbite.c
-minishell
-objs
 srcs
 test
 test.txt
+trash

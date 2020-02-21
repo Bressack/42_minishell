@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 02:51:18 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 13:32:41 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int		execute(const char **args)
 	i = -1;
 	while (++i < BUILTINS)
 	{
-		if (strcmp(args[0], g_builtins[i].name) == 0)
+		if (ft_strcmp(args[0], g_builtins[i].name) == 0)
 			return (g_builtins[i].f)(args[1]);
 	}
 	return launch(args);

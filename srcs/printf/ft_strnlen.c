@@ -6,11 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/03 12:08:42 by frlindh           #+#    #+#             */
-/*   Updated: 2019/11/06 16:28:49 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/21 13:44:31 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft.h"
+#include <printf.h>
 
 int		ft_strnlen(char *str, int n)
 {

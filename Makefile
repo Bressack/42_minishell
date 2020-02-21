@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/17 03:29:02 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/21 13:48:53 by fredrikalindh    ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -44,6 +44,11 @@ HEADER				=	\
 						get_next_line.h \
 						minishell.h \
 						try_malloc.h \
+						printf.h
+
+D_PRINTF			=	/printf/
+S_PRINTF			=	ft_printf.c ft_strnlen.c skip_atoi.c to_c.c to_s.c to_nbr.c to_n.c
+PRINTF				=	$(addprefix $(D_PRINTF), $(S_PRINTF));
 
 # *** SRCS ******************************************************************* #
 
@@ -60,8 +65,11 @@ SRCS_LIST			=	\
 						get_next_line.c \
 						main.c \
 						try_malloc.c \
+						$(PRINTF)
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
+
+
 
 # *** OBJS ******************************************************************* #
 
