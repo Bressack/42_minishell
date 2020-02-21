@@ -6,48 +6,12 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/21 13:50:04 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 16:32:28 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-/*
-** int		main(void)
-** {
-** 	char			*line;
-** 	int				res;
-** 	t_lexer			lex;
-** 	t_token			current_token;
-**
-** 	while (1)
-** 	{
-** 		dprintf(1, ">: ");
-** 		res = get_next_line(1, &line); // why
-** 		if (!strcmp(line, "exit"))
-** 			break ;
-** 		lex = lexer__new(line);
-** 		while (1)
-** 		{
-** 			current_token = lexer__get_next_token(&lex);
-** 			if (current_token.type == ERR)
-** 				lexer__error(&lex);
-** 			token__print(current_token);
-** 			token__del(current_token);
-** 			if (current_token.type == EOT || current_token.type == ERR || current_token.type == NONE)
-** 				break ;
-** 		}
-** 		try_free_((void **)&line, _FL_);
-** 	}
-** 	try_free_((void **)&line, _FL_);
-** 	return (0);
-** }
-*/
-
-/*
-** MAIN: purpose: one loop to keep program running, signal handling calling
-** to get command, lexer, parser, execution and freeing.
-*/
 
 char	*get_prompt(void)
 {
@@ -60,17 +24,17 @@ char	*get_prompt(void)
 	return ("mysh$ ");
 }
 
-void	ps_sig_handler(int signo)
+void	sig_handler(int signo)
 {
 	if (signo == SIGINT)
 	{
 		write(1, "\n", 1);
-		get_prompt();
+		ft_fprintf(1, "%s", get_prompt());
 		signal(SIGINT, sig_handler);
 	}
 }
 
-void	sig_handler(int signo)
+void	sigq_handler(int signo)
 {
 	if (signo == SIGINT)
 	{
@@ -85,14 +49,16 @@ int		main(int ac, char **av, char **env)
 	t_lexer		lex;
 	t_token		current_token;
 
-	get_env(ac, av, env); // void inside...
+	get_env(ac, av, env);
 	while (1)
 	{
 		ft_fprintf(1, "%s", get_prompt());
-		// signal(SIGINT, sig_handler);
+		signal(SIGINT, sig_handler);
 		get_next_line(0, &lex);
-		if (!strcmp(lex.line, "exit") || lex.line[0] < 0)
+		if (!ft_strcmp(lex.line, "exit") || (lex.line[0] <= 0 && ft_fprintf(1, "exit\n")))
 			break ;
+		if (!ft_strcmp(lex.line, "env"))
+			print_env();
 		while (1)
 		{
 			current_token = lexer__get_next_token(&lex);

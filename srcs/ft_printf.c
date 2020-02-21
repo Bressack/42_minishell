@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 10:37:08 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 13:44:30 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 16:08:50 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	ft_cont(char *buf, const char **format, va_list ap, int i)
 	int		dir[11];
 	int		j;
 
-	while (**format && i < BUFF_SIZE - 65)
+	while (**format && i < PF_BUFF_SIZE - 65)
 	{
 		if ((j = 11) == 11 && **format != '%')
 			buf[i++] = *(*format)++;
@@ -98,7 +98,7 @@ static int	ft_cont(char *buf, const char **format, va_list ap, int i)
 
 // int			ft_printf(const char *format, ...)
 // {
-// 	char	buf[BUFF_SIZE];
+// 	char	buf[PF_BUFF_SIZE];
 // 	va_list	ap;
 // 	int		printed;
 // 	int		last;
@@ -119,7 +119,7 @@ static int	ft_cont(char *buf, const char **format, va_list ap, int i)
 
 int			ft_fprintf(int fd, const char *format, ...)
 {
-	char	buf[BUFF_SIZE];
+	char	buf[PF_BUFF_SIZE];
 	va_list	ap;
 	int		printed;
 	int		last;

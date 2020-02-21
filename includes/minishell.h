@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:20:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/21 13:49:46 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 15:39:24 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,6 @@
 # include <class__lexer.h>
 # include <get_next_line.h>
 # include <printf.h>
+# include <env.h>
 
 #endif
