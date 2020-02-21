@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/15 11:20:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 22:09:58 by fredrikalindh    ###   ########.fr       */
+/*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
+/*   Updated: 2020/02/21 02:20:44 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-# include <libc.h>
-# include <color_shell.h>
-# include <try_malloc.h>
-# include <utils.h>
-# include <class__token.h>
-# include <class__lexer.h>
-# include <get_next_line.h>
+#ifndef ENV_H
+# define ENV_H
+
+typedef struct	s_env
+{
+	const char		*name;
+	char			*value;
+	struct s_env	*next;
+}				t_env;
+
+t_env	*g_env;
 
 #endif

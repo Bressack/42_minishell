@@ -3,91 +3,102 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/13 08:56:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/17 12:17:32 by tharchen         ###   ########.fr       */
+/*   Created: 2019/10/22 09:54:38 by fredrika          #+#    #+#             */
+/*   Updated: 2020/02/20 22:25:35 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static int		gnl_u(char *s1, char **s2, char *s3, int cc)
+static int	ft_fullen(char *str, int flag)
 {
-	int			i;
-
-	i = -1;
-	if (!s2 && !s3 && cc == -1)
+	if (flag == 1)
 	{
-		while (s1 && s1[++i])
-			if (s1[i] == '\n')
-				return (i);
-		return (-1);
+		while (str != NULL && *str != '\0')
+		{
+			if (*str == '\n')
+				return (1);
+			str++;
+		}
+		return (0);
 	}
-	else if (!s3 && cc == -1)
-	{
-		while (s1 && s1[++i])
-			;
-		return (i == -1 ? 0 : i);
-	}
-	if (cc)
-		while (cc == -1 ? s3[++i] : ++i < cc)
-			s1[i] = s3[i];
-	s1[i == -1 ? 0 : i] = 0;
-	s2 ? *s2 = s1 : 0;
-	return (0);
+	else
+		while (str != NULL && str[flag])
+			flag++;
+	return (flag);
 }
 
-static int		fill_save(int *fd, char **save)
+static char	*ft_strcat(char *file, char *buf)
+{
+	char	*new;
+	int		i;
+
+	if (!(new = (char *)malloc(ft_fullen(file, 0) + ft_fullen(buf, 0) + 1)))
+		return (NULL);
+	i = 0;
+	while (file != NULL && file[i])
+	{
+		new[i] = file[i];
+		i++;
+	}
+	free(file);
+	file = NULL;
+	while (buf != NULL && *buf != '\0')
+		new[i++] = *buf++;
+	new[i] = '\0';
+	return (new);
+}
+
+static char	*ft_cpyline(char *file, int i)
+{
+	int		j;
+	char	*line;
+	char	*temp;
+
+	while (file && file[i] != '\n' && file[i] != '\0')
+		i++;
+	if (!(line = (char *)malloc(i + 1)))
+		return (NULL);
+	i = -1;
+	while (file && file[++i] != '\n' && file[i] != '\0')
+		line[i] = file[i];
+	line[i] = '\0';
+	if ((temp = NULL) == NULL && file && file[i++] != '\0')
+	{
+		if (!(temp = (char *)malloc(ft_fullen(&file[i], 0) + 1)))
+			return (NULL);
+		j = 0;
+		while (file[i] != '\0')
+			temp[j++] = file[i++];
+		temp[j] = '\0';
+	}
+	free(file);
+	file = temp;
+	return (line);
+}
+
+int			get_next_line(int fd, t_lexer *l)
 {
 	char		buf[GNL_BUFFER_SIZE + 1];
-	char		*tmp;
-	int			len[2];
+	int			ret;
+	char		*file;
 
-	len[GNL_LEN] = 0;
-	len[GNL_RET] = 0;
-	while (1)
-	{
-		if (gnl_u(*save, NULL, NULL, -1) != -1)
-			return (gnl_u(*save, NULL, NULL, -1));
-		len[GNL_LEN] = gnl_u(*save, (char **)1, NULL, -1);
-		if ((len[GNL_RET] = read(*fd, buf, GNL_BUFFER_SIZE)) < 0)
-			return (-1);
-		if (!len[GNL_RET] && (*fd = -1))
-			return (len[GNL_LEN]);
-		buf[len[GNL_RET]] = 0;
-		tmp = try_malloc((len[GNL_RET] + len[GNL_LEN] + 1), NULL, 0);
-		gnl_u(tmp, NULL, *save, len[GNL_LEN]);
-		gnl_u(tmp + len[GNL_LEN], NULL, buf, len[GNL_RET]);
-		try_free_((void **)save, NULL, 0);
-		*save = tmp;
-	}
-}
-
-int				get_next_line(int fd, char **line)
-{
-	static char	*save = NULL;
-	char		*tmp[2];
-	size_t		pos_nl;
-
-	if (fd < 0 || !line || (pos_nl = fill_save(&fd, &save)) == -1)
-	{
-		try_free_((void **)&save, NULL, 0);
+	file = NULL;
+	if (fd < 0 || GNL_BUFFER_SIZE < 1)
 		return (-1);
-	}
-	*line = try_malloc(pos_nl + 1, NULL, 0);
-	if (!save)
-		return (0);
-	gnl_u(*line, NULL, save, pos_nl);
-	if (gnl_u(save, (char **)1, NULL, -1) - pos_nl)
+	ret = -1;
+	while (ft_fullen(file, 1) == 0 && ret != 0)
 	{
-		tmp[0] = try_malloc(gnl_u(save,
-			(char **)1, NULL, -1) - pos_nl + 1, NULL, 0);
-		gnl_u(tmp[0], &tmp[1], save + pos_nl + 1, -1);
-		try_free_((void **)&save, NULL, 0);
-		save = tmp[1];
+		if ((ret = read(fd, buf, GNL_BUFFER_SIZE)) == -1)
+			return (-1);
+		buf[ret] = '\0';
+		file = ft_strcat(file, buf);
 	}
-	if (fd == -1)
-		try_free_((void **)&save, NULL, 0);
-	return (fd == -1 ? 0 : 1);
+	l->line = ft_cpyline(file, 0);
+	l->len_line = ft_strlen(l->line);
+	l->pos = 0;
+	l->current_char = l->line[l->pos];
+	return (ret == 0 ? 0 : 1);
 }
