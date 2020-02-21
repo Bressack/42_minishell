@@ -1,16 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env2.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:47:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 18:36:16 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 17:21:58 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+// #include <minishell.h>
+#include "../includes/printf.h"
+int	ft_strcmp(char *s1, char *s2);
+
+
+/*
+** So	export	=	list_push_back
+** 		unset	=	list_remove_if
+** 		env		=	print_env
+*/
+
+typedef struct	s_env
+{
+	char			*name;
+	char			**value;
+	struct s_env	*next;
+}				t_env;
+
+t_env	*g_env;
 
 /*
 ** PRINTS ENV VARS, MEANING THE SAME AS ENV BUILT-IN
@@ -22,13 +40,12 @@ void	print_env()
 	int		i;
 
 	trav = g_env;
-	while (trav)
+	while (trav != NULL)
 	{
+		ft_fprintf(1, "%s=%s", trav->name, trav->value[0]);
 		i = 0;
-		if (trav->value && trav->value[i])
-			ft_fprintf(1, "%s=%s", trav->name, trav->value[i++]);
-		while (trav->value && trav->value[i])
-			ft_fprintf(1, ":%s", trav->value[i++]);
+		while (trav->value && trav->value[++i])
+			ft_fprintf(1, ":%s", trav->value[i]);
 		write(1, "\n", 1);
 		trav = trav->next;
 	}
@@ -135,4 +152,17 @@ void	env_destructor(t_env *f)
 		env_destructor(f->next);
 		free(f);
 	}
+}
+
+/*
+** TEST TOMORROW
+*/
+
+int		main(int ac, char **av, char **env)
+{
+	get_env(ac, av, env);
+	print_env();
+	ft_fprintf(1, "PATH=%s\n", (ret_env("PATH"))[2]);
+	ft_fprintf(1, "HOME=%s\n", *(ret_env("HOME")));
+	env_destructor(g_env);
 }

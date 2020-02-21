@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 09:54:38 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/20 22:25:35 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 18:54:38 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,14 @@ int			get_next_line(int fd, t_lexer *l)
 	if (fd < 0 || GNL_BUFFER_SIZE < 1)
 		return (-1);
 	ret = -1;
-	while (ft_fullen(file, 1) == 0 && ret != 0)
+	while (ft_fullen(file, 1) == 0)
 	{
 		if ((ret = read(fd, buf, GNL_BUFFER_SIZE)) == -1)
 			return (-1);
 		buf[ret] = '\0';
 		file = ft_strcat(file, buf);
+		if (file[0] == 0)
+			break ; 
 	}
 	l->line = ft_cpyline(file, 0);
 	l->len_line = ft_strlen(l->line);

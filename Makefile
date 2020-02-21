@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/21 16:10:53 by frlindh          ###   ########.fr        #
+#    Updated: 2020/02/21 19:10:41 by fredrikalindh    ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -28,7 +28,7 @@ NAME				=	minishell
 
 CC					=	gcc
 
-FLAGS				=	-Wall -Wextra -Werror -O3 -g3 -fsanitize=address
+FLAGS				=	-Wall -Wextra -Werror # -O3 -g3 -fsanitize=address
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -47,6 +47,7 @@ HEADER				=	\
 						printf.h \
 						env.h \
 						utils.h \
+						commands.h \
 
 PRINTF			=	\
 						ft_printf.c \
@@ -75,6 +76,9 @@ SRCS_LIST			=	\
 						main.c \
 						try_malloc.c \
 						env.c \
+						unset.c \
+						export.c \
+						commands.c \
 						$(PRINTF)
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))

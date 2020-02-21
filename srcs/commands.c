@@ -6,116 +6,93 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 13:32:41 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 19:41:15 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include ""
+#include <minishell.h>
 
-#define BUILTINS 7
-
-typedef struct		s_bi
-{
-	char	*name;
-	void	(f*)(const char	*arg);
-}					t_bi;
-
-t_bi		g_builtins[BUILTINS] =
-{
-	{"echo", &bi_echo},
-	{"cd", &bi_cd},
-	{"pwd", &bi_pwd},
-	{"exit", &bi_exit}, // or just immidiately?
-	{"export", &bi_export},
-	{"unset", &bi_unset},
-	{"env", &bi_env}
-};
-
-void	xecho(int fd, char **args)
+void	xecho(char *args)
 {
 	int n;
 
-	if (ft_strcmp(*args, "-n") == 0 && (n = 1) == 1)
-		args++;
-	while (*args != NULL)
-		ft_fprintf(fd, "%s", *args++);
+	n = 0;
+	if (ft_strncmp(args, "-n", 2) == 0 && (n = 1) == 1)
+		args = args + 3;
+	ft_fprintf(1, "%s", args);
 	if (n != 1)
-		ft_fprintf(fd, "\n");
+		ft_fprintf(1, "\n");
 }
 
-void	xpwd(int fd, char **args)
+void	xpwd(char *args)
 {
+	(void)args;
 	char	cwd[1024];
 
 	getcwd(cwd, 1024);
-	ft_fprintf(fd, "%s\n", cwd);
+	ft_fprintf(1, "%s\n", cwd);
 }
 
-void	xexit()
+void	xexit(char *args)
 {
+	(void)args;
 	ft_fprintf(1, "exit\n");
 	exit (0);
 }
 
 void	xcd(char *args)
 {
-	char *tmp;
-
 	if (args == NULL)
-	{
-		tmp = ret_env("HOME")
-		chdir(tmp[0]);
-		// chdir(*ret_env("HOME")); // get from env list | is too many args here?
-	}
-	else
-		if (chdir(args) != 0)
-			ft_fprintf(2, "%s\n", (strerror(errno)));
+		chdir(*(ret_env("HOME"))); // chdir(*ret_env("HOME")); // get from env list | is too many args here?
+	else if (chdir(args) != 0)
+		ft_fprintf(2, "%s\n", (strerror(errno)));
 }
 
-int		launch(char **args)
-{
-	pid_t	pid;
-	pid_t	wpid;
-	int		status;
-
-	pid = fork();
-	if (pid == 0) //child
-	{
-		signal(SIGINT, SIG_DFL);
-		if (execve(args[0], args) == -1)
-		 	strerror(errno);
-		exit(-1);
-	}
-	else if (pid < 0)
-		strerror(errno);
-	else
-	{
-		wpid = waitpid(pid, &status, WUNTRACTED);
-		while (!WIFEXITED(status) && !WIFSIGNALED(status)) // dooo smth, killlll here?
-			;
-	}
-	return (1);
-}
-
-int		execute(const char **args)
-{
-	int i;
-
-	i = -1;
-	while (++i < BUILTINS)
-	{
-		if (ft_strcmp(args[0], g_builtins[i].name) == 0)
-			return (g_builtins[i].f)(args[1]);
-	}
-	return launch(args);
-}
-
-int		main(int ac, char **av, char **ep)
-{
-	if (ac < 1)
-		return (1);
-	if (strcmp(av[1], "cd"))
-		ft_cd(av);
-	else
-		execute(av);
-}
+/*
+** int		launch(char **args)
+** {
+** 	pid_t	pid;
+** 	pid_t	wpid;
+** 	int		status;
+**
+** 	pid = fork();
+** 	if (pid == 0) //child
+** 	{
+** 		signal(SIGINT, SIG_DFL);
+** 		if (execve(args[0], args) == -1)
+** 		 	strerror(errno);
+** 		exit(-1);
+** 	}
+** 	else if (pid < 0)
+** 		strerror(errno);
+** 	else
+** 	{
+** 		wpid = waitpid(pid, &status, WUNTRACTED);
+** 		while (!WIFEXITED(status) && !WIFSIGNALED(status)) // dooo smth, killlll
+**< here?
+** 			;
+** 	}
+** 	return (1);
+** }
+**
+** int		execute(const char **args)
+** {
+** 	int i;
+**
+** 	i = -1;
+** 	while (++i < BUILTINS)
+** 		if (ft_strcmp(args[0], g_builtins[i].name) == 0)
+** 			return (g_builtins[i].f)(args[1]);
+** 	return launch(args);
+** }
+**
+** int		main(int ac, char **av, char **ep)
+** {
+** 	if (ac < 1)
+** 		return (1);
+** 	if (strcmp(av[1], "cd"))
+** 		ft_cd(av);
+** 	else
+** 		execute(av);
+** }
+*/

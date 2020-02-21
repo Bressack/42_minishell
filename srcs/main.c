@@ -6,12 +6,22 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/21 16:32:28 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/21 19:22:49 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+t_bi		g_builtins[BUILTINS] =
+{
+	{"echo", 4, &xecho},
+	{"cd", 2, &xcd},
+	{"pwd", 3, &xpwd},
+	{"exit", 4, &xexit}, // or just immidiately?
+	{"export", 6, &export},
+	{"unset", 5, &unset},
+	{"env", 3, &print_env}
+};
 
 char	*get_prompt(void)
 {
@@ -47,7 +57,7 @@ void	sigq_handler(int signo)
 int		main(int ac, char **av, char **env)
 {
 	t_lexer		lex;
-	t_token		current_token;
+	// t_token		current_token;
 
 	get_env(ac, av, env);
 	while (1)
@@ -57,18 +67,22 @@ int		main(int ac, char **av, char **env)
 		get_next_line(0, &lex);
 		if (!ft_strcmp(lex.line, "exit") || (lex.line[0] <= 0 && ft_fprintf(1, "exit\n")))
 			break ;
-		if (!ft_strcmp(lex.line, "env"))
-			print_env();
-		while (1)
-		{
-			current_token = lexer__get_next_token(&lex);
-			if (current_token.type == ERR)
-				lexer__error(&lex);
-			token__print(current_token);
-			token__del(current_token);
-			if (current_token.type == EOT || current_token.type == ERR || current_token.type == NONE)
-				break ;
-		}
+		ac = -1;
+		while (++ac < BUILTINS)
+			if (ft_strncmp(lex.line, g_builtins[ac].name, g_builtins[ac].len) == 0)
+				g_builtins[ac].f(lex.line + g_builtins[ac].len + 1);
+/*
+** 		while (1)
+** 		{
+** 			current_token = lexer__get_next_token(&lex);
+** 			if (current_token.type == ERR)
+** 				lexer__error(&lex);
+** 			token__print(current_token);
+** 			token__del(current_token);
+** 			if (current_token.type == EOT || current_token.type == ERR || current_token.type == NONE)
+** 				break ;
+** 		}
+*/
 		try_free_((void **)&lex.line, _FL_);
 	}
 	try_free_((void **)&lex.line, _FL_);

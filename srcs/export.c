@@ -1,34 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 18:13:54 by fredrikalindh    ###   ########.fr       */
+/*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
+/*   Updated: 2020/02/21 18:27:28 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
+#include <minishell.h>
 
-typedef struct	s_env
+void	export(char *val)
 {
-	char			*name;
-	char			**value;
-	struct s_env	*next;
-}				t_env;
+	t_env	*trav;
+	t_env	*new;
 
-t_env	*g_env;
-
-void	print_env();
-char	**ret_env(char *name);
-char	*ft_copsep(char **e, char sep);
-void	set_env(t_env *e, char *env);
-void	get_env(int ac, char **av, char **env);
-void	env_destructor(t_env *f);
-void	export(char *val);
-void	unset(char *name);
-
-#endif
+	trav = g_env;
+	while (trav && trav->next)
+		trav = trav->next;
+	if (!(new = (t_env *)malloc(sizeof(t_env))))
+		return ;
+	set_env(new, val);
+	new->next = trav->next;
+	trav->next = new;
+}

@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 18:13:54 by fredrikalindh    ###   ########.fr       */
+/*   Created: 2020/02/21 18:27:33 by fredrika          #+#    #+#             */
+/*   Updated: 2020/02/21 19:38:24 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
+#include <minishell.h>
 
-typedef struct	s_env
+void	unset(char *name)
 {
-	char			*name;
-	char			**value;
-	struct s_env	*next;
-}				t_env;
+	t_env	**indir;
+	t_env	*f;
+	int		i;
 
-t_env	*g_env;
-
-void	print_env();
-char	**ret_env(char *name);
-char	*ft_copsep(char **e, char sep);
-void	set_env(t_env *e, char *env);
-void	get_env(int ac, char **av, char **env);
-void	env_destructor(t_env *f);
-void	export(char *val);
-void	unset(char *name);
-
-#endif
+	indir = &g_env;
+	while (*indir && ft_strcmp(name, (*indir)->name))
+		indir = &(*indir)->next;
+	if (*indir == NULL)
+		return ;
+	f = *indir;
+	*indir = f->next;
+	free(f->name);
+	i = -1;
+	while (f->value[++i])
+		free(f->value[i]);
+	free(f->value);
+	free(f);
+}

@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   commands.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 18:13:54 by fredrikalindh    ###   ########.fr       */
+/*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
+/*   Updated: 2020/02/21 19:22:40 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
+#ifndef COMMANDS_H
+# define COMMANDS_H
 
-typedef struct	s_env
+#include <minishell.h>
+#define BUILTINS 7
+
+void	xecho(char *args);
+void	xpwd(char *args);
+void	xexit(char *args);
+void	xcd(char *args);
+
+typedef struct		s_bi
 {
-	char			*name;
-	char			**value;
-	struct s_env	*next;
-}				t_env;
-
-t_env	*g_env;
-
-void	print_env();
-char	**ret_env(char *name);
-char	*ft_copsep(char **e, char sep);
-void	set_env(t_env *e, char *env);
-void	get_env(int ac, char **av, char **env);
-void	env_destructor(t_env *f);
-void	export(char *val);
-void	unset(char *name);
+	char	*name;
+	int		len;
+	void	(*f)(char	*args); //change to const ?
+}					t_bi;
 
 #endif
