@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:47:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 18:36:16 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 20:31:08 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,10 @@ void	get_env(int ac, char **av, char **env)
 			prev->next = new;
 		prev = new;
 	}
+	// export(ft_strcat("SHELL=", ft_strcat(*ret_env("PWD"), "minishell"))); //pwd
 }
 
-void	env_destructor(t_env *f)
+void	env_destructor(t_env *f, int flag)
 {
 	int		i;
 
@@ -132,7 +133,10 @@ void	env_destructor(t_env *f)
 		while (f->value[++i])
 			free(f->value[i]);
 		free(f->value);
-		env_destructor(f->next);
-		free(f);
+		if (flag == 1)
+		{
+			env_destructor(f->next, 1);
+			free(f);
+		}
 	}
 }

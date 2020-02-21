@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 19:41:15 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/21 20:41:51 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,12 @@ void	xecho(char *args)
 	int n;
 
 	n = 0;
-	if (ft_strncmp(args, "-n", 2) == 0 && (n = 1) == 1)
-		args = args + 3;
-	ft_fprintf(1, "%s", args);
+	if (args && *args != '\0')
+	{
+		if (ft_strncmp(args, "-n", 2) == 0 && (n = 1) == 1)
+			args = args + 3;
+		ft_fprintf(1, "%s", args);
+	}
 	if (n != 1)
 		ft_fprintf(1, "\n");
 }
@@ -42,7 +45,7 @@ void	xexit(char *args)
 
 void	xcd(char *args)
 {
-	if (args == NULL)
+	if (args == NULL || *args == '\0')
 		chdir(*(ret_env("HOME"))); // chdir(*ret_env("HOME")); // get from env list | is too many args here?
 	else if (chdir(args) != 0)
 		ft_fprintf(2, "%s\n", (strerror(errno)));
