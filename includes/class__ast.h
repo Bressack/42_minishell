@@ -1,23 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   class__ast.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/25 11:48:44 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 16:25:44 by tharchen         ###   ########.fr       */
+/*   Created: 2020/02/18 00:40:38 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/18 11:07:25 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
-
-int		ft_strlen(const char *s)
+#ifndef CLASS__AST_H
+# define CLASS__AST_H
+typedef struct		s_ast
 {
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
+	t_lex			lex;
+	t_node			*tree;
+}					t_ast;
+#endif

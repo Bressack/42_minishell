@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/22 00:36:59 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/22 02:08:27 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -27,7 +27,7 @@
 
 NAME				=	minishell
 
-CC					=	gcc
+CC					=	clang
 
 FLAGS				=	\
 						-Wall -Wextra -Werror \
@@ -68,17 +68,22 @@ PRINTF			=	\
 SRCS_DIR			=	./srcs/
 
 SRCS_LIST			=	\
+						main.c \
 						class__lexer.c \
+						class__lexer__defined_tokens.c \
 						class__token.c \
-						defined_tokens.c \
+						class__token__global_arrays.c \
+						ft_memcpy.c \
+						ft_strdup.c \
+						ft_strjoin.c \
 						ft_strlen.c \
-						ft_strncpy.c \
 						ft_strncmp.c \
 						ft_strcmp.c \
+						ft_strncpy.c \
 						ft_strsub.c \
 						get_next_line.c \
-						main.c \
 						try_malloc.c \
+						ft_strcpy.c \
 						env.c \
 						unset.c \
 						export.c \

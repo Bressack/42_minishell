@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/25 11:48:44 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 16:25:44 by tharchen         ###   ########.fr       */
+/*   Created: 2019/10/09 09:43:42 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/20 16:54:39 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int		ft_strlen(const char *s)
+char	*ft_strcpy(char *s1, const char *s2)
 {
-	int	i;
+	int i;
 
 	i = 0;
-	while (s[i])
+	if (s2 == NULL)
+		return (NULL);
+	while (s2[i] != '\0')
+	{
+		s1[i] = s2[i];
 		i++;
-	return (i);
+	}
+	s1[i] = '\0';
+	return (s1);
 }

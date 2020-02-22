@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   class__ast.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/25 11:48:44 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 16:25:44 by tharchen         ###   ########.fr       */
+/*   Created: 2020/02/18 00:31:14 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/18 14:16:31 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int		ft_strlen(const char *s)
+t_ast		ast__new(t_lex lex)
 {
-	int	i;
+	t_ast	new;
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+	new.lex = lex;
+	new.tree = NULL;
+	return (new);
+}
+
+void		ast__del(t_ast ast)
+{
+	node__del(ast.tree);
+}
+
+void		ast__print()
+{
+	// TODO
 }

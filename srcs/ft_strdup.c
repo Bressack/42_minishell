@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/25 11:48:44 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 16:25:44 by tharchen         ###   ########.fr       */
+/*   Created: 2019/09/17 17:11:58 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/20 16:27:43 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int		ft_strlen(const char *s)
+char	*ft_strdup(char *src)
 {
-	int	i;
+	char	*dest;
+	size_t	len;
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+	if (!src)
+		return (NULL);
+	len = ft_strlen(src) + 1;
+	if (!(dest = try_malloc(sizeof(char) * len, _FL_)))
+		return (NULL);
+	ft_strcpy(dest, src);
+	return (dest);
 }

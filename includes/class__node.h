@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   class__node.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/25 11:48:44 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/20 16:25:44 by tharchen         ###   ########.fr       */
+/*   Created: 2020/02/18 00:39:52 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/18 11:07:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
-
-int		ft_strlen(const char *s)
+#ifndef CLASS__NODE_H
+# define CLASS__NODE_H
+typedef struct		s_node
 {
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
+	struct s_node	*right;
+	struct s_node	*left;
+	struct s_node	*parent;
+	t_token			token;
+}					t_node;
+#endif
