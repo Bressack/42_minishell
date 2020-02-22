@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/21 15:41:09 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 04:03:09 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,17 +69,16 @@ typedef enum		e_char_type
 }					t_char_type;
 extern t_char_type	g_token_ascii_table[255];
 char				*lexer__get_prompt(int prompt_type);
-t_lexer				lexer__new(char *line);					// init the t_lexer struct needed by all metodes of the lexer class
-void				lexer__error(t_lexer *lex);				// write errors message in the stdout
-int					lexer__advance(t_lexer *lex, int n);	// go to the next character in the line and checks potential errors
+t_lexer				lexer__new(char *line);
+inline void			lexer__error(t_lexer *lex);
+inline int			lexer__istype(char c, t_char_type type);
 void				lexer__set_start_pos(t_lexer *lex, int new_pos);
-void				lexer__skip_whitespace(t_lexer *lex);	// skip all whitespaces listed by the grammar from line
-t_token				lexer__get_next_token(t_lexer *lex);	// get the next token from line and return it into a token node
-int					lexer__istype(char c, t_char_type type);
+int					lexer__advance(t_lexer *lex, int n);
+void				lexer__advence_foreach(t_lexer *lex, t_char_type type);
+void				lexer__refill_line(t_lexer *lex, int join_nl, int prompt);
+void				lexer__get_word_quote_token(t_lexer *lex, t_char_type ct);
 t_token				lexer__get_word_token(t_lexer *lex);
-t_token				lexer__get_defined_token(t_token_type type);
-int					lexer__isdefined_token(t_lexer *lex);
-t_token				lexer__search_defined_token(t_lexer *lex);
+t_token				lexer__get_next_token(t_lexer *lex);
 
 char				*lexer__debug(t_lexer *lex, int lever, int opt);
 #endif
