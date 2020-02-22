@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-Makefile
-grammar.y
-idea.c
-includes
-srcs
-test
-test.txt
-trash
-=======
 total 488
 drwxr-xr-x  16 tharchen  2019_paris     544 Feb 20 17:03 .
 drwxr-xr-x   4 tharchen  2019_paris     136 Feb 13 09:34 ..
@@ -25,4 +15,3 @@ drwxr-xr-x  20 tharchen  2019_paris     680 Feb 20 16:30 srcs
 -rw-r--r--   1 tharchen  2019_paris       0 Feb 20 17:03 test
 -rw-r--r--   1 tharchen  2019_paris   77997 Feb 16 16:45 test.txt
 -rw-r--r--   1 tharchen  2019_paris    1435 Feb 18 15:33 tester.sh
->>>>>>> theo

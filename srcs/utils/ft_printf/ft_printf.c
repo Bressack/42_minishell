@@ -28,13 +28,13 @@ static void	ft_specifier(int *dir, const char **format, int i, va_list ap)
 	while (**format == 'h' || **format == 'l')
 	{
 		if (**format == 'l')
-			dir[LONG]++;
+			dir[PRINTF_LONG]++;
 		if (**format == 'h')
-			dir[SHORT]++;
+			dir[PRINTF_SHORT]++;
 		(*format)++;
 	}
-	(dir[SPEC] = ft_iscspec(**format)) >= 0 ? (*format)++ : 0;
-	if (dir[SPEC] == 9)
+	(dir[PRINTF_SPEC] = ft_iscspec(**format)) >= 0 ? (*format)++ : 0;
+	if (dir[PRINTF_SPEC] == 9)
 		to_n(i, dir, ap);
 }
 
@@ -43,24 +43,24 @@ static void	ft_initdir(int *dir, const char **f, va_list ap)
 	while (**f == '+' || **f == '-' || **f == '.' || **f == '#' || **f == ' ' ||
 	**f == '\'' || (**f >= '0' && **f <= '9'))
 	{
-		dir[ZERO] = (**f == '0') ? 1 : dir[ZERO];
-		dir[LEFT] = (**f == '-') ? 1 : dir[LEFT];
-		dir[PLUS] = (**f == '+') ? 1 : dir[PLUS];
-		dir[SPACE] = (**f == ' ') ? 1 : dir[SPACE];
-		dir[S] = (**f == '#') ? 1 : dir[S];
-		if (**f == '.' && (*f)++ && (dir[PREC] = 0) == 0)
+		dir[PRINTF_ZERO] = (**f == '0') ? 1 : dir[PRINTF_ZERO];
+		dir[PRINTF_LEFT] = (**f == '-') ? 1 : dir[PRINTF_LEFT];
+		dir[PRINTF_PLUS] = (**f == '+') ? 1 : dir[PRINTF_PLUS];
+		dir[PRINTF_SPACE] = (**f == ' ') ? 1 : dir[PRINTF_SPACE];
+		dir[PRINTF_S] = (**f == '#') ? 1 : dir[PRINTF_S];
+		if (**f == '.' && (*f)++ && (dir[PRINTF_PREC] = 0) == 0)
 		{
 			if (**f >= '0' && **f <= '9')
-				dir[PREC] = skip_atoi(f);
-			else if (**f == '*' && (*f)++ && (dir[PREC] = va_arg(ap, int)) < 0)
-				dir[PREC] = -dir[PREC];
+				dir[PRINTF_PREC] = skip_atoi(f);
+			else if (**f == '*' && (*f)++ && (dir[PRINTF_PREC] = va_arg(ap, int)) < 0)
+				dir[PRINTF_PREC] = -dir[PRINTF_PREC];
 		}
 		else if (**f >= '1' && **f <= '9')
-			dir[WIDTH] = skip_atoi(f);
-		else if (**f == '*' && (*f)++ && (dir[WIDTH] = va_arg(ap, int)) < 0)
+			dir[PRINTF_WIDTH] = skip_atoi(f);
+		else if (**f == '*' && (*f)++ && (dir[PRINTF_WIDTH] = va_arg(ap, int)) < 0)
 		{
-			dir[LEFT] = 1;
-			dir[WIDTH] = -dir[WIDTH];
+			dir[PRINTF_LEFT] = 1;
+			dir[PRINTF_WIDTH] = -dir[PRINTF_WIDTH];
 		}
 		else
 			(*f)++;
@@ -83,11 +83,11 @@ static int	ft_cont(char *buf, const char **format, va_list ap, int i)
 				dir[--j] = -1;
 			ft_initdir(dir, format, ap);
 			ft_specifier(dir, format, i, ap);
-			if (dir[SPEC] < 1 || dir[SPEC] == 8)
+			if (dir[PRINTF_SPEC] < 1 || dir[PRINTF_SPEC] == 8)
 				i += to_c(&buf[i], dir, ap);
-			else if (dir[SPEC] == 1)
+			else if (dir[PRINTF_SPEC] == 1)
 				i += to_s(&buf[i], dir, ap);
-			else if (dir[SPEC] > 1 && dir[SPEC] < 9)
+			else if (dir[PRINTF_SPEC] > 1 && dir[PRINTF_SPEC] < 9)
 				i += to_nbr(&buf[i], dir, ap);
 		}
 		if (*(*format - 1) == '\n')

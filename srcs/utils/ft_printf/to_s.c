@@ -22,18 +22,18 @@ int			to_s(char *buf, int *dir, va_list ap)
 
 	s = va_arg(ap, char *);
 	s == NULL ? s = NULLSTR : 0;
-	len = ft_strnlen(s, dir[PREC]);
+	len = ft_strnlen(s, dir[PRINTF_PREC]);
 	fill = ' ';
-	if (dir[ZERO] == 1)
+	if (dir[PRINTF_ZERO] == 1)
 		fill = '0';
 	str = buf;
 	i = -1;
-	if (dir[LEFT] != 1)
-		while (len < dir[WIDTH]--)
+	if (dir[PRINTF_LEFT] != 1)
+		while (len < dir[PRINTF_WIDTH]--)
 			*str++ = fill;
 	while (++i < len)
 		*str++ = *s++;
-	while (len < dir[WIDTH]--)
+	while (len < dir[PRINTF_WIDTH]--)
 		*str++ = ' ';
 	return (str - buf);
 }

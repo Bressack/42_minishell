@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/22 02:08:27 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/22 03:00:13 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -53,42 +53,66 @@ HEADER				=	\
 						utils.h \
 						commands.h \
 
-PRINTF			=	\
-						ft_printf.c \
-						ft_strnlen.c \
-						skip_atoi.c \
-						to_c.c \
-						to_n.c \
-						to_nbr.c \
-						to_s.c \
-
-
 # *** SRCS ******************************************************************* #
 
 SRCS_DIR			=	./srcs/
 
+
+SRCS_TOKEN			=	\
+						token/class__token.c \
+						token/class__token__global_arrays.c \
+
+SRCS_ENVIRONEMENT	=	\
+						environement/unset.c \
+						environement/env.c \
+						environement/export.c \
+
+SRCS_LEXER			=	\
+						lexer/class__lexer.c \
+						lexer/class__lexer__defined_tokens.c \
+
+SRCS_BUILTIN		=	\
+						builtins/commands.c \
+
+SRCS_AST			=	\
+						ast/class__ast.c \
+
+SRCS_NODE			=	\
+						node/class__node.c \
+
+SRCS_UTILS			=	\
+						utils/ft_strlen.c \
+						utils/ft_strjoin.c \
+						utils/ft_memcpy.c \
+						utils/get_next_line.c \
+						utils/try_malloc.c \
+						utils/ft_strncmp.c \
+						utils/ft_strcpy.c \
+						utils/ft_strdup.c \
+						utils/ft_strsub.c \
+						utils/ft_strncpy.c \
+						utils/ft_strcmp.c \
+
+SRCS_PRINTF			=	\
+						utils/ft_printf/to_n.c \
+						utils/ft_printf/skip_atoi.c \
+						utils/ft_printf/ft_strnlen.c \
+						utils/ft_printf/to_c.c \
+						utils/ft_printf/ft_printf.c \
+						utils/ft_printf/to_nbr.c \
+						utils/ft_printf/to_s.c \
+
 SRCS_LIST			=	\
 						main.c \
-						class__lexer.c \
-						class__lexer__defined_tokens.c \
-						class__token.c \
-						class__token__global_arrays.c \
-						ft_memcpy.c \
-						ft_strdup.c \
-						ft_strjoin.c \
-						ft_strlen.c \
-						ft_strncmp.c \
-						ft_strcmp.c \
-						ft_strncpy.c \
-						ft_strsub.c \
-						get_next_line.c \
-						try_malloc.c \
-						ft_strcpy.c \
-						env.c \
-						unset.c \
-						export.c \
-						commands.c \
-						$(PRINTF)
+						$(SRCS_TOKEN) \
+						$(SRCS_ENVIRONEMENT) \
+						$(SRCS_LEXER) \
+						$(SRCS_BUILTIN) \
+						$(SRCS_AST) \
+						$(SRCS_NODE) \
+						$(SRCS_UTILS) \
+						$(SRCS_PRINTF) \
+
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
@@ -98,23 +122,25 @@ SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
 OBJS_DIR			=	./objs/
 
+# OBJS_LIST			=	$(notdir $(patsubst %.c, %.o, $(SRCS_LIST)))
 OBJS_LIST			=	$(patsubst %.c, %.o, $(SRCS_LIST))
 
 OBJS				=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 
 # *** RULES ****************************************************************** #
 
-.PHONY: clean fclean all re norm
+.PHONY: clean fclean all re norm test
 
-all: $(OBJS) $(SRCS) $(NAME)
 
-$(NAME): $(SRCS) $(OBJS)
+all: $(SRCS) $(OBJS) $(NAME)
+
+$(NAME):
 	@ $(CC) $(FLAGS) $(HDIR) $(OBJS) -o $@
 	@ printf "\n"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@ mkdir -p $(OBJS_DIR)
-	@ $(CC) $(FLAGS) $(HDIR) -c -o $@ $<
+	@ $(CC) $(FLAGS) $(HDIR) -c -o $(addprefix $(OBJS_DIR), $(notdir $@)) $<
 	@ printf "\033[31m Program \033[32m$(NAME) : \033[34mCompilation of \033[36m$(notdir $<)\033[0m                             \r"
 
 norm:
@@ -132,4 +158,6 @@ re: fclean
 real: re
 	@ ./$(NAME)
 
+test:
+	@ echo $(OBJS)
 # **************************************************************************** #

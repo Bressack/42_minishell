@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 02:08:27 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 03:17:52 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_bi		g_builtins[BUILTINS] =
 	{"env", 3, &print_env}
 };
 
-void	get_prompt(void)
+void	get_prompt(int prompt_lever)
 {
 /*
 ** 	check either PS1 or get cwd
@@ -34,13 +34,23 @@ void	get_prompt(void)
 	int		i;
 	int		last;
 
-	getcwd(prompt, 1000);
-	i = -1;
-	while (prompt[++i])
-		if (prompt[i] == '/')
-			last = i + 1;
-	ft_dprintf(1, "%s%s > %s", C_G_CYAN, &prompt[last], C_RES);
-	// return ("mysh$ ");
+	if (prompt_lever == PROMPT_CASUAL)
+	{
+		getcwd(prompt, 1000);
+		i = -1;
+		while (prompt[++i])
+			if (prompt[i] == '/')
+				last = i + 1;
+		ft_dprintf(1, "%s%s > %s", C_G_CYAN, &prompt[last], C_RES);
+	}
+	else if (prompt_lever == PROMPT_CASUAL)
+		printf("%s\n", );
+	else if (prompt_lever == PROMPT_CASUAL)
+		printf("%s\n", );
+	else if (prompt_lever == PROMPT_CASUAL)
+		printf("%s\n", );
+	else
+		get_prompt(PROMPT_CASUAL)
 }
 
 void	sig_handler(int signo)
@@ -66,14 +76,14 @@ void	sig_handler(int signo)
 int		main(int ac, char **av, char **env)
 {
 	t_lexer		lex;
-	// t_token		current_token;
+	t_token		current_token;
 
 	get_env(ac, av, env);
 	while (1)
 	{
 		get_prompt();
 		signal(SIGINT, sig_handler);
-		get_next_line(0, &lex);
+		lexer__refill_line(&lex);
 		if (!ft_strcmp(lex.line, "exit") || (lex.line[0] <= 0 && ft_dprintf(1, "exit\n")))
 			break ;
 		ac = -1;

@@ -19,17 +19,17 @@ int			to_c(char *buf, int *dir, va_list ap)
 
 	str = buf;
 	fill = ' ';
-	dir[WIDTH]--;
-	if (dir[PREC] == -1 && dir[ZERO] == 1)
+	dir[PRINTF_WIDTH]--;
+	if (dir[PRINTF_PREC] == -1 && dir[PRINTF_ZERO] == 1)
 		fill = '0';
-	if (dir[LEFT] != 1)
-		while (0 < dir[WIDTH]--)
+	if (dir[PRINTF_LEFT] != 1)
+		while (0 < dir[PRINTF_WIDTH]--)
 			*str++ = fill;
-	if (dir[SPEC] == -1)
+	if (dir[PRINTF_SPEC] == -1)
 		*str++ = '\0';
 	else
-		*str++ = (dir[SPEC] == 8) ? '%' : va_arg(ap, int);
-	while (0 < dir[WIDTH]--)
+		*str++ = (dir[PRINTF_SPEC] == 8) ? '%' : va_arg(ap, int);
+	while (0 < dir[PRINTF_WIDTH]--)
 		*str++ = ' ';
-	return (dir[SPEC] == -1) ? (str - buf - 1) : (str - buf);
+	return (dir[PRINTF_SPEC] == -1) ? (str - buf - 1) : (str - buf);
 }

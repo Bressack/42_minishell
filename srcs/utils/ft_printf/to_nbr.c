@@ -20,9 +20,9 @@ static void			ft_itoa_b(char *addr, unsigned long long nbr, int *dir)
 	int				base;
 
 	i = 0;
-	base = (dir[SPEC] == 6 || dir[SPEC] == 7 || dir[SPEC] == 2) ? 16 : 10;
-	xbase = (dir[SPEC] == 7) ? "0123456789ABCDEF" : "0123456789abcdef";
-	if (nbr == 0 && dir[PREC] != 0)
+	base = (dir[PRINTF_SPEC] == 6 || dir[PRINTF_SPEC] == 7 || dir[PRINTF_SPEC] == 2) ? 16 : 10;
+	xbase = (dir[PRINTF_SPEC] == 7) ? "0123456789ABCDEF" : "0123456789abcdef";
+	if (nbr == 0 && dir[PRINTF_PREC] != 0)
 		n[i++] = '0';
 	while (nbr != 0)
 	{
@@ -40,52 +40,52 @@ static char			*ft_number_str(char *n, char *str, char sign, int *dir)
 	int				len;
 
 	len = ft_strnlen(n, -1);
-	if (dir[LEFT] != 1 && dir[ZERO] != 1)
-		while (0 < dir[WIDTH]--)
+	if (dir[PRINTF_LEFT] != 1 && dir[PRINTF_ZERO] != 1)
+		while (0 < dir[PRINTF_WIDTH]--)
 			*str++ = ' ';
 	if (sign != 0)
 		*str++ = sign;
-	if (dir[SPEC] == 2 || (dir[S] == 1 && dir[SPEC] >= 6 && dir[SPEC] <= 7))
+	if (dir[PRINTF_SPEC] == 2 || (dir[PRINTF_S] == 1 && dir[PRINTF_SPEC] >= 6 && dir[PRINTF_SPEC] <= 7))
 	{
 		*str++ = '0';
-		*str++ = (dir[SPEC] == 7) ? 'X' : 'x';
+		*str++ = (dir[PRINTF_SPEC] == 7) ? 'X' : 'x';
 	}
-	if (dir[LEFT] != 1)
-		while (0 < dir[WIDTH]--)
+	if (dir[PRINTF_LEFT] != 1)
+		while (0 < dir[PRINTF_WIDTH]--)
 			*str++ = '0';
-	while (dir[PREC]-- > len)
+	while (dir[PRINTF_PREC]-- > len)
 		*str++ = '0';
 	while (n && *n && len-- > 0)
 		*str++ = *n++;
-	while (0 < dir[WIDTH]--)
+	while (0 < dir[PRINTF_WIDTH]--)
 		*str++ = ' ';
 	return (str);
 }
 
 static long long	get_nbr(int *dir, va_list ap)
 {
-	if (dir[SPEC] == 2)
+	if (dir[PRINTF_SPEC] == 2)
 		return ((unsigned long long)va_arg(ap, void *));
-	else if (dir[SPEC] == 5 || dir[SPEC] == 6 || dir[SPEC] == 7)
+	else if (dir[PRINTF_SPEC] == 5 || dir[PRINTF_SPEC] == 6 || dir[PRINTF_SPEC] == 7)
 	{
-		if (dir[LONG] == 0)
+		if (dir[PRINTF_LONG] == 0)
 			return ((unsigned long long)va_arg(ap, unsigned long));
-		else if (dir[LONG] == 1)
+		else if (dir[PRINTF_LONG] == 1)
 			return (va_arg(ap, unsigned long long));
-		else if (dir[SHORT] == 0)
+		else if (dir[PRINTF_SHORT] == 0)
 			return ((unsigned short int)va_arg(ap, unsigned int));
-		else if (dir[SHORT] == 1)
+		else if (dir[PRINTF_SHORT] == 1)
 			return ((unsigned char)va_arg(ap, unsigned int));
 		else
 			return ((unsigned long long)va_arg(ap, unsigned int));
 	}
-	if (dir[LONG] == 0)
+	if (dir[PRINTF_LONG] == 0)
 		return ((long long)va_arg(ap, long));
-	else if (dir[LONG] == 1)
+	else if (dir[PRINTF_LONG] == 1)
 		return ((long long)va_arg(ap, long long));
-	else if (dir[SHORT] == 0)
+	else if (dir[PRINTF_SHORT] == 0)
 		return ((short int)va_arg(ap, int));
-	else if (dir[SHORT] == 1)
+	else if (dir[PRINTF_SHORT] == 1)
 		return ((signed char)va_arg(ap, int));
 	else
 		return ((long long)va_arg(ap, int));
@@ -98,24 +98,24 @@ int					to_nbr(char *buf, int *dir, va_list ap)
 	char			n[70];
 
 	sign = 0;
-	if (dir[SPEC] == 3 || dir[SPEC] == 4)
+	if (dir[PRINTF_SPEC] == 3 || dir[PRINTF_SPEC] == 4)
 	{
 		nbr = get_nbr(dir, ap);
-		sign = (dir[SPACE] == 1) ? ' ' : 0;
-		sign = (dir[PLUS] == 1) ? '+' : sign;
+		sign = (dir[PRINTF_SPACE] == 1) ? ' ' : 0;
+		sign = (dir[PRINTF_PLUS] == 1) ? '+' : sign;
 		sign = (nbr < 0) ? '-' : sign;
-		dir[WIDTH] = (sign != 0) ? dir[WIDTH] - 1 : dir[WIDTH];
+		dir[PRINTF_WIDTH] = (sign != 0) ? dir[PRINTF_WIDTH] - 1 : dir[PRINTF_WIDTH];
 	}
-	if ((dir[SPEC] == 3 || dir[SPEC] == 4) && nbr >= 0)
+	if ((dir[PRINTF_SPEC] == 3 || dir[PRINTF_SPEC] == 4) && nbr >= 0)
 		ft_itoa_b(n, (unsigned long long)nbr, dir);
-	else if (dir[SPEC] == 3 || dir[SPEC] == 4)
+	else if (dir[PRINTF_SPEC] == 3 || dir[PRINTF_SPEC] == 4)
 		ft_itoa_b(n, (unsigned long long)-nbr, dir);
 	else
 		ft_itoa_b(n, (unsigned long long)get_nbr(dir, ap), dir);
-	dir[PREC] != -1 ? dir[ZERO] = -1 : 0;
-	dir[PREC] = dir[PREC] < ft_strnlen(n, -1) ? ft_strnlen(n, -1) : dir[PREC];
-	dir[WIDTH] = dir[WIDTH] - dir[PREC];
-	n[0] == '\0' || n[0] == '0' ? dir[S] = -1 : 0;
-	(dir[SPEC] == 2 || dir[S] == 1) ? dir[WIDTH] = dir[WIDTH] - 2 : 0;
+	dir[PRINTF_PREC] != -1 ? dir[PRINTF_ZERO] = -1 : 0;
+	dir[PRINTF_PREC] = dir[PRINTF_PREC] < ft_strnlen(n, -1) ? ft_strnlen(n, -1) : dir[PRINTF_PREC];
+	dir[PRINTF_WIDTH] = dir[PRINTF_WIDTH] - dir[PRINTF_PREC];
+	n[0] == '\0' || n[0] == '0' ? dir[PRINTF_S] = -1 : 0;
+	(dir[PRINTF_SPEC] == 2 || dir[PRINTF_S] == 1) ? dir[PRINTF_WIDTH] = dir[PRINTF_WIDTH] - 2 : 0;
 	return (ft_number_str(n, buf, sign, dir) - buf);
 }

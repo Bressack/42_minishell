@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 16:51:55 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/22 00:37:27 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 02:18:22 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,17 @@
 
 typedef enum		e_ft_printf_dir
 {
-	ZERO,
-	LEFT,
-	PLUS,
-	SPACE,
-	SMALL,
-	S,
-	LONG,
-	SHORT,
-	WIDTH,
-	PREC,
-	SPEC
+	PRINTF_ZERO,
+	PRINTF_LEFT,
+	PRINTF_PLUS,
+	PRINTF_SPACE,
+	PRINTF_SMALL,
+	PRINTF_S,
+	PRINTF_LONG,
+	PRINTF_SHORT,
+	PRINTF_WIDTH,
+	PRINTF_PREC,
+	PRINTF_SPEC
 }					t_ft_printf_dir;
 
 int		ft_printf(const char *format, ...);

@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:47:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/22 02:03:14 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 02:57:37 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,15 +128,15 @@ void	env_destructor(t_env *f, int flag)
 
 	if (f)
 	{
-		try_free_(f->name, _FL_);
+		try_free_((void **)&f->name, _FL_);
 		i = -1;
 		while (f->value[++i])
-			try_free_(f->value[i], _FL_);
-		try_free_(f->value, _FL_);
+			try_free_((void **)&f->value[i], _FL_);
+		try_free_((void **)&f->value, _FL_);
 		if (flag == 1)
 		{
 			env_destructor(f->next, 1);
-			try_free_(f, _FL_);
+			try_free_((void **)&f, _FL_);
 		}
 	}
 }

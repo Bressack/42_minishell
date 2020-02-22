@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 09:54:38 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 18:54:38 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/22 03:03:12 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static char	*ft_cpyline(char *file, int i)
 	return (line);
 }
 
-int			get_next_line(int fd, t_lexer *l)
+int			get_next_line(int fd, char **line)
 {
 	char		buf[GNL_BUFFER_SIZE + 1];
 	int			ret;
@@ -96,11 +96,8 @@ int			get_next_line(int fd, t_lexer *l)
 		buf[ret] = '\0';
 		file = ft_strcat(file, buf);
 		if (file[0] == 0)
-			break ; 
+			break ;
 	}
-	l->line = ft_cpyline(file, 0);
-	l->len_line = ft_strlen(l->line);
-	l->pos = 0;
-	l->current_char = l->line[l->pos];
+	*line = ft_cpyline(file, 0);
 	return (ret == 0 ? 0 : 1);
 }
