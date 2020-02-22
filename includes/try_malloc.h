@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 00:38:51 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/21 16:57:34 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 12:30:54 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef enum			e_opt_print_mem
 	PRINT_ERR,
 	PRINT_DBLFREE,
 	PRINT_NULLFREE,
-	PRINT_OK,
+	PRINT_OK
 }						t_opt_print_mem;
 typedef struct			s_debug_malloc
 {
@@ -41,7 +41,7 @@ typedef struct			s_debug_malloc
 extern t_debug_malloc	g_debug_malloc[__SIZE_MALLOC_DEBUG];
 extern size_t			g_i_malloc;
 extern int				__test;
-void					print_mem__(void);
+void					print_mem__(int opt);
 void					*try_malloc(size_t size, char *f, int l);
 void					try_free_(void **p, char *f, int l);
 void					try_free_all(char *f, int l);

@@ -6,22 +6,13 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 04:16:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 05:26:18 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 17:31:25 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libc.h>
 #define DIV			3
 
-void	print_start(void)
-{
-
-}
-
-void	print_end(void)
-{
-
-}
 char	optab[5] =
 {
 	'+',
@@ -33,7 +24,7 @@ char	optab[5] =
 
 int		tot;
 
-#define MAX_CALC	1000
+#define MAX_CALC	2000
 
 void	do_what_you_should_to_do_madgod_blaze()
 {
@@ -78,7 +69,9 @@ int\t\t\tmain(int ac, char **av)\n\
 \tchar\top;\n\
 \tint\t\tb;\n\n\
 \tif (ac != 4 || av[2][1])\n\
+\t{\n\
 \t\tdprintf(2, \"args error\\n\");\n\t\texit(-1);\n\
+\t}\n\
 \ta = atoi(av[1]);\n\
 \top = av[2][0];\n\
 \ta = atoi(av[3]);\n\

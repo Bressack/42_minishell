@@ -12,7 +12,7 @@
 %token  PIPE
 /*      '|'                                        */
 %token  AND          OR
-/*      '&&'         '||'                          */
+/*      '&'          '|'                          */
 %token  SEMICON
 /*      ';'                                        */
 %token  SPACE        TAB

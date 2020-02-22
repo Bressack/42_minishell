@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/22 03:00:13 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/22 17:06:49 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -14,14 +14,14 @@
 #                                                                              #
 #    rules:                                                                    #
 #                                                                              #
-#    make        : make the project                                            #
-#    make all    : make the project                                            #
+#    make           : make the project                                         #
+#    make all       : make the project                                         #
 #    make minishell : make the project                                         #
-#    make norm   : run the norminette of srcs and headers                      #
-#    make clean  : clean object files (.o)                                     #
-#    make fclean : clean object files (.o) and remove minishell bin            #
-#    make re     : run rules fclean then all                                   #
-#    make run    : run re then run ./$(NAME)                                   #
+#    make norm      : run the norminette of srcs and headers                   #
+#    make clean     : clean object files (.o)                                  #
+#    make fclean    : clean object files (.o) and remove minishell bin         #
+#    make re        : run rules fclean then all                                #
+#    make run       : run re then run ./$(NAME)                                #
 #                                                                              #
 # *** NAME - CC - FLAGS ****************************************************** #
 
@@ -32,7 +32,7 @@ CC					=	clang
 FLAGS				=	\
 						-Wall -Wextra -Werror \
 						-O3 \
-						# -g3 -fsanitize=address \
+						-g3 -fsanitize=address \
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -44,6 +44,8 @@ HEADER_DIR			=	\
 HEADER				=	\
 						class__lexer.h \
 						class__token.h \
+						class__ast.h \
+						class__node.h \
 						color_shell.h \
 						get_next_line.h \
 						minishell.h \
@@ -108,10 +110,10 @@ SRCS_LIST			=	\
 						$(SRCS_ENVIRONEMENT) \
 						$(SRCS_LEXER) \
 						$(SRCS_BUILTIN) \
-						$(SRCS_AST) \
-						$(SRCS_NODE) \
 						$(SRCS_UTILS) \
 						$(SRCS_PRINTF) \
+						$(SRCS_AST) \
+						$(SRCS_NODE) \
 
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
@@ -122,7 +124,6 @@ SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
 OBJS_DIR			=	./objs/
 
-# OBJS_LIST			=	$(notdir $(patsubst %.c, %.o, $(SRCS_LIST)))
 OBJS_LIST			=	$(patsubst %.c, %.o, $(SRCS_LIST))
 
 OBJS				=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
@@ -131,16 +132,15 @@ OBJS				=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 
 .PHONY: clean fclean all re norm test
 
+all: $(OBJS) $(SRCS) $(NAME)
 
-all: $(SRCS) $(OBJS) $(NAME)
-
-$(NAME):
+$(NAME): $(OBJS) $(SRCS)
 	@ $(CC) $(FLAGS) $(HDIR) $(OBJS) -o $@
 	@ printf "\n"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
-	@ mkdir -p $(OBJS_DIR)
-	@ $(CC) $(FLAGS) $(HDIR) -c -o $(addprefix $(OBJS_DIR), $(notdir $@)) $<
+	@ mkdir -p $(dir $@)
+	@ $(CC) $(FLAGS) $(HDIR) -c -o $@ $<
 	@ printf "\033[31m Program \033[32m$(NAME) : \033[34mCompilation of \033[36m$(notdir $<)\033[0m                             \r"
 
 norm:
@@ -159,5 +159,10 @@ real: re
 	@ ./$(NAME)
 
 test:
-	@ echo $(OBJS)
+	@ echo "OBJS_DIR : " $(OBJS_DIR)
+	@ echo
+	@ echo "OBJS_LIST: " $(OBJS_LIST)
+	@ echo
+	@ echo "OBJS     : " $(OBJS)
+	@ echo
 # **************************************************************************** #

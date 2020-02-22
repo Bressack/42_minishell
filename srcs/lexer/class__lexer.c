@@ -6,25 +6,11 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 03:04:45 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 13:24:16 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-char				*lexer__get_prompt(int prompt_type)
-{
-	if (prompt_type == PROMPT_CASUAL)
-		return (PROMPT_CASUAL_STR);
-	else if (prompt_type == PROMPT_SQUOTE)
-		return (PROMPT_SQUOTE_STR);
-	else if (prompt_type == PROMPT_DQUOTE)
-		return (PROMPT_DQUOTE_STR);
-	else if (prompt_type == PROMPT_BSLASH)
-		return (PROMPT_BSLASH_STR);
-	else
-		return ("");
-}
 
 t_lexer				lexer__new(char *line)
 {
@@ -173,21 +159,24 @@ void				lexer__refill_line(t_lexer *lex, int join_nl, int prompt)
 	char			*line;
 	char			*tmp;
 
-	while (1)
+	print_prompt(prompt);
+	if (get_next_line(0, &line) == -1)
 	{
-		dprintf(1, "%s> ", lexer__get_prompt(prompt));
-		if (get_next_line(0, &line) == -1)
-			dprintf(2, "GNL KO - %d\n", __LINE__);
-		if (line)
-			break ;
+		dprintf(2, "gnl error (%s - %d)\n", _FL_);
+		exit(-1);
 	}
-	if (join_nl)
-		tmp = ft_strjoin(3, lex->line, "\n", line);
+	if (lex->line)
+	{
+		if (join_nl)
+			tmp = ft_strjoin(3, lex->line, "\n", line);
+		else
+			tmp = ft_strjoin(2, lex->line, line);
+		try_free_((void **)&lex->line, _FL_);
+		try_free_((void **)&line, _FL_);
+		lex->line = tmp;
+	}
 	else
-		tmp = ft_strjoin(2, lex->line, line);
-	try_free_((void **)&lex->line, _FL_);
-	try_free_((void **)&line, _FL_);
-	lex->line = tmp;
+		*lex = lexer__new(line);
 	lex->len_line = ft_strlen(lex->line);
 	lex->current_char = lex->line[lex->pos];
 	// lexer__debug(lex, POS, DEBUG_PRINT_CHAR_TYPE);

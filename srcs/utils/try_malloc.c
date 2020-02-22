@@ -6,7 +6,7 @@
 /*   By: tarchen <tarchen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/14 12:09:53 by tarchen           #+#    #+#             */
-/*   Updated: 2020/02/21 16:58:23 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 12:40:15 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,20 @@
 t_debug_malloc	g_debug_malloc[__SIZE_MALLOC_DEBUG];
 size_t			g_i_malloc = 1;
 
-PRINT_ALL,
-PRINT_ERR,
-PRINT_DBLFREE,
-PRINT_NULLFREE,
-PRINT_OK
+typedef struct		s_mmopt
+{
+	int				t;
+	char			*s;
+}					t_mmopt;
+
+t_mmopt				g_mmoptt[5] =
+{
+	{PRINT_ALL, "PRINT_ALL"},
+	{PRINT_ERR, "PRINT_ERR"},
+	{PRINT_DBLFREE, "PRINT_DBLFREE"},
+	{PRINT_NULLFREE, "PRINT_NULLFREE"},
+	{PRINT_OK, "PRINT_OK"}
+};
 
 void		print_mem__(int opt)
 {
@@ -58,14 +67,21 @@ void		print_mem__(int opt)
 	int		total_mem_alloc_true = 0;
 	size_t	i;
 
-	printf("malloc: display debug array\n");
+	printf(""C_G_RED"malloc:"C_RES" "C_G_WHITE"display debug array"C_RES"\n"C_G_RED"tracking:"C_RES" "C_G_WHITE"%s"C_RES"\n", g_mmoptt[opt].s);
 	dprintf(2, " %s         || %s                                                || %s                                       || %s\n", C_G_RED"ADDRESS"C_RES, C_G_CYAN"MALLOC"C_RES, C_G_MAGENTA"FREE"C_RES, C_G_YELLOW"MARK"C_RES);
 	dprintf(2, "                 || %s             | %s   | %s      | %s || %s             | %s   | %s ||\n", "function", "line", "size", "real size", "function", "line", "count free");
 	dprintf(2, "-------------------------------------------------------------------------------------------------------------------------------\n");
 	for (i = 0; i < g_i_malloc; i++)
 	{
-		if (opt == PRINT_ERR && )
+			 if (opt == PRINT_ERR      && !GDM.f_malloc && GDM.nb_free == 1)
 			continue ;
+		else if (opt == PRINT_DBLFREE  && GDM.nb_free <= 1)
+			continue ;
+		else if (opt == PRINT_NULLFREE && !GDM.f_malloc && GDM.nb_free == 1)
+			continue ;
+		else if (opt == PRINT_OK       && !GDM.f_malloc && GDM.nb_free == 1)
+			continue ;
+
 		dprintf(2, " %-15p || %-20.20s | %-6d | %-9d | %-9d || %-20.20s | %-6d | %-2d         || %s"C_RES"\n",
 			GDM.mem,
 			i ? GDM.f_malloc : "(null pointer)",
@@ -75,7 +91,7 @@ void		print_mem__(int opt)
 			GDM.nb_free >= 1 ? GDM.f_free : "---------------------------------",
 			GDM.nb_free >= 1 ? GDM.l_free : 0,
 			GDM.nb_free,
-			!GDM.mem || GDM.nb_free == 1 ? C_G_GREEN"OK" : C_G_RED"KO"
+			!GDM.mem && GDM.nb_free == 1 ? C_G_GREEN"OK" : C_G_RED"KO" // maybe ||
 		);
 		!i ? dprintf(2, "-------------------------------------------------------------------------------------------------------------------------------\n") : 0;
 		if (GDM.f_malloc && !GDM.nb_free)
@@ -99,14 +115,14 @@ void		*try_malloc(size_t size, char *f, int l)
 	if (g_i_malloc == __SIZE_MALLOC_DEBUG)
 	{
 		dprintf(2, C_G_RED"error:"C_G_WHITE" not enough space on malloc debug array. (actually %d)\n", __SIZE_MALLOC_DEBUG);
-		print_mem__();
+		print_mem__(PRINT_ALL);
 		exit(-2);
 	}
 	if (!(alloc = malloc(size)))
 	{
 		dprintf(2, C_G_RED"error:"C_G_WHITE" malloc can't allocate region in: "C_G_RED"%s"C_WHITE
 			" - (line:"C_G_MAGENTA"%d"C_RES")\n", f, l);
-		print_mem__();
+		print_mem__(PRINT_ALL);
 		exit(-1);
 	}
 	g_debug_malloc[g_i_malloc].f_free = 0;

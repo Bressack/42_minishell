@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:35:06 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/18 14:34:03 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 16:39:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,27 @@ void		node__print(t_node node)
 }
 
 
-void		node__add_child(t_ast *parent, t_node child, int rl_lever)
+// void		node__add_child(t_ast *parent, t_node child, int rl_lever)
+// {
+// 	if (rl_lever == RIGHT_CHILD)
+// 		ast->tree->
+// 	if (rl_lever == LEFT_CHILD)
+// 		ast->tree->
+// }
+
+t_cmd		node__new_cmd(char *name)
 {
-	if (rl_lever == RIGHT_CHILD)
-		ast->tree->
-	if (rl_lever == LEFT_CHILD)
-		ast->tree->
+	t_cmd	new;
+
+	new.name = name;
+	new.fd_in = 1;
+	new.fd_out = 0;
+	new.av_in = NULL;
+	new.av = NULL;
+	new.av_out = NULL;
+}
+
+t_redir		node__eat_redir()
+{
+
 }

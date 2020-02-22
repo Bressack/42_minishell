@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 04:15:39 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/22 21:30:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,33 +77,37 @@ int		main(int ac, char **av, char **env)
 {
 	t_lexer		lex;
 	t_token		current_token;
+	t_ast		ast;
 
+	bzero(&lex, sizeof(t_lexer));
 	get_env(ac, av, env);
 	while (1)
 	{
-		lexer__refill_line(&lex, 0, PROMPT_CASUAL);
 		signal(SIGINT, sig_handler);
+		lexer__refill_line(&lex, 0, PROMPT_CASUAL);
 		if (!ft_strcmp(lex.line, "exit") || (lex.line[0] <= 0 && ft_dprintf(1, "exit\n")))
 			break ;
-		ac = -1;
-		while (++ac < BUILTINS) // OBVOUSLY MOVE THIS ONE LATER // YES OBVOUSLY WE SHALL
-		{
-			if (ft_strncmp(lex.line, g_builtins[ac].name, g_builtins[ac].len) == 0)
-			{
-				g_builtins[ac].f(lex.line + g_builtins[ac].len + 1);
-				break ;
-			}
-		}
-		if (ac == BUILTINS)
-			ft_dprintf(1, "minishell: command not found: %s\n", lex.line);
+		// ac = -1;
+		// while (++ac < BUILTINS) // OBVOUSLY MOVE THIS ONE LATER // YES OBVOUSLY WE SHALL
+		// {
+		// 	if (ft_strncmp(lex.line, g_builtins[ac].name, g_builtins[ac].len) == 0)
+		// 	{
+		// 		g_builtins[ac].f(lex.line + g_builtins[ac].len + 1);
+		// 		break ;
+		// 	}
+		// }
+		// if (ac == BUILTINS)
+		// 	ft_dprintf(1, "minishell: command not found: %s\n", lex.line);
 
 		while (1)
 		{
+			ast = ast__new_tree();
 			current_token = lexer__get_next_token(&lex);
 			if (current_token.type == ERR)
 				lexer__error(&lex);
 			token__print(current_token);
-			token__del(current_token);
+			// token__del(current_token);
+			ast__main();
 			if (current_token.type == EOT || current_token.type == ERR || current_token.type == NONE)
 				break ;
 		}
