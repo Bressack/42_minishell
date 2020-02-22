@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/21 19:10:41 by fredrikalindh    ###   ########.fr        #
+#    Updated: 2020/02/22 00:36:59 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -21,6 +21,7 @@
 #    make clean  : clean object files (.o)                                     #
 #    make fclean : clean object files (.o) and remove minishell bin            #
 #    make re     : run rules fclean then all                                   #
+#    make run    : run re then run ./$(NAME)                                   #
 #                                                                              #
 # *** NAME - CC - FLAGS ****************************************************** #
 
@@ -28,7 +29,10 @@ NAME				=	minishell
 
 CC					=	gcc
 
-FLAGS				=	-Wall -Wextra -Werror # -O3 -g3 -fsanitize=address
+FLAGS				=	\
+						-Wall -Wextra -Werror \
+						-O3 \
+						# -g3 -fsanitize=address \
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -44,7 +48,7 @@ HEADER				=	\
 						get_next_line.h \
 						minishell.h \
 						try_malloc.h \
-						printf.h \
+						ft_printf.h \
 						env.h \
 						utils.h \
 						commands.h \
@@ -121,7 +125,6 @@ re: fclean
 	@ make -j
 
 real: re
-	@ $(shell clear)
-	@ $(shell ./$(NAME))
+	@ ./$(NAME)
 
 # **************************************************************************** #

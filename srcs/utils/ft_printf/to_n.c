@@ -1,23 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   skip_atoi.c                                        :+:      :+:    :+:   */
+/*   to_n.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/03 12:08:13 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 13:44:30 by fredrikalindh    ###   ########.fr       */
+/*   Created: 2019/11/08 11:43:30 by frlindh           #+#    #+#             */
+/*   Updated: 2020/02/21 13:44:26 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <printf.h>
+#include <ft_printf.h>
 
-int		skip_atoi(const char **s)
+void	to_n(int printed, int *dir, va_list ap)
 {
-	int	nb;
+	int	*ptr;
 
-	nb = 0;
-	while (**s >= '0' && **s <= '9')
-		nb = nb * 10 + *((*s)++) - '0';
-	return (nb);
+	if (dir[LONG] >= 0)
+	{
+		if (dir[LONG] == 0)
+			ptr = (int *)va_arg(ap, long *);
+		else
+			ptr = (int *)va_arg(ap, long long *);
+	}
+	else if (dir[SHORT] >= 0)
+	{
+		if (dir[SHORT] == 0)
+			ptr = (int *)va_arg(ap, short int *);
+		else
+			ptr = (int *)va_arg(ap, signed char *);
+	}
+	else
+		ptr = va_arg(ap, int *);
+	*ptr = printed;
 }

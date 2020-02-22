@@ -6,11 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 10:37:08 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 16:08:50 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/22 00:36:59 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <printf.h>
+#include <ft_printf.h>
 
 static int	ft_iscspec(const char c)
 {
@@ -96,28 +96,28 @@ static int	ft_cont(char *buf, const char **format, va_list ap, int i)
 	return (i);
 }
 
-// int			ft_printf(const char *format, ...)
-// {
-// 	char	buf[PF_BUFF_SIZE];
-// 	va_list	ap;
-// 	int		printed;
-// 	int		last;
-//
-// 	if (format == NULL)
-// 		return (-1);
-// 	printed = 0;
-// 	va_start(ap, format);
-// 	while (*format)
-// 	{
-// 		last = ft_cont(buf, &format, ap, 0);
-// 		write(1, buf, last);
-// 		printed += last;
-// 	}
-// 	va_end(ap);
-// 	return (printed);
-// }
+int			ft_printf(const char *format, ...)
+{
+	char	buf[PF_BUFF_SIZE];
+	va_list	ap;
+	int		printed;
+	int		last;
 
-int			ft_fprintf(int fd, const char *format, ...)
+	if (format == NULL)
+		return (-1);
+	printed = 0;
+	va_start(ap, format);
+	while (*format)
+	{
+		last = ft_cont(buf, &format, ap, 0);
+		write(1, buf, last);
+		printed += last;
+	}
+	va_end(ap);
+	return (printed);
+}
+
+int			ft_dprintf(int fd, const char *format, ...)
 {
 	char	buf[PF_BUFF_SIZE];
 	va_list	ap;

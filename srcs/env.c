@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:47:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 20:31:08 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/22 00:42:04 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	print_env()
 	{
 		i = 0;
 		if (trav->value && trav->value[i])
-			ft_fprintf(1, "%s=%s", trav->name, trav->value[i++]);
+			ft_dprintf(1, "%s=%s", trav->name, trav->value[i++]);
 		while (trav->value && trav->value[i])
-			ft_fprintf(1, ":%s", trav->value[i++]);
+			ft_dprintf(1, ":%s", trav->value[i++]);
 		write(1, "\n", 1);
 		trav = trav->next;
 	}
@@ -60,7 +60,7 @@ char	*ft_copsep(char **e, char sep)
 	i = 0;
 	while (e && e[0][i] && e[0][i] != sep)
 		i++;
-	if (!(ret = (char *)malloc(i + 1)))
+	if (!(ret = (char *)try_malloc(i + 1, _FL_)))
 		return (NULL);
 	i = 0;
 	while (*e && **e && **e != sep)
@@ -86,7 +86,7 @@ void	set_env(t_env *e, char *env)
 		if (env[i] == '=' || env[i] == ':')
 			c++;
 	e->name = ft_copsep(&env, '=');
-	if (!(e->value = (char **)malloc((c + 1) * sizeof(char *))))
+	if (!(e->value = (char **)try_malloc((c + 1) * sizeof(char *), _FL_)))
 		return ;
 	i = 0;
 	while (env && *env && i < c)
@@ -110,7 +110,7 @@ void	get_env(int ac, char **av, char **env)
 	prev = NULL;
 	while (env && env[++i])
 	{
-		if (!(new = (t_env *)malloc(sizeof(t_env))))
+		if (!(new = (t_env *)try_malloc(sizeof(t_env), _FL_)))
 			break ;
 		set_env(new, env[i]);
 		if (prev == NULL && (new->next = NULL) == NULL) // must be more elegant way?
@@ -128,15 +128,15 @@ void	env_destructor(t_env *f, int flag)
 
 	if (f)
 	{
-		free(f->name);
+		try_free_(f->name, _FL_);
 		i = -1;
 		while (f->value[++i])
-			free(f->value[i]);
-		free(f->value);
+			try_free_(f->value[i], _FL_);
+		try_free_(f->value, _FL_);
 		if (flag == 1)
 		{
 			env_destructor(f->next, 1);
-			free(f);
+			try_free_(f, _FL_);
 		}
 	}
 }

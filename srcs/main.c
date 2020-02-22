@@ -39,7 +39,7 @@ void	get_prompt(void)
 	while (prompt[++i])
 		if (prompt[i] == '/')
 			last = i + 1;
-	ft_fprintf(1, "%s%s > %s", C_G_CYAN, &prompt[last], C_RES);
+	ft_dprintf(1, "%s%s > %s", C_G_CYAN, &prompt[last], C_RES);
 	// return ("mysh$ ");
 }
 
@@ -74,7 +74,7 @@ int		main(int ac, char **av, char **env)
 		get_prompt();
 		signal(SIGINT, sig_handler);
 		get_next_line(0, &lex);
-		if (!ft_strcmp(lex.line, "exit") || (lex.line[0] <= 0 && ft_fprintf(1, "exit\n")))
+		if (!ft_strcmp(lex.line, "exit") || (lex.line[0] <= 0 && ft_dprintf(1, "exit\n")))
 			break ;
 		ac = -1;
 		while (++ac < BUILTINS) // OBVOUSLY MOVE THIS ONE LATER
@@ -86,7 +86,7 @@ int		main(int ac, char **av, char **env)
 			}
 		}
 		if (ac == BUILTINS)
-			ft_fprintf(1, "minishell: command not found: %s\n", lex.line);
+			ft_dprintf(1, "minishell: command not found: %s\n", lex.line);
 /*
 ** 		while (1)
 ** 		{

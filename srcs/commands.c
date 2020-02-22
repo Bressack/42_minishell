@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 20:41:51 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/22 00:48:03 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void	xecho(char *args)
 	{
 		if (ft_strncmp(args, "-n", 2) == 0 && (n = 1) == 1)
 			args = args + 3;
-		ft_fprintf(1, "%s", args);
+		ft_dprintf(1, "%s", args);
 	}
 	if (n != 1)
-		ft_fprintf(1, "\n");
+		ft_dprintf(1, "\n");
 }
 
 void	xpwd(char *args)
@@ -33,13 +33,13 @@ void	xpwd(char *args)
 	char	cwd[1024];
 
 	getcwd(cwd, 1024);
-	ft_fprintf(1, "%s\n", cwd);
+	ft_dprintf(1, "%s\n", cwd);
 }
 
 void	xexit(char *args)
 {
 	(void)args;
-	ft_fprintf(1, "exit\n");
+	ft_dprintf(1, "exit\n");
 	exit (0);
 }
 
@@ -48,7 +48,7 @@ void	xcd(char *args)
 	if (args == NULL || *args == '\0')
 		chdir(*(ret_env("HOME"))); // chdir(*ret_env("HOME")); // get from env list | is too many args here?
 	else if (chdir(args) != 0)
-		ft_fprintf(2, "%s\n", (strerror(errno)));
+		ft_dprintf(2, "%s\n", (strerror(errno)));
 }
 
 /*

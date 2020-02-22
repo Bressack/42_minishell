@@ -1,42 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf.h                                           :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 16:51:55 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 16:37:29 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/22 00:37:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_H
-# define FT_H
-
+#ifndef FT_PRINTF
+# define FT_PRINTF
 
 // # include <minishell.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
 
-# define PF_BUFF_SIZE 10241
+# define PF_BUFF_SIZE 16384
 # define C_SPEC "cspdiuxX%n"
 # define NULLSTR "(null)"
 
-# define ZERO 0
-# define LEFT 1
-# define PLUS 2
-# define SPACE 3
-# define SMALL 4
-# define S 5
-# define LONG 6
-# define SHORT 7
-# define WIDTH 8
-# define PREC 9
-# define SPEC 10
+typedef enum		e_ft_printf_dir
+{
+	ZERO,
+	LEFT,
+	PLUS,
+	SPACE,
+	SMALL,
+	S,
+	LONG,
+	SHORT,
+	WIDTH,
+	PREC,
+	SPEC
+}					t_ft_printf_dir;
 
-// int		ft_printf(const char *format, ...);
-int		ft_fprintf(int fd, const char *format, ...);
+int		ft_printf(const char *format, ...);
+int		ft_dprintf(int fd, const char *format, ...);
 int		ft_strnlen(char *str, int n);
 int		skip_atoi(const char **s);
 int		to_c(char *buf, int *dir, va_list ap);

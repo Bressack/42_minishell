@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnlen.c                                       :+:      :+:    :+:   */
+/*   skip_atoi.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/03 12:08:42 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 13:44:31 by fredrikalindh    ###   ########.fr       */
+/*   Created: 2019/11/03 12:08:13 by frlindh           #+#    #+#             */
+/*   Updated: 2020/02/21 13:44:30 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <printf.h>
+#include <ft_printf.h>
 
-int		ft_strnlen(char *str, int n)
+int		skip_atoi(const char **s)
 {
-	int	i;
+	int	nb;
 
-	i = 0;
-	if (n != -1)
-		while (str && str[i] && i < n)
-			i++;
-	else
-		while (str && str[i])
-			i++;
-	return (i);
+	nb = 0;
+	while (**s >= '0' && **s <= '9')
+		nb = nb * 10 + *((*s)++) - '0';
+	return (nb);
 }

@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 // #include <minishell.h>
-#include "../includes/printf.h"
+#include "../includes/ft_printf.h"
 int	ft_strcmp(char *s1, char *s2);
 
 
@@ -42,10 +42,10 @@ void	print_env()
 	trav = g_env;
 	while (trav != NULL)
 	{
-		ft_fprintf(1, "%s=%s", trav->name, trav->value[0]);
+		ft_dprintf(1, "%s=%s", trav->name, trav->value[0]);
 		i = 0;
 		while (trav->value && trav->value[++i])
-			ft_fprintf(1, ":%s", trav->value[i]);
+			ft_dprintf(1, ":%s", trav->value[i]);
 		write(1, "\n", 1);
 		trav = trav->next;
 	}
@@ -162,7 +162,7 @@ int		main(int ac, char **av, char **env)
 {
 	get_env(ac, av, env);
 	print_env();
-	ft_fprintf(1, "PATH=%s\n", (ret_env("PATH"))[2]);
-	ft_fprintf(1, "HOME=%s\n", *(ret_env("HOME")));
+	ft_dprintf(1, "PATH=%s\n", (ret_env("PATH"))[2]);
+	ft_dprintf(1, "HOME=%s\n", *(ret_env("HOME")));
 	env_destructor(g_env);
 }
