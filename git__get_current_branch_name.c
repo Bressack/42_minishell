@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   class__ast.h                                       :+:      :+:    :+:   */
+/*   git__get_current_branch_name.c                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/18 00:40:38 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/23 15:56:34 by tharchen         ###   ########.fr       */
+/*   Created: 2020/02/23 16:33:56 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/23 16:52:43 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLASS__AST_H
-# define CLASS__AST_H
-# include <minishell.h>
-typedef struct		s_ast
+# define CURR_DIR	"/Users/tharchen/Prog/42/circle_4/minishell"
+
+char		*git__get_current_branch_name(char **env)
 {
-	t_lexer			lex;
-	t_node			*tree;
-	t_node			*last_added;
-}					t_ast;
-t_ast				ast__new(void);
-void				ast__del(t_ast ast);
-void				ast__print();
-void				ast__new_tree(t_ast *ast, t_token token);
-#endif
+	pid_t	pid;
+	char	*av[];
+	char	*git_dir;
+
+	git_dir = ft_strjoin(3, CURR_DIR, "/", ".git")
+	if (opendir())
+	if ((pid = fork()))
+		execve("git", env);
+}
