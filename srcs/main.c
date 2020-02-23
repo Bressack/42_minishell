@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/23 14:44:41 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/23 19:02:52 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,17 +99,17 @@ int		main(int ac, char **av, char **env)
 		// if (ac == BUILTINS)
 		// 	ft_dprintf(1, "minishell: command not found: %s\n", lex.line);
 
-		ast = ast__new();
-		while (1)
-		{
-			current_token = lexer__get_next_token(&lex);
-			if (token__istype(current_token, ERR)
-				lexer__error(&lex);
-			if (token__istype(current_token, EOT | NONE))
-				break ;
-			token__print(current_token);
-			ast__add_node(&ast, current_token);
-		}
+		ast = ast__new(lex);
+		// while (1)
+		// {
+		// 	current_token = lexer__get_next_token(&lex);
+		// 	if (token__istype(current_token, ERR)
+		// 		lexer__error(&lex);
+		// 	if (token__istype(current_token, EOT | NONE))
+		// 		break ;
+		// 	token__print(current_token);
+		// 	ast__add_node(&ast, current_token);
+		// }
 
 		try_free_((void **)&lex.line, _FL_);
 	}

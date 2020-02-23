@@ -6,16 +6,17 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:31:14 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/23 16:09:18 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/23 20:33:13 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-t_ast		ast__new(void)
+t_ast		ast__new(t_lexer lex)
 {
 	t_ast	new;
 
+	new.lex = lex;
 	new.tree = NULL;
 	return (new);
 }
@@ -23,6 +24,12 @@ t_ast		ast__new(void)
 void		ast__del(t_ast ast)
 {
 	node__del(ast.tree);
+}
+
+void		ast__error(int err_type, void *arg)
+{
+	if (err_type == AST__UNEXPECTED_TOKEN)
+		ft_dprintf(2, "error: unexpected token \'%s\'\n", (char *)arg);
 }
 
 void		ast__print_deep(t_node *n, int deep)
@@ -46,56 +53,22 @@ void		ast__print(t_ast ast)
 
 // ************************************************************************** //
 
-void		ast__add_node_word(t_ast *ast, t_token token)
+
+t_token		ast__token_eater(t_ast ast, t_token_type expected_token_type)
+{
+	t_token	token_crumbs;
+
+	token_crumbs = lexer__get_next_token(&ast.lex);
+	if (!token__istype(token_crumbs, expected_token_type))
+		ast__error(AST__UNEXPECTED_TOKEN,
+		(char *)token__get_type_str(token_crumbs));
+	return (token_crumbs);
+}
+
+void		ast__expr()
 {
 	
 }
-
-void		ast__add_node_redirection(t_ast *ast, t_token token)
-{
-
-}
-
-void		ast__add_node_cmdsep(t_ast *ast, t_token token)
-{
-
-}
-
-void		ast__add_node_subshell(t_ast *ast, t_token token)
-{
-
-}
-
-
-void		ast__add_node(t_ast *ast, t_token token)
-{
-	if (token__istype(token, WORD|SQUOTE|DQUOTE|STAR|BSLASH|QUESMARK|DOLLAR|SLASH))	// WORDS
-		ast__add_node_word(ast, token);
-	if (token__istype(token, REDIREC_IN|REDIREC_OUT|DREDIREC_OUT))					// REDIRECTIONS
-		ast__add_node_redirection(ast, token);
-	if (token__istype(token, DBL_AND|SGL_AND|DBL_OR|PIPE|SEMICON))					// CMD SEP
-		ast__add_node_cmdsep(ast, token);
-	if (token__istype(token, LPAREN|RPAREN))										// SUBSHELL
-		ast__add_node_subshell(ast, token);
-	if (token__istype(token, ERR|EOT|SPACE|PASS|NONE))								// UNEXPECTED
-		ast__error();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

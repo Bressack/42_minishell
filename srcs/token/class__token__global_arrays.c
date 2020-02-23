@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 00:27:40 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 02:10:36 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/23 20:51:46 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,3 +130,29 @@ t_token				g_defined_tokens[NB_DEFINED_TOKEN] =
 	{ NONE         , ""   , 0, 0, 1 }
 };
 // echo ! # % + , - . : = @ [ ] ^ _ ` { } / ~ ( ) & | < > $ * ? ;
+
+t_token_str			g_token_str[NB_DEFINED_TOKEN] =
+{
+	{ERR         , "ERR"},
+	{EOT         , "EOT"},
+	{SPACE       , "SPACE"},
+	{WORD        , "WORD"},
+	{LPAREN      , "LPAREN"},
+	{RPAREN      , "RPAREN"},
+	{REDIREC_IN  , "REDIREC_IN"},
+	{REDIREC_OUT , "REDIREC_OUT"},
+	{DREDIREC_OUT, "DREDIREC_OUT"},
+	{SQUOTE      , "SQUOTE"},
+	{DQUOTE      , "DQUOTE"},
+	{DBL_AND     , "DBL_AND"},
+	{DBL_OR      , "DBL_OR"},
+	{PIPE        , "PIPE"},
+	{SEMICON     , "SEMICON"},
+	{BSLASH      , "BSLASH"},
+	{QUESMARK    , "QUESMARK"},
+	{DOLLAR      , "DOLLAR"},
+	{PASS        , "PASS"},
+	{SLASH       , "SLASH"},
+	{STAR        , "STAR"},
+	{NONE        , "NONE"}
+}

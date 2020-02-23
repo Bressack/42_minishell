@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:21:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 14:50:16 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/23 19:15:59 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,13 @@ typedef struct		s_token
 	int				pos_in_line;
 	int				isunique;
 }					t_token;
+typedef struct		s_token_str
+{
+	t_token_type	type;
+	char			str[20];
+}					t_token_str;
 extern t_token		g_defined_tokens[NB_DEFINED_TOKEN];
+extern t_token_str	g_token_str[NB_DEFINED_TOKEN];
 t_token				token__new(t_token_type type, char *value, int pos);
 void				token__del(t_token token);
 void				token__print(t_token token);

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 13:55:09 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/23 19:00:44 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** token__new
 ** parameter: t_token_type type, char *value, int pos
 **
-** token__new creat ans return a new token and init the token values
+** token__new return a new token previously initialized
 */
 // t_token			token__new(t_token_type type, char *value, int pos)
 // {
@@ -74,6 +74,13 @@ void			token__print(t_token t) // for the moment, just for debug (yes it's ugly)
 int				token__istype(t_token token, t_token_type type)
 {
 	return (type & token.type);
+}
+
+char			*token__get_type_str(t_token token)
+{
+	if (!token__istype(token, 0x3FFFFF)) // 0x3FFFFF means all token types declared in enum e_token_type (equivalent to: if (!token__istype(token, ERR|EOT|SPACE|PASS|WORD|SQUOTE|DQUOTE|LPAREN|RPAREN|REDIREC_IN|REDIREC_OUT|DREDIREC_OUT|DBL_AND|SGL_AND|DBL_OR|PIPE|SEMICON|BSLASH|QUESMARK|DOLLAR|SLASH|STAR|NONE)) )
+		return (token__get_type_str(g_defined_tokens[ERR])); // return the value of the defined token ERR
+	return ((char *)g_token_str[token.type]); // if token is a valid token, return its value
 }
 
 // ls -laG | cat -e && rm -rf srcs/maintest/main.c ; echo $HOME | cat -e | wc -l
