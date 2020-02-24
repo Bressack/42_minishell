@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/23 19:02:52 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/25 00:15:51 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,44 +77,43 @@ int		main(int ac, char **av, char **env)
 {
 	t_lexer		lex;
 	t_token		current_token;
-	t_ast		ast;
+	int			sloc;
+	int			pid;
+	// t_ast		ast;
 
 	bzero(&lex, sizeof(t_lexer));
 	get_env(ac, av, env);
+	printf("echo $HOME \"je \'suis\' un \\\" chat\"$OK$SALUT\n");
 	while (1)
 	{
 		signal(SIGINT, sig_handler);
 		lexer__refill_line(&lex, 0, PROMPT_CASUAL);
 		if (!ft_strcmp(lex.line, "exit") || (lex.line[0] <= 0 && ft_dprintf(1, "exit\n")))
 			break ;
-		// ac = -1;
-		// while (++ac < BUILTINS) // OBVOUSLY MOVE THIS ONE LATER // YES OBVOUSLY WE SHALL
-		// {
-		// 	if (ft_strncmp(lex.line, g_builtins[ac].name, g_builtins[ac].len) == 0)
-		// 	{
-		// 		g_builtins[ac].f(lex.line + g_builtins[ac].len + 1);
-		// 		break ;
-		// 	}
-		// }
-		// if (ac == BUILTINS)
-		// 	ft_dprintf(1, "minishell: command not found: %s\n", lex.line);
-
-		ast = ast__new(lex);
-		// while (1)
-		// {
-		// 	current_token = lexer__get_next_token(&lex);
-		// 	if (token__istype(current_token, ERR)
-		// 		lexer__error(&lex);
-		// 	if (token__istype(current_token, EOT | NONE))
-		// 		break ;
-		// 	token__print(current_token);
-		// 	ast__add_node(&ast, current_token);
-		// }
-
+		// ast = ast__new(lex);
+		if (!(pid = fork()))
+		{
+			while (1)
+			{
+				current_token = lexer__get_next_token(&lex);
+				token__print(current_token);
+				if (current_token.type == ERR)
+				{
+					lexer__error(1, &lex);
+					break ;
+				}
+				if (token__istype(current_token, EOT | NONE))
+					break ;
+				token__del(current_token);
+				// ast__add_node(&ast, current_token);
+			}
+			exit(0);
+		}
+		waitpid(pid, &sloc, WUNTRACED);
 		try_free_((void **)&lex.line, _FL_);
 	}
 	try_free_((void **)&lex.line, _FL_);
 	try_free_all(_FL_);
-	print_mem__(PRINT_KO);
+	print_mem__(PRINT_ERR);
 	return (0);
 }

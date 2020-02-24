@@ -1,25 +1,29 @@
 # minishell Grammar
 
-<ascii>						: [0 .. 254]
+ASCII						: [0 .. 254]
 							;
-<letter>					: ['a' .. 'z']
+LETTER						: ['a' .. 'z']
 							| ['A' .. 'Z']
-<symbole>					: '!' | '#' | '%' | '+' | ',' | '-' | '.' | ':'
-							| '=' | '@' | '[' | ']' | '^' | '_' | '`' | '{'
-							| '}' | '/' | '~' | '?' | '*'|
+SYMBOLE						: '!' | '#' | '%' | '+' | ',' | '-' | '.' | ':'
+							| '=' | '@' | '[' | ']' | '^' | '_' | '{'
+							| '}' | '/' | '~' | '?' | '*'
 							;
-<digit>						: ['0' .. '9']
+DIGIT						: ['0' .. '9']
 							;
-<number>					: <digit>
-							| <number> <digit>
+<number>					: DIGIT
+							| <number> DIGIT
 							;
-<escaped>					: '\' <ascii>
+<escaped>					: '\' ASCII
 							;
-<word>						: <letter>
-							| <digit>
+<empty>						:
+							;
+<word>						: LETTER
+							| DIGIT
+							| SYMBOLE
 							| <escaped>
-							| <word> <letter>
-							| <word> <digit>
+							| <word> LETTER
+							| <word> DIGIT
+							| <word> SYMBOLE
 							| <word> <escaped>
 							;
 <word_list> 				: <word>
@@ -65,11 +69,13 @@
 							| <list1> '\n' <newline_list> <list1>
 							| <pipeline>
 							;
-<list_terminator>			: '\n'
-							| ';'
-							;
-<newline_list>				:
+<newline_list>				: <empty>
 							| <newline_list> '\n'
+							;
+%% start					: <expr>
+							;
+<expr>						: <empty>
+							| <simple_list>
 							;
 <simple_list>				: <simple_list1>
 							| <simple_list1> '&'
@@ -81,6 +87,6 @@
 							| <simple_list1> ';' <simple_list1>
 							| <pipeline>
 							;
-<pipeline>					:
+<pipeline>					: <empty>
 							| <pipeline> '|' <newline_list> <pipeline>
 		  					| <command>

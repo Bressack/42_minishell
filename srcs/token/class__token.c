@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/23 19:00:44 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/24 23:12:33 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,8 @@ void			token__print(t_token t) // for the moment, just for debug (yes it's ugly)
 	else if (t.type == PIPE)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"PIPE        "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
 	else if (t.type == SEMICON)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"SEMICON     "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
 	else if (t.type == BSLASH)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"BSLASH      "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
-	else if (t.type == QUESMARK)	printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"QUESMARK    "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
 	else if (t.type == DOLLAR)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"DOLLAR      "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
 	else if (t.type == PASS)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"PASS        "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
-	else if (t.type == SLASH)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"SLASH       "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
-	else if (t.type == STAR)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"STAR        "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
 	else if (t.type == NONE)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"NONE        "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
 }
 
@@ -80,7 +77,7 @@ char			*token__get_type_str(t_token token)
 {
 	if (!token__istype(token, 0x3FFFFF)) // 0x3FFFFF means all token types declared in enum e_token_type (equivalent to: if (!token__istype(token, ERR|EOT|SPACE|PASS|WORD|SQUOTE|DQUOTE|LPAREN|RPAREN|REDIREC_IN|REDIREC_OUT|DREDIREC_OUT|DBL_AND|SGL_AND|DBL_OR|PIPE|SEMICON|BSLASH|QUESMARK|DOLLAR|SLASH|STAR|NONE)) )
 		return (token__get_type_str(g_defined_tokens[ERR])); // return the value of the defined token ERR
-	return ((char *)g_token_str[token.type]); // if token is a valid token, return its value
+	return ((char *)g_token_str[token.type].str); // if token is a valid token, return its value
 }
 
 // ls -laG | cat -e && rm -rf srcs/maintest/main.c ; echo $HOME | cat -e | wc -l

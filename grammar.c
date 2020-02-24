@@ -6,33 +6,27 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/23 21:37:59 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/23 22:03:43 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/24 18:43:22 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // les terminaux doivent etre eaten et les non terminaux sont uniquement des fonction et donc appel de fonction
-int		nt_ascii()
+
+
+
+t_token		get_next_token()
 {
-	return (c >= 0 && c <= 254 ? 1 : 0);
+	while (self.current_char != EOT)
+	{
+		if (isspace(self.current_char))
+			skip_whitespace(self);
+
+	}
 }
 
-int		nt_letter()
+int			nt_digit(self)
 {
-	return ((c >= 'a' && c <= 'z' )|| (c >= 'A' && c <= 'Z') ? 1 : 0);
-}
 
-int		nt_symbole()
-{
-	return (c == '!' || c == '#' || c == '%' || c == '+' || c == ',' ||
-			c == '-' || c == '.' || c == ':' || c == '=' || c == '@' ||
-			c == '[' || c == ']' || c == '^' || c == '_' || c == '`' ||
-			c == '{' || c == '}' || c == '/' || c == '~' || c == '?' ||
-			c == '*' ? 1 : 0);
-}
-
-int		nt_digit()
-{
-	return (c >= '0' && c <= '9' ? 1 : 0);
 }
 
 void		nt_number()

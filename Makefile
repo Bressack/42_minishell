@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/22 17:06:49 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/24 19:39:48 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -44,8 +44,6 @@ HEADER_DIR			=	\
 HEADER				=	\
 						class__lexer.h \
 						class__token.h \
-						class__ast.h \
-						class__node.h \
 						color_shell.h \
 						get_next_line.h \
 						minishell.h \
@@ -54,6 +52,8 @@ HEADER				=	\
 						env.h \
 						utils.h \
 						commands.h \
+						# class__ast.h \
+						# class__node.h \
 
 # *** SRCS ******************************************************************* #
 
@@ -76,11 +76,11 @@ SRCS_LEXER			=	\
 SRCS_BUILTIN		=	\
 						builtins/commands.c \
 
-SRCS_AST			=	\
-						ast/class__ast.c \
-
-SRCS_NODE			=	\
-						node/class__node.c \
+# SRCS_AST			=	\
+# 						ast/class__ast.c \
+#
+# SRCS_NODE			=	\
+# 						node/class__node.c \
 
 SRCS_UTILS			=	\
 						utils/ft_strlen.c \
@@ -112,8 +112,8 @@ SRCS_LIST			=	\
 						$(SRCS_BUILTIN) \
 						$(SRCS_UTILS) \
 						$(SRCS_PRINTF) \
-						$(SRCS_AST) \
-						$(SRCS_NODE) \
+						# $(SRCS_AST) \
+						# $(SRCS_NODE) \
 
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))

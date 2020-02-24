@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 13:24:16 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/25 00:00:46 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,25 @@ t_lexer				lexer__new(char *line)
 	return (lex);
 }
 
-inline void			lexer__error(t_lexer *lex)
+void				lexer__error(int opt, t_lexer *lex)
 {
-	printf("Invalid character \'%c\' (%#x)\n",
-		lex->current_char, lex->current_char);
+	if (opt == UNEXPECTED_EOF)
+		printf("error: unexpected \'EOF\' after \'%c\'\n", lex->current_char);
+	else if (opt == SGLAND_NOT_HANDLED)
+		printf("error: functionality not supported \'%c\'\n", lex->current_char);
+	else
+		printf("Invalid character \'%c\' (%#x)\n",
+			lex->current_char, lex->current_char);
 }
 
-inline int			lexer__istype(char c, t_char_type type)
+inline int			lexer__istype(t_lexer *lex, t_char_type type)
 {
-	return (type & g_token_ascii_table[(int)c]);
+	return (type & g_token_ascii_table[(int)(lex->current_char)]);
+}
+
+inline int			lexer__istype_start(t_lexer *lex, t_char_type type)
+{
+	return (type & g_token_ascii_table[(int)(lex->start_char)]);
 }
 
 /*
@@ -45,67 +55,66 @@ inline int			lexer__istype(char c, t_char_type type)
 */
 char				*lexer__debug(t_lexer *lex, int lever, int opt)
 {
-	if (opt == DEBUG_PRINT_CHAR_TYPE)
-	{
-			 if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_ERR))		dprintf(2, "type: CHR_ERR        \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_EOT))		dprintf(2, "type: CHR_EOT        \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_SPACE))		dprintf(2, "type: CHR_SPACE      \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_WORD))		dprintf(2, "type: CHR_WORD       \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_LPAREN))		dprintf(2, "type: CHR_LPAREN     \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_RPAREN))		dprintf(2, "type: CHR_RPAREN     \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_REDIREC_IN))	dprintf(2, "type: CHR_REDIREC_IN \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_REDIREC_OUT))dprintf(2, "type: CHR_REDIREC_OUT\n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_SQUOTE))		dprintf(2, "type: CHR_SQUOTE     \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_DQUOTE))		dprintf(2, "type: CHR_DQUOTE     \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_AND))		dprintf(2, "type: CHR_AND        \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_PIPE))		dprintf(2, "type: CHR_PIPE       \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_SEMICON))	dprintf(2, "type: CHR_SEMICON    \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_SLASH))		dprintf(2, "type: CHR_SLASH      \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_PASS))		dprintf(2, "type: CHR_PASS       \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_DOLLAR))		dprintf(2, "type: CHR_DOLLAR     \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_BSLASH))		dprintf(2, "type: CHR_BSLASH     \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_QUESMARK))	dprintf(2, "type: CHR_QUESMARK   \n");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_STAR))		dprintf(2, "type: CHR_STAR       \n");
-		else	dprintf(2, "CHR_UNKNOWN\n");
-	}
 	if (opt == DEBUG_RET_CHAR_TYPE)
 	{
-			 if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_ERR))		return ("CHR_ERR");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_EOT))		return ("CHR_EOT");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_SPACE))		return ("CHR_SPACE");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_WORD))		return ("CHR_WORD");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_LPAREN))		return ("CHR_LPAREN");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_RPAREN))		return ("CHR_RPAREN");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_REDIREC_IN))	return ("CHR_REDIREC_IN");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_REDIREC_OUT))return ("CHR_REDIREC_OUT");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_SQUOTE))		return ("CHR_SQUOTE");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_DQUOTE))		return ("CHR_DQUOTE");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_AND))		return ("CHR_AND");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_PIPE))		return ("CHR_PIPE");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_SEMICON))	return ("CHR_SEMICON");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_SLASH))		return ("CHR_SLASH");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_PASS))		return ("CHR_PASS");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_DOLLAR))		return ("CHR_DOLLAR");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_BSLASH))		return ("CHR_BSLASH");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_QUESMARK))	return ("CHR_QUESMARK");
-		else if (lexer__istype(lever == POS ? lex->current_char : lex->start_char, CHR_STAR))		return ("CHR_STAR");
-		else	return ("CHR_UNKNOWN");
+		if (lever == POS)
+		{
+				 if (lexer__istype(lex, CHR_ERR))			return ("CHR_ERR");
+			else if (lexer__istype(lex, CHR_EOT))			return ("CHR_EOT");
+			else if (lexer__istype(lex, CHR_SPACE))			return ("CHR_SPACE");
+			else if (lexer__istype(lex, CHR_WORD))			return ("CHR_WORD");
+			else if (lexer__istype(lex, CHR_LPAREN))		return ("CHR_LPAREN");
+			else if (lexer__istype(lex, CHR_RPAREN))		return ("CHR_RPAREN");
+			else if (lexer__istype(lex, CHR_REDIREC_IN))	return ("CHR_REDIREC_IN");
+			else if (lexer__istype(lex, CHR_REDIREC_OUT))	return ("CHR_REDIREC_OUT");
+			else if (lexer__istype(lex, CHR_SQUOTE))		return ("CHR_SQUOTE");
+			else if (lexer__istype(lex, CHR_DQUOTE))		return ("CHR_DQUOTE");
+			else if (lexer__istype(lex, CHR_AND))			return ("CHR_AND");
+			else if (lexer__istype(lex, CHR_PIPE))			return ("CHR_PIPE");
+			else if (lexer__istype(lex, CHR_SEMICON))		return ("CHR_SEMICON");
+			else if (lexer__istype(lex, CHR_PASS))			return ("CHR_PASS");
+			else if (lexer__istype(lex, CHR_DOLLAR))		return ("CHR_DOLLAR");
+			else if (lexer__istype(lex, CHR_BSLASH))		return ("CHR_BSLASH");
+			else											return ("CHR_UNKNOWN");
+		}
+		else if (lever == START)
+		{
+				if (lexer__istype_start(lex, CHR_ERR))			return ("CHR_ERR");
+		   else if (lexer__istype_start(lex, CHR_EOT))			return ("CHR_EOT");
+		   else if (lexer__istype_start(lex, CHR_SPACE))		return ("CHR_SPACE");
+		   else if (lexer__istype_start(lex, CHR_WORD))			return ("CHR_WORD");
+		   else if (lexer__istype_start(lex, CHR_LPAREN))		return ("CHR_LPAREN");
+		   else if (lexer__istype_start(lex, CHR_RPAREN))		return ("CHR_RPAREN");
+		   else if (lexer__istype_start(lex, CHR_REDIREC_IN))	return ("CHR_REDIREC_IN");
+		   else if (lexer__istype_start(lex, CHR_REDIREC_OUT))	return ("CHR_REDIREC_OUT");
+		   else if (lexer__istype_start(lex, CHR_SQUOTE))		return ("CHR_SQUOTE");
+		   else if (lexer__istype_start(lex, CHR_DQUOTE))		return ("CHR_DQUOTE");
+		   else if (lexer__istype_start(lex, CHR_AND))			return ("CHR_AND");
+		   else if (lexer__istype_start(lex, CHR_PIPE))			return ("CHR_PIPE");
+		   else if (lexer__istype_start(lex, CHR_SEMICON))		return ("CHR_SEMICON");
+		   else if (lexer__istype_start(lex, CHR_PASS))			return ("CHR_PASS");
+		   else if (lexer__istype_start(lex, CHR_DOLLAR))		return ("CHR_DOLLAR");
+		   else if (lexer__istype_start(lex, CHR_BSLASH))		return ("CHR_BSLASH");
+		   else													return ("CHR_UNKNOWN");
+		}
 	}
 	else if (opt == DEBUG_POS)
 	{
 		char *tmp_start = lexer__debug(lex, START, DEBUG_RET_CHAR_TYPE);
 		char *tmp_pos = lexer__debug(lex, POS, DEBUG_RET_CHAR_TYPE);
+
 		printf("[ DEBUG :                ] [%s ]\n", lex->line);
+		printf("start: %d | char: (%c)\n", lex->start, lex->start_char);
+		printf("pos  : %d | char: (%c)\n", lex->pos, lex->current_char);
 		printf("[ start : %-15s] [%*s%c%*s]\n", tmp_start, lex->start, "", '^', lex->len_line - lex->start, "");
 		printf("[ pos   : %-15s] [%*s%c%*s]\n", tmp_pos, lex->pos, "", '^', lex->len_line - lex->pos, "");
+		printf("*****************************************************************************\n");
 	}
 	return (NULL);
 }
 
 void				lexer__set_start_pos(t_lexer *lex, int new_pos)
 {
-	if (new_pos >= lex->len_line - 1)
-		new_pos = lex->len_line - 1;
 	lex->start = new_pos;
 	lex->start_char = lex->line[new_pos];
 }
@@ -148,10 +157,27 @@ int					lexer__advance(t_lexer *lex, int n)
 ** lexer__advence_foreach advance until lex->current_char type is egale to the
 ** second parameter 'type'
 */
-void				lexer__advence_foreach(t_lexer *lex, t_char_type type)
+void			lexer__advence_foreach(
+t_lexer *lex, t_char_type type, int whis)
 {
-	while (lexer__istype(lex->current_char, type))
-		lexer__advance(lex, 1);
+	while (1)
+	{
+		if (lexer__istype(lex, CHR_BSLASH) && type == CHR_WORD)
+			lexer__advance(lex, 1);
+		else if (lexer__istype(lex, CHR_BSLASH) && (type == CHR_DQUOTE ||
+			type == CHR_SQUOTE) && whis == WHILE_ISNOT)
+			lexer__advance(lex, 1);
+		if (!lexer__advance(lex, 1))
+			break ;
+		if (whis == WHILE_ISNOT ? lexer__istype(lex, type) : !lexer__istype(
+			lex, type))
+			break ;
+	}
+}
+
+char				lexer__peek(t_lexer *lex)
+{
+	return (lex->line[lex->pos + 1]);
 }
 
 void				lexer__refill_line(t_lexer *lex, int join_nl, int prompt)
@@ -179,68 +205,36 @@ void				lexer__refill_line(t_lexer *lex, int join_nl, int prompt)
 		*lex = lexer__new(line);
 	lex->len_line = ft_strlen(lex->line);
 	lex->current_char = lex->line[lex->pos];
-	// lexer__debug(lex, POS, DEBUG_PRINT_CHAR_TYPE);
-	// lexer__debug(lex, POS, DEBUG_POS);
 }
 
-void				lexer__get_word_quote_token(t_lexer *lex, t_char_type ct)
+int					lexer__isword(t_lexer *lex)
 {
-	while (1)
+	return (lexer__istype(lex, CHR_WORD | CHR_SQUOTE | CHR_DQUOTE |
+		CHR_BSLASH));
+}
+
+int					lexer__isquote(t_lexer *lex)
+{
+	return (lexer__istype(lex, CHR_SQUOTE | CHR_DQUOTE));
+}
+
+void				lexer__pass_quotes(t_lexer *lex, t_char_type type)
+{
+	lexer__advance(lex, 1);
+	while (!lexer__istype(lex, type))
 	{
+		if (lexer__istype(lex, CHR_BSLASH))
+			lexer__advance(lex, 1);
 		if (!lexer__advance(lex, 1))
-			lexer__refill_line(lex, 1, ct == CHR_SQUOTE ? PROMPT_SQUOTE : PROMPT_DQUOTE);
-		else if (lexer__istype(lex->current_char, CHR_BSLASH))
-		{
-			if (!lexer__advance(lex, 1))
-				lexer__refill_line(lex, 0, PROMPT_BSLASH);
-		}
-		else if (lexer__istype(lex->current_char, ct))
 			break ;
 	}
-	lexer__advance(lex, 1);
 }
 
-/*
-** return: t_token
-** lexer__get_word_token
-** parameter: t_lexer *lex
-**
-** lexer__get_word_token get the following word token present in lex->line
-** and starting at lex->start
-**
-** while lex->current_char is a CHR_WORD character type:
-** if lex->current_char is a back slash then pass it and pass his next character
-** else if lex->current_char is a quote (single or double) then advance to the
-** next corresponding quote
-** else lex->current_char is a CHR_WORD character so just advance
-**
-** then
-**
-** substitute the token from line to a new WORD token
-** then
-** return the WORD token
-*/
-t_token				lexer__get_word_token(t_lexer *lex)
+t_token				lexer__token_grabber(t_lexer *lex, t_token_type_m type)
 {
 	t_token			new;
-	t_char_type		ct; // char type
 
-	// lexer__debug(lex, POS, DEBUG_PRINT_CHAR_TYPE);
-	// lexer__debug(lex, POS, DEBUG_POS);
-	while (lexer__istype(lex->current_char,
-		CHR_WORD | CHR_SQUOTE | CHR_DQUOTE | CHR_BSLASH | CHR_STAR | CHR_SLASH))
-	{
-		if (lexer__istype(lex->current_char, CHR_BSLASH))
-		{
-			if (!lexer__advance(lex, 2))
-				lexer__refill_line(lex, 0, PROMPT_BSLASH);
-		}
-		else if ((ct = lexer__istype(lex->current_char, CHR_SQUOTE | CHR_DQUOTE)))
-			lexer__get_word_quote_token(lex, ct);
-		else
-			lexer__advance(lex, 1);
-	}
-	new.type = WORD;
+	new.type = type;
 	new.len = lex->pos - lex->start;
 	new.pos_in_line = lex->start;
 	ft_strncpy(new.value, &lex->line[lex->start], new.len);
@@ -272,17 +266,27 @@ t_token				lexer__get_word_token(t_lexer *lex)
 */
 t_token				lexer__get_next_token(t_lexer *lex)
 {
-	t_token			ret;
 	int				rtype;
 
-	ret = g_defined_tokens[EOT];
-	lexer__advence_foreach(lex, CHR_SPACE | CHR_PASS);
+	// printf(" --- "C_G_GRAY"("C_G_YELLOW"%4d"C_G_GRAY") "C_G_WHITE"BEGIN"C_RES"\n", __LINE__);lexer__debug(lex, 0, DEBUG_POS);
+	while (lexer__istype(lex, CHR_SPACE | CHR_PASS))
+		lexer__advance(lex, 1);
 	lexer__set_start_pos(lex, lex->pos);
-	if ((rtype = lexer__istype(lex->current_char, CHR_ERR | CHR_EOT)))
-		ret = g_defined_tokens[rtype];
-	else
-		ret = lexer__search_defined_token(lex);
-	return (ret);
+	if (lexer__istype(lex, CHR_EOT))
+		return (g_defined_tokens[EOT]);
+	if ((rtype = lexer__isdefined_token(lex)) != NONE)
+		return (g_defined_tokens[rtype]);
+	lexer__istype(lex, CHR_DOLLAR) ? lexer__advance(lex, 1) : 0;
+	lexer__istype(lex, CHR_DOLLAR) ? lexer__advance(lex, 1) : 0;
+	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR))
+	{
+		if (lexer__isdefined_token(lex) != NONE)
+			break ;
+		if ((rtype = lexer__isquote(lex)))
+			lexer__pass_quotes(lex, rtype);
+		lexer__advance(lex, 1);
+	}
+	return (lexer__token_grabber(lex, WORD));
 }
 
 // "les 'enfants' des 'ville' " sont" petits"

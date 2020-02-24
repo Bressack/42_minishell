@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 18:27:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 19:38:24 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/25 00:14:45 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ void	unset(char *name)
 		return ;
 	f = *indir;
 	*indir = f->next;
-	free(f->name);
+	try_free_((void **)&f->name, _FL_);
 	i = -1;
 	while (f->value[++i])
-		free(f->value[i]);
-	free(f->value);
-	free(f);
+		try_free_((void **)&f->value[i], _FL_);
+	try_free_((void **)&f->value, _FL_);
+	try_free_((void **)&f, _FL_);
 }

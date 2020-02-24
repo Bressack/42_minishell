@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 14:50:08 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/24 23:57:57 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,16 @@
 # define PROMPT_DQUOTE_STR "dquote"
 # define PROMPT_BSLASH_STR ""
 
+typedef enum		e_foreach_opt
+{
+	WHILE_IS,
+	WHILE_ISNOT
+}					t_foreach_opt;
+typedef enum		e_error_id
+{
+	UNEXPECTED_EOF,
+	SGLAND_NOT_HANDLED
+}					t_error_id;
 typedef enum		e_debug
 {
 	DEBUG_PRINT_CHAR_TYPE,
@@ -60,12 +70,10 @@ typedef enum		e_char_type
 	CHR_AND			= 0x200,
 	CHR_PIPE		= 0x400,
 	CHR_SEMICON		= 0x800,
-	CHR_SLASH		= 0x1000,
-	CHR_PASS		= 0x2000,
-	CHR_DOLLAR		= 0x4000,
-	CHR_BSLASH		= 0x8000,
-	CHR_QUESMARK	= 0x10000,
-	CHR_STAR		= 0x20000
+	CHR_PASS		= 0x1000,
+	CHR_DOLLAR		= 0x2000,
+	CHR_BSLASH		= 0x4000,
+	CHR_NONE		= 0x8000,
 }					t_char_type;
 extern t_char_type	g_token_ascii_table[255];
 
@@ -74,12 +82,14 @@ extern t_char_type	g_token_ascii_table[255];
 */
 void				print_prompt(int prompt_lever);
 t_lexer				lexer__new(char *line);
-void				lexer__error(t_lexer *lex);
-int					lexer__istype(char c, t_char_type type);
+void				lexer__error(int opt, t_lexer *lex);
+int					lexer__istype(t_lexer *lex, t_char_type type);
 char				*lexer__debug(t_lexer *lex, int lever, int opt);
 void				lexer__set_start_pos(t_lexer *lex, int new_pos);
 int					lexer__advance(t_lexer *lex, int n);
-void				lexer__advence_foreach(t_lexer *lex, t_char_type type);
+char				lexer__peek(t_lexer *lex);
+void			lexer__advence_foreach(
+t_lexer *lex, t_char_type type, int be_or_not_to_be);
 void				lexer__refill_line(t_lexer *lex, int join_nl, int prompt);
 void				lexer__get_word_quote_token(t_lexer *lex, t_char_type ct);
 t_token				lexer__get_word_token(t_lexer *lex);

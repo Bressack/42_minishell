@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 20:31:48 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/25 00:18:03 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	export(char *val)
 		}
 		trav = trav->next;
 	}
-	if (!(new = (t_env *)malloc(sizeof(t_env))))
+	if (!(new = (t_env *)try_malloc(sizeof(t_env), _FL_)))
 		return ;
 	set_env(new, val);
 	new->next = trav->next;
