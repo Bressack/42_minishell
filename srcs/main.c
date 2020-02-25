@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/25 14:02:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/25 14:27:38 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int		main(int ac, char **av, char **env)
 	{
 		signal(SIGINT, sig_handler);
 		lexer__refill_line(&lex, sloc, PROMPT_CASUAL);
-		if (!ft_strcmp(lex.line, "exit") || (lex.line[0] < 0 && ft_dprintf(1, "exit\n")))
+		if (lex.line[0] < 0 && ft_dprintf(1, "exit\n"))
 			break ;
 		// ast = ast__new(lex);
 		if (!(pid = fork()))

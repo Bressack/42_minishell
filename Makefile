@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/25 13:25:50 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/25 14:26:20 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -94,6 +94,7 @@ SRCS_UTILS			=	\
 						utils/ft_strsub.c \
 						utils/ft_strncpy.c \
 						utils/ft_strcmp.c \
+						utils/cat_value.c \
 
 SRCS_PRINTF			=	\
 						utils/ft_printf/to_n.c \

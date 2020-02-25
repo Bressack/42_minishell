@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 13:36:27 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/22 02:08:27 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/25 14:13:33 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,5 @@ char	*ft_strdup(char *src);
 void	*ft_memcpy(void *s1, const void *s2, size_t n);
 char	*ft_strcpy(char *s1, const char *s2);
 int		ft_strcmp(char *s1, char *s2);
+char	*cat_value(char *s1, char *s2);
 #endif
