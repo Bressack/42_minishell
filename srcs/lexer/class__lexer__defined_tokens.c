@@ -6,13 +6,26 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/25 00:12:12 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/25 13:41:18 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int					lexer__isdefined_token(t_lexer *lex)
+/*
+** int					lexer__isdefined_token_dblchar(
+** 	int *type, int *len, char *curr, char *next)
+** {
+** 	len = 0;
+** 	type = EOT;
+** 	curr = lex->current_char;
+** 	next = lex->line[lex->pos + 1];
+**
+**
+** }
+*/
+
+int					lexer__isdefined_token(t_lexer *lex, int adv)
 {
 	int				type;
 	int				len;
@@ -42,12 +55,10 @@ int					lexer__isdefined_token(t_lexer *lex)
 	else if (curr == ';' && (len = 1))
 		type = I_SEMICON;
 	else if (curr == '&')
-	{
 		lexer__error(SGLAND_NOT_HANDLED, lex);
-		return (I_ERR);
-	}
 	else
-		return (NONE);
-	lexer__advance(lex, len);
+		return (I_NONE);
+	if (adv == ADVANCE)
+		lexer__advance(lex, len);
 	return (type);
 }
