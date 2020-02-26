@@ -8,7 +8,7 @@
 
 # Token types
 #
-# EOF (end-of-file) token is used to indicate that
+# EOT (end-of-file) token is used to indicate that
 # there is no more input left for lexical analysis
 INTEGER       = 'INTEGER'
 REAL          = 'REAL'
@@ -31,7 +31,7 @@ PROGRAM       = 'PROGRAM'
 VAR           = 'VAR'
 COLON         = 'COLON'
 COMMA         = 'COMMA'
-EOF           = 'EOF'
+EOT           = 'EOT'
 
 
 class Token(object):
@@ -206,7 +206,7 @@ class Lexer(object):
 
             self.error()
 
-        return Token(EOF, None)
+        return Token(EOT, None)
 
 
 ###############################################################################
@@ -540,7 +540,7 @@ class Parser(object):
         variable: ID
         """
         node = self.program()
-        if self.current_token.type != EOF:
+        if self.current_token.type != EOT:
             self.error()
 
         return node

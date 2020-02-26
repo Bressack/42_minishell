@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/25 11:50:15 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/26 21:46:02 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef enum		e_foreach_opt
 }					t_foreach_opt;
 typedef enum		e_error_id
 {
-	UNEXPECTED_EOF,
+	UNEXPECTED_EOT,
 	SGLAND_NOT_HANDLED,
 	ERR_GNL
 }					t_error_id;
@@ -84,7 +84,8 @@ extern t_char_type	g_token_ascii_table[255];
 ** class__lexer.c
 */
 void				print_prompt(int sloc, int prompt_lever);
-t_lexer				lexer__new(char *line);
+t_lexer				lexer__new(int sloc);
+void				lexer__del(t_lexer *lex);
 void				lexer__error(int opt, t_lexer *lex);
 int					lexer__istype(t_lexer *lex, t_char_type type);
 char				*lexer__debug(t_lexer *lex, int lever, int opt);

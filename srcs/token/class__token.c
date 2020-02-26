@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/24 23:12:33 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/26 06:37:26 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void			token__print(t_token t) // for the moment, just for debug (yes it's ugly)
 	else if (t.type == NONE)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"NONE        "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t.value);
 }
 
-int				token__istype(t_token token, t_token_type type)
+int				token__istype(t_token token, t_token_type_m type)
 {
 	return (type & token.type);
 }

@@ -6,29 +6,29 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/25 13:58:16 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/26 21:46:02 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-t_lexer				lexer__new(char *line)
+t_lexer				lexer__new(int sloc)
 {
 	t_lexer			lex;
 
-	lex.line = line; // not a duplicated str (if line is freed, lex.line will be freed too)
-	lex.len_line = ft_strlen(line);
-	lex.pos = 0;
-	lex.start = 0;
-	lex.current_char = lex.line[lex.pos];
-	lex.start_char = lex.line[lex.pos];
+	lexer__refill_line(&lex, sloc, PROMPT_CASUAL);
 	return (lex);
+}
+
+void				lexer__del(t_lexer *lex)
+{
+	try_free_((void **)&lex->line, _FL_);
 }
 
 void				lexer__error(int opt, t_lexer *lex)
 {
-	if (opt == UNEXPECTED_EOF)
-		printf("error: unexpected \'EOF\' after \'%c\'\n", lex->current_char);
+	if (opt == UNEXPECTED_EOT)
+		printf("error: unexpected \'EOT\' after \'%c\'\n", lex->current_char);
 	else if (opt == SGLAND_NOT_HANDLED)
 		printf("error: functionality not supported \'%c\'\n", lex->current_char);
 	else if (opt == ERR_GNL)
@@ -47,73 +47,6 @@ inline int			lexer__istype(t_lexer *lex, t_char_type type)
 inline int			lexer__istype_start(t_lexer *lex, t_char_type type)
 {
 	return (type & g_token_ascii_table[(int)(lex->start_char)]);
-}
-
-/*
-** function here just for the debug, it will be remove at the end
-**
-** lexer__debug take a t_lex as parameter and print a debugging message on
-** stderr about the character type of lex->current_char
-** if the type of lex->current_char is unknown, print '/!\ UNKNOWN CHARACTER TYPE /!\' on stderr
-*/
-char				*lexer__debug(t_lexer *lex, int lever, int opt)
-{
-	if (opt == DEBUG_RET_CHAR_TYPE)
-	{
-		if (lever == POS)
-		{
-				 if (lexer__istype(lex, CHR_ERR))			return ("CHR_ERR");
-			else if (lexer__istype(lex, CHR_EOT))			return ("CHR_EOT");
-			else if (lexer__istype(lex, CHR_SPACE))			return ("CHR_SPACE");
-			else if (lexer__istype(lex, CHR_WORD))			return ("CHR_WORD");
-			else if (lexer__istype(lex, CHR_LPAREN))		return ("CHR_LPAREN");
-			else if (lexer__istype(lex, CHR_RPAREN))		return ("CHR_RPAREN");
-			else if (lexer__istype(lex, CHR_REDIREC_IN))	return ("CHR_REDIREC_IN");
-			else if (lexer__istype(lex, CHR_REDIREC_OUT))	return ("CHR_REDIREC_OUT");
-			else if (lexer__istype(lex, CHR_SQUOTE))		return ("CHR_SQUOTE");
-			else if (lexer__istype(lex, CHR_DQUOTE))		return ("CHR_DQUOTE");
-			else if (lexer__istype(lex, CHR_AND))			return ("CHR_AND");
-			else if (lexer__istype(lex, CHR_PIPE))			return ("CHR_PIPE");
-			else if (lexer__istype(lex, CHR_SEMICON))		return ("CHR_SEMICON");
-			else if (lexer__istype(lex, CHR_PASS))			return ("CHR_PASS");
-			else if (lexer__istype(lex, CHR_DOLLAR))		return ("CHR_DOLLAR");
-			else if (lexer__istype(lex, CHR_BSLASH))		return ("CHR_BSLASH");
-			else											return ("CHR_UNKNOWN");
-		}
-		else if (lever == START)
-		{
-				if (lexer__istype_start(lex, CHR_ERR))			return ("CHR_ERR");
-			else if (lexer__istype_start(lex, CHR_EOT))			return ("CHR_EOT");
-			else if (lexer__istype_start(lex, CHR_SPACE))		return ("CHR_SPACE");
-			else if (lexer__istype_start(lex, CHR_WORD))		return ("CHR_WORD");
-			else if (lexer__istype_start(lex, CHR_LPAREN))		return ("CHR_LPAREN");
-			else if (lexer__istype_start(lex, CHR_RPAREN))		return ("CHR_RPAREN");
-			else if (lexer__istype_start(lex, CHR_REDIREC_IN))	return ("CHR_REDIREC_IN");
-			else if (lexer__istype_start(lex, CHR_REDIREC_OUT))	return ("CHR_REDIREC_OUT");
-			else if (lexer__istype_start(lex, CHR_SQUOTE))		return ("CHR_SQUOTE");
-			else if (lexer__istype_start(lex, CHR_DQUOTE))		return ("CHR_DQUOTE");
-			else if (lexer__istype_start(lex, CHR_AND))			return ("CHR_AND");
-			else if (lexer__istype_start(lex, CHR_PIPE))		return ("CHR_PIPE");
-			else if (lexer__istype_start(lex, CHR_SEMICON))		return ("CHR_SEMICON");
-			else if (lexer__istype_start(lex, CHR_PASS))		return ("CHR_PASS");
-			else if (lexer__istype_start(lex, CHR_DOLLAR))		return ("CHR_DOLLAR");
-			else if (lexer__istype_start(lex, CHR_BSLASH))		return ("CHR_BSLASH");
-			else												return ("CHR_UNKNOWN");
-		}
-	}
-	else if (opt == DEBUG_POS)
-	{
-		char *tmp_start = lexer__debug(lex, START, DEBUG_RET_CHAR_TYPE);
-		char *tmp_pos = lexer__debug(lex, POS, DEBUG_RET_CHAR_TYPE);
-
-		printf("[ DEBUG :                ] [%s ]\n", lex->line);
-		printf("start: %d | char: (%c)\n", lex->start, lex->start_char);
-		printf("pos  : %d | char: (%c)\n", lex->pos, lex->current_char);
-		printf("[ start : %-15s] [%*s%c%*s]\n", tmp_start, lex->start, "", '^', lex->len_line - lex->start, "");
-		printf("[ pos   : %-15s] [%*s%c%*s]\n", tmp_pos, lex->pos, "", '^', lex->len_line - lex->pos, "");
-		printf("*****************************************************************************\n");
-	}
-	return (NULL);
 }
 
 void				lexer__set_start_pos(t_lexer *lex, int new_pos)
@@ -220,7 +153,7 @@ void				lexer__pass_quotes(t_lexer *lex, t_char_type type)
 			break ;
 	}
 	if (!lexer__istype(lex, type))
-		lexer__error(UNEXPECTED_EOF, lex);
+		lexer__error(UNEXPECTED_EOT, lex);
 
 }
 

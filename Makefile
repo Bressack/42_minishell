@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/25 14:26:20 by frlindh          ###   ########.fr        #
+#    Updated: 2020/02/27 00:02:40 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -33,6 +33,7 @@ FLAGS				=	\
 						-Wall -Wextra -Werror \
 						-O3 \
 						-g3 -fsanitize=address \
+						-ferror-limit=1000 \
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -52,8 +53,7 @@ HEADER				=	\
 						env.h \
 						utils.h \
 						commands.h \
-						# class__ast.h \
-						# class__node.h \
+						class__tokovore.h \
 
 # *** SRCS ******************************************************************* #
 
@@ -76,11 +76,8 @@ SRCS_LEXER			=	\
 SRCS_BUILTIN		=	\
 						builtins/commands.c \
 
-# SRCS_AST			=	\
-# 						ast/class__ast.c \
-#
-# SRCS_NODE			=	\
-# 						node/class__node.c \
+SRCS_TOKOVORE		=	\
+						tokovore/class__tokovore.c \
 
 SRCS_UTILS			=	\
 						utils/ft_strlen.c \
@@ -95,6 +92,21 @@ SRCS_UTILS			=	\
 						utils/ft_strncpy.c \
 						utils/ft_strcmp.c \
 						utils/cat_value.c \
+
+SRCS_LIBLIST		=	\
+						ft_add_node_end_np.c \
+						ft_add_node_f_nextto_np.c \
+						ft_add_node_f_prevto_np.c \
+						ft_add_node_nextto_np.c \
+						ft_add_node_prevto_np.c \
+						ft_add_node_start_np.c \
+						ft_del_list_np.c \
+						ft_del_node_end_np.c \
+						ft_del_node_np.c \
+						ft_del_node_start_np.c \
+						ft_foreach_node_f_np.c \
+						ft_new_node.c \
+						ft_swap_node_np.c \
 
 SRCS_PRINTF			=	\
 						utils/ft_printf/to_n.c \
@@ -113,8 +125,8 @@ SRCS_LIST			=	\
 						$(SRCS_BUILTIN) \
 						$(SRCS_UTILS) \
 						$(SRCS_PRINTF) \
-						# $(SRCS_AST) \
-						# $(SRCS_NODE) \
+						$(SRCS_TOKOVORE) \
+						$(SRCS_LIBLIST) \
 
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))

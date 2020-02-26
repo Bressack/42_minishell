@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_del_node_end_np.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/15 11:20:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 00:05:00 by tharchen         ###   ########.fr       */
+/*   Created: 2019/09/30 12:39:11 by tharchen          #+#    #+#             */
+/*   Updated: 2020/02/26 23:07:23 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-# include <libc.h>
-# include <errno.h>
-# include <color_shell.h>
-# include <try_malloc.h>
-# include <double_linked.h>
-# include <utils.h>
-# include <class__token.h>
-# include <class__lexer.h>
-# include <class__tokovore.h>
-# include <get_next_line.h>
-# include <ft_printf.h>
-# include <env.h>
-# include <commands.h>
+#include <double_linked.h>
 
-#endif
+void		ft_del_node_end_np(t_pnp **begin_list, void (*f)(t_pnp *curr))
+{
+	t_pnp	*tmp;
+
+	tmp = *begin_list;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	if (tmp != *begin_list)
+		tmp->prev->next = NULL;
+	if (f)
+		f(tmp);
+	try_free_((void **)&tmp, _FL_);
+}
