@@ -6,26 +6,37 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/26 21:46:02 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/27 18:23:30 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-t_lexer				lexer__new(int sloc)
-{
-	t_lexer			lex;
+/*
+** **************************************************************************
+** **** lexer object handle *************************************************
+** **************************************************************************
+*/
 
-	lexer__refill_line(&lex, sloc, PROMPT_CASUAL);
+t_lexer			*lexer__new(int sloc)
+{
+	t_lexer		*lex;
+
+	lex = try_malloc(sizeof(t_lexer), _FL_);
+	lexer__refill_line(lex, sloc, PROMPT_CASUAL);
 	return (lex);
 }
 
-void				lexer__del(t_lexer *lex)
+void			lexer__del(t_lexer **lex)
 {
-	try_free_((void **)&lex->line, _FL_);
+	if (*lex)
+	{
+		try_free_((void **)&(*lex)->line, _FL_);
+		try_free_((void **)lex, _FL_);
+	}
 }
 
-void				lexer__error(int opt, t_lexer *lex)
+void			lexer__error(int opt, t_lexer *lex)
 {
 	if (opt == UNEXPECTED_EOT)
 		printf("error: unexpected \'EOT\' after \'%c\'\n", lex->current_char);
@@ -39,36 +50,45 @@ void				lexer__error(int opt, t_lexer *lex)
 	exit(-1);
 }
 
-inline int			lexer__istype(t_lexer *lex, t_char_type type)
+/*
+** **************************************************************************
+** **** is something and peek ***********************************************
+** **************************************************************************
+*/
+
+inline int		lexer__istype(t_lexer *lex, t_char_type type)
 {
 	return (type & g_token_ascii_table[(int)(lex->current_char)]);
 }
 
-inline int			lexer__istype_start(t_lexer *lex, t_char_type type)
+inline int		lexer__istype_start(t_lexer *lex, t_char_type type)
 {
 	return (type & g_token_ascii_table[(int)(lex->start_char)]);
 }
 
-void				lexer__set_start_pos(t_lexer *lex, int new_pos)
+inline char		lexer__peek(t_lexer *lex)
 {
-	lex->start = new_pos;
-	lex->start_char = lex->line[new_pos];
+	return (lex->line[lex->pos + 1]);
+}
+
+inline int		lexer__isword(t_lexer *lex)
+{
+	return (lexer__istype(lex, CHR_WORD | CHR_SQUOTE | CHR_DQUOTE |
+		CHR_BSLASH));
+}
+
+inline int		lexer__isquote(t_lexer *lex)
+{
+	return (lexer__istype(lex, CHR_SQUOTE | CHR_DQUOTE));
 }
 
 /*
-** return: int
-** lexer__advance
-** parameter: t_lexer *lex, int n
-**
-** lexer__advance try to advance the reading head by the second parameter 'n'
-**
-** if lexer__advance fall on the end of the lex->line during the process, it
-** assigns the CHR_EOT character type to lex->current_char and return 0
-** else return 1
-**
-** it's a recurcive function
+** **************************************************************************
+** **** advance and pass function *******************************************
+** **************************************************************************
 */
-int					lexer__advance(t_lexer *lex, int n)
+
+int				lexer__advance(t_lexer *lex, int n)
 {
 	if (lex->current_char == CHR_EOT)
 		return (0);
@@ -85,14 +105,6 @@ int					lexer__advance(t_lexer *lex, int n)
 	}
 }
 
-/*
-** return: void
-** lexer__advence_foreach
-** parameter: t_lexer *lex, t_char_type type
-**
-** lexer__advence_foreach advance until lex->current_char type is egale to the
-** second parameter 'type'
-*/
 void			lexer__advence_foreach(t_lexer *lex, t_char_type type, int whis)
 {
 	while (1)
@@ -110,38 +122,9 @@ void			lexer__advence_foreach(t_lexer *lex, t_char_type type, int whis)
 	}
 }
 
-char				lexer__peek(t_lexer *lex)
+void			lexer__pass_quotes(t_lexer *lex, t_char_type type)
 {
-	return (lex->line[lex->pos + 1]);
-}
-
-void				lexer__refill_line(t_lexer *lex, int sloc, int prompt)
-{
-	try_free_((void **)&lex->line, _FL_);
-	print_prompt(sloc, prompt);
-	if (get_next_line(0, &lex->line) == -1)
-		lexer__error(ERR_GNL, lex);
-	lex->pos = 0;
-	lex->start = 0;
-	lex->len_line = ft_strlen(lex->line);
-	lex->current_char = lex->line[lex->pos];
-	lex->start_char = lex->line[lex->start];
-}
-
-int					lexer__isword(t_lexer *lex)
-{
-	return (lexer__istype(lex, CHR_WORD | CHR_SQUOTE | CHR_DQUOTE |
-		CHR_BSLASH));
-}
-
-int					lexer__isquote(t_lexer *lex)
-{
-	return (lexer__istype(lex, CHR_SQUOTE | CHR_DQUOTE));
-}
-
-void				lexer__pass_quotes(t_lexer *lex, t_char_type type)
-{
-	int				found;
+	int			found;
 
 	found = 0;
 	lexer__advance(lex, 1);
@@ -157,33 +140,62 @@ void				lexer__pass_quotes(t_lexer *lex, t_char_type type)
 
 }
 
-t_token				lexer__token_grabber(t_lexer *lex, t_token_type_m type)
-{
-	t_token			new;
+/*
+** **************************************************************************
+** **** set and init ********************************************************
+** **************************************************************************
+*/
 
-	new.type = type;
-	new.len = lex->pos - lex->start;
-	new.pos_in_line = lex->start;
-	ft_strncpy(new.value, &lex->line[lex->start], new.len);
-	new.value[new.len] = 0;
+void			lexer__set_start_pos(t_lexer *lex, int new_pos)
+{
+	lex->start = new_pos;
+	lex->start_char = lex->line[new_pos];
+}
+
+/*
+** **************************************************************************
+** **** body functions ******************************************************
+** **************************************************************************
+*/
+
+void			lexer__refill_line(t_lexer *lex, int sloc, int prompt)
+{
+	try_free_((void **)&lex->line, _FL_);
+	print_prompt(sloc, prompt);
+	if (get_next_line(0, &lex->line) == -1)
+		lexer__error(ERR_GNL, lex);
+	lex->pos = 0;
+	lex->start = 0;
+	lex->len_line = ft_strlen(lex->line);
+	lex->current_char = lex->line[lex->pos];
+	lex->start_char = lex->line[lex->start];
+}
+
+t_token			*lexer__token_grabber(t_lexer *lex, t_token_type_m type)
+{
+	t_token		*new;
+
+	new = token__new(type, ft_strsub(lex->line, lex->start, lex->pos - lex->start),
+		lex->start);
 	return (new);
 }
 
-t_token				lexer__get_next_token(t_lexer *lex)
+t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
 {
-	int				rtype;
+	int			rtype;
 
 	while (lexer__istype(lex, CHR_SPACE | CHR_PASS))
 		lexer__advance(lex, 1);
 	lexer__set_start_pos(lex, lex->pos);
 	if (lexer__istype(lex, CHR_EOT))
-		return (g_defined_tokens[I_EOT]);
+		return (token__copy(&g_defined_tokens[I_EOT]));
 	if ((rtype = lexer__isdefined_token(lex, ADVANCE)) != I_NONE)
-		return (g_defined_tokens[rtype]);
+		return (token__copy(&g_defined_tokens[rtype]));
 	lexer__istype(lex, CHR_DOLLAR) ? lexer__advance(lex, 1) : 0;
 	if (lexer__istype(lex, CHR_DOLLAR) && lexer__advance(lex, 1))
 		return (lexer__token_grabber(lex, WORD));
-	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR | CHR_DOLLAR))
+	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR |
+		CHR_DOLLAR))
 	{
 		lexer__istype(lex, CHR_BSLASH) ? lexer__advance(lex, 2) : 0;
 		if (lexer__isdefined_token(lex, NOADVANCE) != I_NONE)

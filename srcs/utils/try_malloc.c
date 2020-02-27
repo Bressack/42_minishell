@@ -6,7 +6,7 @@
 /*   By: tarchen <tarchen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/14 12:09:53 by tarchen           #+#    #+#             */
-/*   Updated: 2020/02/25 00:18:02 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/27 17:38:14 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ void		*try_malloc(size_t size, char *f, int l)
 		print_mem__(PRINT_ALL);
 		exit(-1);
 	}
+	ft_bzero(alloc, size);
 	g_debug_malloc[g_i_malloc].f_free = 0;
 	g_debug_malloc[g_i_malloc].l_free = 0;
 	g_debug_malloc[g_i_malloc].nb_free = 0;

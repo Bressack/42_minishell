@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/26 21:46:02 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/27 17:48:00 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,25 +80,46 @@ typedef enum		e_char_type
 }					t_char_type;
 extern t_char_type	g_token_ascii_table[255];
 
-/*
-** class__lexer.c
-*/
 void				print_prompt(int sloc, int prompt_lever);
-t_lexer				lexer__new(int sloc);
-void				lexer__del(t_lexer *lex);
-void				lexer__error(int opt, t_lexer *lex);
-int					lexer__istype(t_lexer *lex, t_char_type type);
-char				*lexer__debug(t_lexer *lex, int lever, int opt);
-void				lexer__set_start_pos(t_lexer *lex, int new_pos);
-int					lexer__advance(t_lexer *lex, int n);
-void				lexer__advence_foreach(
-t_lexer *lex, t_char_type type, int be_or_not_to_be);
-void				lexer__refill_line(t_lexer *lex, int join_nl, int prompt);
-void				lexer__get_word_quote_token(t_lexer *lex, t_char_type ct);
-
-t_token				lexer__get_next_token(t_lexer *lex);
 /*
-** class__lexer__defined_tokens.c
+** **************************************************************************
+** **** lexer object handle *************************************************
+** **************************************************************************
 */
+t_lexer				*lexer__new(int sloc);
+void				lexer__del(t_lexer **lex);
+void				lexer__error(int opt, t_lexer *lex);
+/*
+** **************************************************************************
+** **** is something and peek ***********************************************
+** **************************************************************************
+*/
+inline int			lexer__istype(t_lexer *lex, t_char_type type);
+inline int			lexer__istype_start(t_lexer *lex, t_char_type type);
+inline char			lexer__peek(t_lexer *lex);
+inline int			lexer__isword(t_lexer *lex);
+inline int			lexer__isquote(t_lexer *lex);
 int					lexer__isdefined_token(t_lexer *lex, int adv);
+/*
+** **************************************************************************
+** **** advance and pass function *******************************************
+** **************************************************************************
+*/
+int					lexer__advance(t_lexer *lex, int n);
+void				lexer__advence_foreach(t_lexer *lex, t_char_type type, int whis);
+void				lexer__pass_quotes(t_lexer *lex, t_char_type type);
+/*
+** **************************************************************************
+** **** set and init ********************************************************
+** **************************************************************************
+*/
+void				lexer__set_start_pos(t_lexer *lex, int new_pos);
+/*
+** **************************************************************************
+** **** body functions ******************************************************
+** **************************************************************************
+*/
+void				lexer__refill_line(t_lexer *lex, int sloc, int prompt);
+t_token				*lexer__token_grabber(t_lexer *lex, t_token_type_m type);
+t_token				*lexer__get_next_token(t_lexer *lex);
 #endif

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/26 20:00:01 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/27 18:02:26 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ int		main(int ac, char **av, char **env)
 			exit(0);
 		}
 		waitpid(pid, &sloc, WUNTRACED);
+		if (sloc == 6)
+			printf("[ SEGV  ] You got a segv lmao, you\'re so bad\n");
 	}
 	try_free_all(_FL_);
 	return (0);

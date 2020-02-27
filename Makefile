@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/27 00:02:40 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/27 17:38:08 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -92,21 +92,22 @@ SRCS_UTILS			=	\
 						utils/ft_strncpy.c \
 						utils/ft_strcmp.c \
 						utils/cat_value.c \
+						utils/ft_bzero.c \
 
 SRCS_LIBLIST		=	\
-						ft_add_node_end_np.c \
-						ft_add_node_f_nextto_np.c \
-						ft_add_node_f_prevto_np.c \
-						ft_add_node_nextto_np.c \
-						ft_add_node_prevto_np.c \
-						ft_add_node_start_np.c \
-						ft_del_list_np.c \
-						ft_del_node_end_np.c \
-						ft_del_node_np.c \
-						ft_del_node_start_np.c \
-						ft_foreach_node_f_np.c \
-						ft_new_node.c \
-						ft_swap_node_np.c \
+						utils/lists/ft_add_node_end_np.c \
+						utils/lists/ft_add_node_f_nextto_np.c \
+						utils/lists/ft_add_node_f_prevto_np.c \
+						utils/lists/ft_add_node_nextto_np.c \
+						utils/lists/ft_add_node_prevto_np.c \
+						utils/lists/ft_add_node_start_np.c \
+						utils/lists/ft_del_list_np.c \
+						utils/lists/ft_del_node_end_np.c \
+						utils/lists/ft_del_node_np.c \
+						utils/lists/ft_del_node_start_np.c \
+						utils/lists/ft_foreach_node_f_np.c \
+						utils/lists/ft_new_node.c \
+						utils/lists/ft_swap_node_np.c \
 
 SRCS_PRINTF			=	\
 						utils/ft_printf/to_n.c \

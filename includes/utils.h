@@ -6,13 +6,14 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 13:36:27 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/25 14:13:33 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/27 17:38:10 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
 # include <minishell.h>
+void	ft_bzero(void *s, int n);
 char	*ft_strsub(char const *s, unsigned int start, size_t len);
 char	*ft_strncpy(char *s1, const char *s2, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);

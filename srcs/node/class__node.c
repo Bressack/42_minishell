@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-t_node		node__new(t_token token)
+t_node		node__new(t_token *token)
 {
 	t_node	new;
 

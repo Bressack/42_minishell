@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/08 16:19:17 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 00:05:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/27 17:12:55 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <stdarg.h>
+# include <try_malloc.h>
 # define SUCCESS 0
 # define FAILURE 1
 
