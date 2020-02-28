@@ -6,15 +6,13 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 06:29:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/28 15:04:38 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 19:06:30 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLASS__TOKOVORE_H
 # define CLASS__TOKOVORE_H
 # include <minishell.h>
-# define TMPS		50
-
 /*
 ** ************************************************************************** **
 ** ****** ENUMS ************************************************************* **
@@ -28,7 +26,9 @@ typedef enum				e_bool_return
 typedef enum				e_options
 {
 	NOT_A_LIST,
-	LIST
+	LIST,
+	CURRENT,
+	NEXT
 }							t_options;
 typedef enum				e_tokerror
 {
@@ -78,7 +78,7 @@ typedef struct				s_node_eot
 */
 	int						selector;
 /*
-** 	AST datas
+** 	creation datas
 */
 	t_token					*eot;
 /*
@@ -103,7 +103,7 @@ typedef struct				s_subnode_redir
 */
 	int						selector;
 /*
-** 	AST datas
+** 	creation datas
 */
 	t_token					*type;
 	t_token					*file;
@@ -130,7 +130,7 @@ typedef struct				s_node_cmd
 */
 	int						selector;
 /*
-** 	AST datas
+** 	creation datas
 */
 	t_token					*arg; // allocated list
 	t_subnode_redir			*redir; // allocated list
@@ -159,7 +159,7 @@ typedef struct				s_node_sep
 */
 	int						selector;
 /*
-** 	AST datas
+** 	creation datas
 */
 	t_token					*sep;
 /*
@@ -207,14 +207,19 @@ typedef struct				s_node
 */
 typedef struct				s_ast
 {
+	/*
+	** 	creation datas
+	*/
 	t_node_eot				*eot;
-	t_node					*tree; // allocated tree
 	t_node_pattern			*last_recording;
-	t_lexer					*lex; // need lexer__del to destroy
 	t_token					*current_token;
 	t_token					*next_token;
 	t_token					*prev_token;
-	int						is_next_token_set;
+	/*
+	** 	INTERPRETER datas
+	*/
+	t_lexer					*lex; // need lexer__del to destroy
+	t_node					*tree; // allocated tree
 }							t_ast;
 /*
 ** ************************************************************************** **
@@ -230,7 +235,7 @@ void			tokerror(t_ast *ast, int code);
 ** **** types checker ******************************************************* **
 ** ************************************************************************** **
 */
-int				check(t_ast *ast, t_token_supertype type);
+int				check(t_ast *ast, int whichone, t_token_supertype type);
 /*
 ** ************************************************************************** **
 ** **** peek&eat *** both call lexer__get_next_token ************************ **
@@ -245,7 +250,7 @@ void			eat(t_ast *ast, t_token_supertype type);
 */
 void			git_add(
 	t_ast *ast, t_token **dest, t_token_supertype type, int islist);
-void			git_add_to_tree(t_ast *ast, t_node_pattern *node);
+void			git_add_to_tree(t_ast *ast, t_node_pattern *body);
 int				git_commit(t_ast *ast, t_node_pattern *node);
 t_ast			*git_push(t_ast *ast);
 /*
@@ -262,5 +267,6 @@ void			toko_cmd(t_ast *ast);
 ** ************************************************************************** **
 */
 void			init_ast(t_ast **ast, int sloc);
+void			print_ast(t_node *root, int deep);
 t_ast			*toko_master(int sloc);
 #endif

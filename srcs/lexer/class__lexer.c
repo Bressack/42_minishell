@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/28 01:36:18 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 16:39:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,11 +192,7 @@ t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
 		return (token__copy(&g_defined_tokens[I_EOT]));
 	if ((rtype = lexer__isdefined_token(lex, ADVANCE)) != I_NONE)
 		return (token__copy(&g_defined_tokens[rtype]));
-	lexer__istype(lex, CHR_DOLLAR) ? lexer__advance(lex, 1) : 0;
-	if (lexer__istype(lex, CHR_DOLLAR) && lexer__advance(lex, 1))
-		return (lexer__token_grabber(lex, WORD));
-	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR |
-		CHR_DOLLAR))
+	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR))
 	{
 		lexer__istype(lex, CHR_BSLASH) ? lexer__advance(lex, 2) : 0;
 		if (lexer__isdefined_token(lex, NOADVANCE) != I_NONE)

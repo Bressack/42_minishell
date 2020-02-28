@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/28 01:21:35 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 19:02:12 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,26 @@ int		main(int ac, char **av, char **env)
 	while (1)
 	{
 		signal(SIGINT, sig_handler);
+
+		// t_lexer *lex;
+		// t_token *ct;
+		// lex = try_malloc(sizeof(t_lexer), _FL_);
+		// lexer__refill_line(lex, 0, PROMPT_CASUAL);
+		// while ((ct = lexer__get_next_token(lex)))
+		// {
+		// 	token__print(ct);
+		// 	if (ct->type == EOT)
+		// 		break ;
+		// }
+		// try_free_((void **)&lex, _FL_);
+		// continue ;
+
 		// if (!(pid = fork()))
 		// {
 			ast = toko_master(sloc);
 			if (ast)
 				printf("AST RECIVED !!\n");
+			print_ast(ast->tree, 0);
 			// exit(0);
 		// }
 		// waitpid(pid, &sloc, WUNTRACED);

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 22:43:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/28 15:21:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 17:39:46 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,19 +102,21 @@ void				tokerror(t_ast *ast, int code)
 */
 int					check(t_ast *ast, t_token_supertype type)
 {
-	printf("[ START     "C_G_MAGENTA"%4d"C_RES"] check            | ast: "C_G_GREEN"%p"C_RES" | type: "C_G_CYAN"%d"C_RES"\n", __LINE__, ast, type);
+	// printf("[ START     "C_G_MAGENTA"%4d"C_RES"] check            | ast: "C_G_GREEN"%p"C_RES" | type: "C_G_CYAN"%d"C_RES"\n", __LINE__, ast, type);
 	int	i;
 
 	i = -1;
-	printf("    [ BODY  "C_G_MAGENTA"%4d"C_RES"] check            | while loop: ", __LINE__);
+	// printf("    [ BODY  "C_G_MAGENTA"%4d"C_RES"] check            | while loop: ", __LINE__);
 	while (++i <  NB_DEFINED_TOKEN)
 	{
-		printf("["C_G_CYAN"%d"C_RES"]", i);
+		// printf("["C_G_CYAN"%d"C_RES"]", i);
 		if (g_stype[i].type == ast->current_token->type)
 			break ;
 	}
-	printf("\n");
-	printf("[ END       "C_G_MAGENTA"%4d"C_RES"] check            | matching with "C_G_CYAN"%u"C_RES" and return: g_stype[i].supertype == type: "C_G_CYAN"%d"C_RES"\n", __LINE__, g_stype[i].type, g_stype[i].supertype == type ? 1 : 0);
+	if (i >= NB_DEFINED_TOKEN)
+		return (-1);
+	// printf("\n");
+	// printf("[ END       "C_G_MAGENTA"%4d"C_RES"] check            | matching with "C_G_CYAN"%u"C_RES" and return: g_stype[i].supertype == type: "C_G_CYAN"%d"C_RES"\n", __LINE__, g_stype[i].type, g_stype[i].supertype == type ? 1 : 0);
 	return (g_stype[i].supertype == type ? 1 : 0);
 }
 /*
@@ -129,13 +131,19 @@ int					peek(t_ast *ast, t_token_supertype type)
 	{
 		dprintf(1, "    [ BODY  "C_G_MAGENTA"%4d"C_RES"] peek         | current_token is not set, setting current_token. new token: ", __LINE__);
 		ast->current_token = lexer__get_next_token(ast->lex);
-		token__print(ast->next_token);
+		ast->current_token->next = NULL;
+		ast->current_token->prev = NULL;
+		printf("lexer__get_next_token got [%s]\n", ast->current_token->value);
+		token__print(ast->current_token);
 	}
 	if (!ast->is_next_token_set)
 	{
 		printf("    [ BODY  "C_G_MAGENTA"%4d"C_RES"] peek         | next_token is not set, setting next_token. new token: ", __LINE__);
 		ast->is_next_token_set = 1;
 		ast->next_token = lexer__get_next_token(ast->lex);
+		ast->next_token->next = NULL;
+		ast->next_token->prev = NULL;
+		printf("lexer__get_next_token got [%s]\n", ast->next_token->value);
 		token__print(ast->next_token);
 	}
 	printf("[ START     "C_G_MAGENTA"%4d"C_RES"] peek             | checking if next token matchs with type\n", __LINE__);
@@ -149,6 +157,7 @@ void				eat(t_ast *ast, t_token_supertype type)
 	{
 		dprintf(1, "    [ BODY  "C_G_MAGENTA"%4d"C_RES"] eat              | current_token is not set, setting current_token. new token: ", __LINE__);
 		ast->current_token = lexer__get_next_token(ast->lex);
+		printf("lexer__get_next_token got [%s]\n", ast->current_token->value);
 		token__print(ast->next_token);
 	}
 	printf("[ START     "C_G_MAGENTA"%4d"C_RES"] eat              | checking if current token matchs with type\n", __LINE__);
@@ -164,6 +173,7 @@ void				eat(t_ast *ast, t_token_supertype type)
 	}
 	else
 		ast->current_token = lexer__get_next_token(ast->lex);
+		printf("lexer__get_next_token got [%s]\n", ast->current_token->value);
 }
 /*
 ** ************************************************************************** **
@@ -175,7 +185,8 @@ void				git_add(t_ast *ast, t_token **dest, t_token_supertype type,
 {
 	printf("[ START     "C_G_MAGENTA"%4d"C_RES"] git_add          | ast: "C_G_GREEN"%p"C_RES" | dest: "C_G_GREEN"%p"C_RES" | *dest: "C_G_GREEN"%p"C_RES" | type:"
 	" "C_G_CYAN"%d"C_RES"\n", __LINE__, ast, dest, dest ? *dest : 0, type);
-	token__print
+	token__print(ast->current_token);
+	printf("ast->current_token: %s\n", ast->current_token->value);
 	if (type == ST_WORD && islist == LIST)
 	{
 		printf("    [ BODY  "C_G_MAGENTA"%4d"C_RES"] git_add          | git add an list (currently an arg)\n", __LINE__);
@@ -188,19 +199,23 @@ void				git_add(t_ast *ast, t_token **dest, t_token_supertype type,
 	}
 	printf("    [ BODY  "C_G_MAGENTA"%4d"C_RES"] git_add          | going to eat the current_token\n", __LINE__);
 	eat(ast, type);
-	for (t_token *tmp = *dest; tmp; tmp++)
-	{
-		printf("    [ BODY  "C_G_MAGENTA"%4d"C_RES"] git_add          | for loop(tmp:"C_G_GREEN"%p"C_RES")\n", __LINE__, tmp);
-		if (type == ST_WORD && islist)
-			dprintf(1, "[ "C_G_CYAN"%s"C_RES" ] tmp "C_G_CYAN"%15p"C_RES" ", "ARG  " , tmp);
-		else if (type == ST_WORD)
-			dprintf(1, "[ "C_G_CYAN"%s"C_RES" ] tmp "C_G_CYAN"%15p"C_RES" ", "CMD  " , tmp);
-		else if (type == ST_SEP)
-			dprintf(1, "[ "C_G_CYAN"%s"C_RES" ] tmp "C_G_CYAN"%15p"C_RES" ", "SEP  " , tmp);
-		else if (type == ST_REDIR)
-			dprintf(1, "[ "C_G_CYAN"%s"C_RES" ] tmp "C_G_CYAN"%15p"C_RES" ", "REDIR" , tmp);
-		token__print(tmp);
-	}
+	printf("ast->current_token: %s\n", ast->current_token->value);
+	/*
+** 	printf("*dest: %s\n", (*dest)->value);
+** 	for (t_token *tmp = *dest; tmp; tmp = tmp->next)
+** 	{
+** 		printf("    [ BODY  "C_G_MAGENTA"%4d"C_RES"] git_add          | for loop(tmp:"C_G_GREEN"%p"C_RES")\n", __LINE__, tmp);
+** 		if (type == ST_WORD && islist)
+** 			dprintf(1, "[ "C_G_CYAN"%s"C_RES" ] tmp "C_G_CYAN"%15p"C_RES" ", "ARG  " , tmp);
+** 		else if (type == ST_WORD)
+** 			dprintf(1, "[ "C_G_CYAN"%s"C_RES" ] tmp "C_G_CYAN"%15p"C_RES" ", "CMD  " , tmp);
+** 		else if (type == ST_SEP)
+** 			dprintf(1, "[ "C_G_CYAN"%s"C_RES" ] tmp "C_G_CYAN"%15p"C_RES" ", "SEP  " , tmp);
+** 		else if (type == ST_REDIR)
+** 			dprintf(1, "[ "C_G_CYAN"%s"C_RES" ] tmp "C_G_CYAN"%15p"C_RES" ", "REDIR" , tmp);
+** 		token__print(tmp);
+** 	}
+*/
 	printf("[ END       "C_G_MAGENTA"%4d"C_RES"] git_add\n", __LINE__);
 }
 
@@ -345,11 +360,12 @@ void				toko_cmd(t_ast *ast)
 
 	new = try_malloc(sizeof(t_node_cmd), _FL_);
 	new->selector = NODE_CMD;
+	new->arg = NULL;
 	while (check(ast, ST_REDIR))
 		toko_redir(ast, new);
 	if (check(ast, ST_WORD))
 	{
-		git_add(ast, &new->arg, ST_WORD, LIST);
+		// git_add(ast, &new->arg, ST_WORD, LIST);
 		while (check(ast, ST_REDIR) || check(ast, ST_WORD))
 		{
 			if (check(ast, ST_REDIR))
@@ -377,6 +393,9 @@ void				init_ast(t_ast **ast, int sloc)
 		lexer__del(&(*ast)->lex);
 	(*ast)->lex = lexer__new(sloc);
 	(*ast)->current_token = lexer__get_next_token((*ast)->lex);
+	printf("lexer__get_next_token got [%s]\n", (*ast)->current_token->value);
+	(*ast)->next_token = lexer__get_next_token((*ast)->lex);
+	printf("lexer__get_next_token got [%s]\n", (*ast)->next_token->value);
 	// printf("During the init of the AST we discovered a new token:\n --- ");
 	// token__print((*ast)->current_token);
 }
@@ -403,6 +422,12 @@ t_ast				*toko_master(int sloc)
 	printf(" --- BSLASH       : "C_G_CYAN"%d"C_RES"\n", BSLASH);
 	printf(" --- DOLLAR       : "C_G_CYAN"%d"C_RES"\n", DOLLAR);
 	printf(" --- NONE         : "C_G_CYAN"%d"C_RES"\n", NONE);
+	printf("*************************\n");
+	printf(" --- ST_ERR       : "C_G_CYAN"%d"C_RES"\n", ST_ERR);
+	printf(" --- ST_WORD      : "C_G_CYAN"%d"C_RES"\n", ST_WORD);
+	printf(" --- ST_REDIR     : "C_G_CYAN"%d"C_RES"\n", ST_REDIR);
+	printf(" --- ST_SEP       : "C_G_CYAN"%d"C_RES"\n", ST_SEP);
+	printf(" --- ST_EOT       : "C_G_CYAN"%d"C_RES"\n", ST_EOT);
 	static t_ast	*ast = NULL;
 
 	init_ast(&ast, sloc);

@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/28 10:35:52 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/28 17:41:54 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -32,8 +32,8 @@ CC					=	clang
 FLAGS				=	\
 						-Wall -Wextra -Werror \
 						-ferror-limit=1000 \
+						-g3 -fsanitize=address \
 						# -g3 \
-						# -g3 -fsanitize=address \
 						# -O3 \
 
 # *** PROJECT HEADER ********************************************************* #
@@ -78,7 +78,7 @@ SRCS_BUILTIN		=	\
 						builtins/commands.c \
 
 SRCS_TOKOVORE		=	\
-						tokovore/class__tokovore.c \
+						tokovore/class__tokovore2.c \
 
 SRCS_UTILS			=	\
 						utils/ft_strlen.c \
