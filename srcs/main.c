@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 18:02:26 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 01:21:35 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,21 +63,24 @@ void	sig_handler(int signo)
 int		main(int ac, char **av, char **env)
 {
 	int			sloc;
-	int			pid;
+	// int			pid;
+	t_ast		*ast;
 
 	get_env(ac, av, env);
 	sloc = 0;
 	while (1)
 	{
 		signal(SIGINT, sig_handler);
-		if (!(pid = fork()))
-		{
-			toko_master(sloc);
-			exit(0);
-		}
-		waitpid(pid, &sloc, WUNTRACED);
-		if (sloc == 6)
-			printf("[ SEGV  ] You got a segv lmao, you\'re so bad\n");
+		// if (!(pid = fork()))
+		// {
+			ast = toko_master(sloc);
+			if (ast)
+				printf("AST RECIVED !!\n");
+			// exit(0);
+		// }
+		// waitpid(pid, &sloc, WUNTRACED);
+		// if (sloc == 6)
+		// 	printf("[ SEGV  ] You got a segv lmao, you\'re so bad\n");
 	}
 	try_free_all(_FL_);
 	return (0);

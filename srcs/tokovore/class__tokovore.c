@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 22:43:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 18:56:52 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 02:05:40 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ void				tokerror(t_ast *ast, int code)
 {
 	printf("[ START ] tokerror         | ast: %p | code: %d\n", ast, code);
 	if (code == UNEXPECTED_TOKEN)
-		ft_dprintf(2, ""C_G_RED"error:"C_G_WHITE" unexpected token \'"C_G_RED"%s"C_G_WHITE"\' after \'"C_G_GREEN"%s"C_G_WHITE"\'\n",
+		ft_dprintf(2, ""C_G_RED"error:"C_G_WHITE" unexpected token"
+			"\'"C_G_RED"%s"C_G_WHITE"\' after \'"C_G_GREEN"%s"C_G_WHITE"\'\n",
 		ast->current_token->value, ast->prev_token->value);
 	else if (code == UNEXPECTED_EOT)
 		tokerror(ast, UNEXPECTED_TOKEN);
@@ -106,11 +107,19 @@ int					check(t_ast *ast, t_token_supertype type)
 int					peek(t_ast *ast, t_token_supertype type)
 {
 	printf("[ START ] peek             | ast: %p | type: %d\n", ast, type);
+	if (!ast->current_token)
+	{
+		ast->current_token = lexer__get_next_token(ast->lex);
+		printf("Oopsi, the current_token was NULL, pee refilled it:\n --- ");
+		token__print(ast->next_token);
+	}
 	if (!ast->is_next_token_full)
 	{
 		ast->is_next_token_full = 1;
 		ast->next_token = lexer__get_next_token(ast->lex);
 	}
+	printf("peek discover a new token:\n --- ");
+	token__print(ast->next_token);
 	return (check(ast, type));
 }
 
@@ -119,6 +128,7 @@ void				eat(t_ast *ast, t_token_supertype type)
 	printf("[ START ] eat              | ast: %p | type: %d\n", ast, type);
 	if (!check(ast, type))
 		tokerror(ast, UNEXPECTED_TOKEN);
+	printf("is_next_token_full: %d\n", ast->is_next_token_full);
 	ast->prev_token = ast->current_token;
 	if (ast->is_next_token_full)
 	{
@@ -130,19 +140,23 @@ void				eat(t_ast *ast, t_token_supertype type)
 }
 /*
 ** ************************************************************************** **
-** **** git utility :D *** roooo, laugh ! it's a joke.. uhg ? *************** **
+** **** git utility :D *** roooo, laugh ! it's a joke.. uhg ? **** ********** **
 ** ************************************************************************** **
 */
-void				git_add(
-	t_ast *ast, t_token **dest, t_token_supertype type, int islist)
+void				git_add(t_ast *ast, t_token **dest, t_token_supertype type,
+	int islist)
 {
 	printf("[ START ] git_add          | ast: %p | dest: %p | *dest: %p | type: %d\n", ast, dest, dest ? *dest : 0, type);
-	token__print(ast->current_token);
-	if (type == ST_WORD && islist)
+	if (type == ST_WORD && islist == NOT_A_LIST)
 		ft_add_node_end_np((t_pnp **)dest, (t_pnp *)&ast->current_token);
 	else
 		*dest = ast->current_token;
 	eat(ast, type);
+	for (t_token *tmp = *dest; tmp; tmp++)
+	{
+		dprintf(1, "[ %s ] tmp %15p ", type == ST_WORD && islist ? "ARG" : "CMD", tmp);
+		token__print(tmp);
+	}
 }
 
 void				git_add_to_tree(t_ast *ast, t_node_pattern *node)
@@ -150,8 +164,8 @@ void				git_add_to_tree(t_ast *ast, t_node_pattern *node)
 	printf("[ START ] git_add_to_tree  | ast: %p | node: %p\n", ast, node);
 	t_node				*new;
 
-	if (node->selector == NODE_EOT && ast->last_recording->selector == NODE_SEP &&
-		((t_node_sep *)ast->last_recording)->sep->type != SEMICON)
+	if (node->selector == NODE_EOT && ast->last_recording->selector == NODE_SEP
+		&& ((t_node_sep *)ast->last_recording)->sep->type != SEMICON)
 		tokerror(ast, UNEXPECTED_EOT);
 	if (!ast->tree)
 	{
@@ -197,7 +211,7 @@ int					git_commit(t_ast *ast, t_node_pattern *node)
 	return (BREAK);
 }
 
-inline t_ast		*git_push(t_ast *ast)
+t_ast				*git_push(t_ast *ast)
 {
 	printf("[ START ] git_push         | ast: %p\n", ast);
 	return (ast);
@@ -233,7 +247,7 @@ void				toko_sep(t_ast *ast)
 	new->selector = NODE_SEP;
 	if (check(ast, ST_SEP))
 		git_add(ast, &new->sep, ST_SEP, NOT_A_LIST);
-	if (git_commit(ast, (t_node_pattern *)&new) == CONTINUE)
+	if (git_commit(ast, (t_node_pattern *)new) == CONTINUE)
 		toko_cmd(ast);
 }
 
@@ -286,7 +300,7 @@ void				toko_cmd(t_ast *ast)
 		}
 	}
 	toko_cmd__debug_print(new);
-	if (git_commit(ast, (t_node_pattern *)&new) == CONTINUE)
+	if (git_commit(ast, (t_node_pattern *)new) == CONTINUE)
 		toko_sep(ast);
 }
 /*
@@ -296,13 +310,16 @@ void				toko_cmd(t_ast *ast)
 */
 void				init_ast(t_ast **ast, int sloc)
 {
-	printf("[ START ] init_ast         | ast: %p | *ast: %p, sloc: %d\n", ast, ast ? *ast : 0, sloc);
+	printf("[ START ] init_ast         | ast: %p | *ast: %p, sloc: %d\n", ast,
+		ast ? *ast : 0, sloc);
 	if (!(*ast))
 		*ast = try_malloc(sizeof(t_ast), _FL_);
 	else
 		lexer__del(&(*ast)->lex);
 	(*ast)->lex = lexer__new(sloc);
 	(*ast)->current_token = lexer__get_next_token((*ast)->lex);
+	// printf("During the init of the AST we discovered a new token:\n --- ");
+	// token__print((*ast)->current_token);
 }
 
 t_ast				*toko_master(int sloc)
@@ -312,12 +329,8 @@ t_ast				*toko_master(int sloc)
 
 	init_ast(&ast, sloc);
 	if (check(ast, ST_EOT))
-	{
-		ast->eot.selector = NODE_EOT;
-		ast->eot.eot = token__copy(&g_defined_tokens[I_EOT]);
-		git_commit(ast, (t_node_pattern *)&ast->eot);
-	}
-	else
-		toko_cmd(ast);
+		return (NULL);
+	toko_cmd(ast);
 	return (git_push(ast));
 }
+// echo arg1 arg2 arg3 arg4 arg5

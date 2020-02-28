@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 06:29:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 18:38:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 01:25:46 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ typedef enum				e_bool_return
 	CONTINUE,
 	BREAK
 }							t_bool_return;
+typedef enum				e_options
+{
+	NOT_A_LIST,
+	LIST
+}							t_options;
 typedef enum				e_tokerror
 {
 	UNEXPECTED_TOKEN
@@ -203,7 +208,7 @@ typedef struct				s_node
 */
 typedef struct				s_ast
 {
-	t_node_eot				eot;
+	t_node_eot				*eot;
 	t_node					*tree; // allocated tree
 	t_node_pattern			*last_recording;
 	t_lexer					*lex; // need lexer__del to destroy
@@ -240,10 +245,10 @@ void			eat(t_ast *ast, t_token_supertype type);
 ** ************************************************************************** **
 */
 void			git_add(
-	t_ast *ast, t_token **dest, t_token_supertype type, int islist)
+	t_ast *ast, t_token **dest, t_token_supertype type, int islist);
 void			git_add_to_tree(t_ast *ast, t_node_pattern *node);
 int				git_commit(t_ast *ast, t_node_pattern *node);
-inline t_ast	*git_push(t_ast *ast);
+t_ast			*git_push(t_ast *ast);
 /*
 ** ************************************************************************** **
 ** **** grammar unterminals ************************************************* **

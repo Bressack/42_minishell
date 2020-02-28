@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/27 17:38:08 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/28 02:11:38 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -31,9 +31,9 @@ CC					=	clang
 
 FLAGS				=	\
 						-Wall -Wextra -Werror \
-						-O3 \
-						-g3 -fsanitize=address \
+						-g -fsanitize=address -fno-omit-frame-pointer \
 						-ferror-limit=1000 \
+						# -O3 \
 
 # *** PROJECT HEADER ********************************************************* #
 

@@ -6,13 +6,26 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/23 16:33:56 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 00:39:23 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 00:25:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <libc.h>
 // # define CURR_DIR	"/Users/tharchen/Prog/42/circle_4/minishell"
 # define CURR_DIR	"/Users/user/Prog/42/projects/circle_4/minishell"
+
+# define PIPE_READ		0
+# define PIPE_WRITE		1
+
+# ifdef STDOUT
+#  undef STDOUT
+# endif
+# define STDOUT			0
+# ifdef STDIN
+#  undef STDIN
+# endif
+# define STDIN			1
+
 
 static void	*join(char **ret, char *arg, int *retsize)
 {
@@ -59,6 +72,46 @@ char		*ft_strjoin(int nb_str, ...)
 	return (ret);
 }
 
+void		function_before(int fd_in, int fd_out, void *arg)
+{
+	
+}
+void		function_after(int fd_in, int fd_out, void *arg)
+{
+
+}
+
+int			run_shell_cmd(char **env, int opt, char *path_cmd, int ac, ...)
+{
+	va_list	ap;
+	pid_t	pid;
+	char	**av;
+	int		stt;
+	int		fd[2][2];
+
+	fd[STDOUT] = {STDOUT, STDIN};
+	fd[STDIN] = {STDIN, STDOUT};
+	va_start(ap, ac);
+	if (!(av = calloc(sizeof(char *), ac + 2)))
+		exit(-1);
+	av[0] = path_cmd;
+	for (int i = 1; i < ac; i++)
+		av[i] = (char *)ap[i - 1];
+	function_before();
+	if (!(pid = fork()))
+	{
+		dup2(fd[STDOUT][PIPE_READ], STDOUT);
+		dup2(fd[STDIN][PIPE_WRITE], STDIN);
+		close(STDOUT);
+		close(STDIN);
+		execve(path_cmd, av, env);
+		exit(-1);
+	}
+	waitpid(pid, &stt, WUNTRACED);
+	free(av);
+	function_after();
+	return (0);
+}
 
 char		*git__get_current_branch_name(char **env)
 {
@@ -76,9 +129,8 @@ char		*git__get_current_branch_name(char **env)
 	av[2] = NULL;
 	if (!(pid = fork()))
 	{
+		dup2(fd[PIPE_WRITE], STDIN);
 		close(0);
-		fd[1] = dup(0);
-		dprintf(fd[1], "CACA\n");
 		execve("/bin/cat", av, env);
 		exit(-1);
 	}
@@ -91,10 +143,16 @@ char		*git__get_current_branch_name(char **env)
 	char	buf[1024 + 1];
 	int		ret;
 
-	ret = read(fd[0], buf, 1024);
+	ret = read(fd[PIPE_READ], buf, 1024);
 	buf[ret] = 0;
 
-	printf("read: [%s]\n", buf);
+	int i = strlen(buf);
+	char *branch_name = NULL;
+
+	while (--i > 0 && buf[i] != '/')
+		;
+	branch_name = ;
+	"ref: refs/heads/*"
 	return (NULL);
 }
 

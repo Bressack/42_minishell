@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 17:48:00 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 01:26:33 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,11 @@ void				lexer__error(int opt, t_lexer *lex);
 ** **** is something and peek ***********************************************
 ** **************************************************************************
 */
-inline int			lexer__istype(t_lexer *lex, t_char_type type);
-inline int			lexer__istype_start(t_lexer *lex, t_char_type type);
-inline char			lexer__peek(t_lexer *lex);
-inline int			lexer__isword(t_lexer *lex);
-inline int			lexer__isquote(t_lexer *lex);
+int					lexer__istype(t_lexer *lex, t_char_type type);
+int					lexer__istype_start(t_lexer *lex, t_char_type type);
+char				lexer__peek(t_lexer *lex);
+int					lexer__isword(t_lexer *lex);
+int					lexer__isquote(t_lexer *lex);
 int					lexer__isdefined_token(t_lexer *lex, int adv);
 /*
 ** **************************************************************************

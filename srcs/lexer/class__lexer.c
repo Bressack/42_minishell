@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 18:23:30 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 01:36:18 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_lexer			*lexer__new(int sloc)
 
 	lex = try_malloc(sizeof(t_lexer), _FL_);
 	lexer__refill_line(lex, sloc, PROMPT_CASUAL);
+	printf("line refilled with: ["C_G_CYAN"%s"C_RES"]\n", lex->line);
 	return (lex);
 }
 
@@ -56,28 +57,28 @@ void			lexer__error(int opt, t_lexer *lex)
 ** **************************************************************************
 */
 
-inline int		lexer__istype(t_lexer *lex, t_char_type type)
+int				lexer__istype(t_lexer *lex, t_char_type type)
 {
 	return (type & g_token_ascii_table[(int)(lex->current_char)]);
 }
 
-inline int		lexer__istype_start(t_lexer *lex, t_char_type type)
+int				lexer__istype_start(t_lexer *lex, t_char_type type)
 {
 	return (type & g_token_ascii_table[(int)(lex->start_char)]);
 }
 
-inline char		lexer__peek(t_lexer *lex)
+char			lexer__peek(t_lexer *lex)
 {
 	return (lex->line[lex->pos + 1]);
 }
 
-inline int		lexer__isword(t_lexer *lex)
+int				lexer__isword(t_lexer *lex)
 {
 	return (lexer__istype(lex, CHR_WORD | CHR_SQUOTE | CHR_DQUOTE |
 		CHR_BSLASH));
 }
 
-inline int		lexer__isquote(t_lexer *lex)
+int				lexer__isquote(t_lexer *lex)
 {
 	return (lexer__istype(lex, CHR_SQUOTE | CHR_DQUOTE));
 }
@@ -206,5 +207,3 @@ t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
 	}
 	return (lexer__token_grabber(lex, WORD));
 }
-
-
