@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 06:29:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/28 01:25:46 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/28 15:04:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,6 @@ typedef struct				s_node_cmd
 /*
 ** 	AST datas
 */
-	t_token					*cmd;
 	t_token					*arg; // allocated list
 	t_subnode_redir			*redir; // allocated list
 /*
@@ -215,7 +214,7 @@ typedef struct				s_ast
 	t_token					*current_token;
 	t_token					*next_token;
 	t_token					*prev_token;
-	int						is_next_token_full;
+	int						is_next_token_set;
 }							t_ast;
 /*
 ** ************************************************************************** **
