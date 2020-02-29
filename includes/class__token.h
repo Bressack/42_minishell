@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:21:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 14:29:49 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/29 06:17:29 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ typedef enum			e_token_type_m
 	DQUOTE				= 0x20,
 	LPAREN				= 0x40,
 	RPAREN				= 0x80,
-	REDIREC_IN			= 0x100,
-	REDIREC_OUT			= 0x200,
-	DREDIREC_OUT		= 0x400,
+	REDIR_IN			= 0x100,
+	REDIR_OUT			= 0x200,
+	DREDIR_OUT			= 0x400,
 	DBL_AND				= 0x800,
 	DBL_OR				= 0x2000,
 	PIPE				= 0x4000,
@@ -92,5 +92,9 @@ t_token					*token__new(t_token_type_m type, char *value, int pos);
 t_token					*token__copy(t_token *token);
 void					token__del(t_token **token);
 int						token__istype(t_token *token, t_token_type_m type);
+int						token__isword(t_token *token);
+int						token__issep(t_token *token);
+int						token__isredir(t_token *token);
+int						token__isparen(t_token *token);
 void					token__print(t_token *t);
 #endif

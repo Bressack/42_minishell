@@ -5,7 +5,7 @@
 %token  WORD
 %token  LPAREN       RPAREN
 /*      '('          ')'                           */
-%token  REDIREC_IN   REDIREC_OUT    DREDIREC_OUT
+%token  REDIR_IN   REDIR_OUT    DREDIR_OUT
 /*      '<'          '>'            '>>'           */
 %token  SQUOTE       DQUOTE
 /*      '''          '"'                           */
@@ -25,9 +25,9 @@ expr            : (redirection)*
                 | (LPAREN expr RPAREN (cmd_sep expr | expr_end)*)*
                 | (expr_end)*
                 ;
-redirection     : REDIREC_IN file
-                | REDIREC_OUT file
-                | REDIREC_OUT REDIREC_OUT file
+redirection     : REDIR_IN file
+                | REDIR_OUT file
+                | REDIR_OUT REDIR_OUT file
                 ;
 cmd             : word
                 ;
@@ -51,3 +51,118 @@ space           : SPACE
                 | TAB
                 ;
 /* END :) */
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+%token	REDIR_IN
+%token	REDIR_OUT
+%token	DREDIR_OUT
+%token	WORD
+%token	DBL_AND
+%token	DBL_OR
+%token	PIPE
+%token	SEMI
+%token	LPAREN
+%token	RPAREN
+
+ls;(ls;);
+
+expr			: subshell
+
+subshell		: complexe_cmd
+				| LPAREN complexe_cmd RPAREN
+
+complexe_cmd	: simple_cmd
+				| simple_cmd DBL_AND
+				| simple_cmd DBL_OR
+				| simple_cmd DBL_OR
+
+simple_cmd		: cmd
+				| cmd PIPE simple_cmd
+
+cmd				: arg
+				| arg cmd
+
+arg				: WORD
+				| REDIR_IN WORD
+				| REDIR_OUT WORD
+				| DREDIR_OUT WORD
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+ls | cat && ls ; ls | ls
+|                                                                                                                                                                                                 |
+|                                                                                                                                                                                                 |
+|                                                                                                                                                                                                 |
+|                                                                                                                                                                                                 |
+|                                                                                                                                                                                                 |
+|                                                                                                                                                                                                 |
+|                                                      __________________________________________[ ;]__________________________________________                                                   |
+|                                                     /                                                                                        \                                                  |
+|                               __________________[||]___________________                                                     __________________[||]___________________                           |
+|                              /                                         \                                                   /                                         \                          |
+|                   _______[ ;]_______                             _______[ ;]_______                             _______[ ;]_______                             _______[ ;]_______               |
+|                  /                  \                           /                  \                           /                  \                           /                  \              |
+|             _[&&]_                 _[&&]_                  _[&&]_                 _[&&]_                  _[&&]_                 _[&&]_                  _[&&]_                 _[&&]_          |
+|            /      \               /      \                /      \               /      \                /      \               /      \                /      \               /      \         |
+|        [||]        [||]       [||]        [||]        [||]        [||]       [||]        [||]        [||]        [||]       [||]        [||]        [||]        [||]       [||]        [||]     |
+|       /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \    |
+|     aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  |
+|
+
+|                                                                   |
+|                                                                   |
+|                     |                                            |
+|                    / \                                        |
+|                   ;   ls                                            |
+|                  / \                                                |
+|                &&   ls                                                |
+|               /  \                                                  |
+|              |    ls                                                 |
+|             / \                                                     |
+|           ls   cat                                                     |
+|                                                                   |
+|                                                                   |
+|                                                                   |
+|                                                                   |
+|                                                                   |
+
+a && b | c | d ; e || f | g | h
+
+|                                                                               |
+|               __[ ;]__                                                        |
+|              /        \                                                       |
+|          [&&]          [||]                                                   |
+|         /    \        /    \                                                  |
+|        a      [ |]   e      [ |]                                              |
+|              /    \        /    \                                             |
+|          [ |]      d    [ |]     h                                            |
+|         /    \         /    \                                                 |
+|        b      c       f      g                                                |
+|                                                                               |
+
+ls ; ls || ls | ls | ls && ls ; ((ls && ls | ls) | ls)
+
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                     ___[ ;]___                                               |
+|                   /            \                                             |
+|                [ ;]           [()]                                           |
+|                /  \             |                                            |
+|              ls   [&&]        [ |]                                           |
+|                   /  \        /  \                                           |
+|                [||]  [ls]   [()]  ls                                         |
+|                /  \           |                                              |
+|              ls   [ |]      [&&]                                             |
+|                   /  \      /  \                                             |
+|                 ls    ls  ls  [ |]                                           |
+|                               /  \                                           |
+|                             ls    ls                                         |

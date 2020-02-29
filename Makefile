@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/02/28 17:41:54 by tharchen         ###   ########.fr        #
+#    Updated: 2020/02/29 11:38:54 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -32,8 +32,8 @@ CC					=	clang
 FLAGS				=	\
 						-Wall -Wextra -Werror \
 						-ferror-limit=1000 \
-						-g3 -fsanitize=address \
-						# -g3 \
+						-g3 \
+						# -g3 -fsanitize=address \
 						# -O3 \
 
 # *** PROJECT HEADER ********************************************************* #
@@ -46,6 +46,7 @@ HEADER_DIR			=	\
 HEADER				=	\
 						class__lexer.h \
 						class__token.h \
+						ast_builder.h \
 						color_shell.h \
 						get_next_line.h \
 						minishell.h \
@@ -77,8 +78,8 @@ SRCS_LEXER			=	\
 SRCS_BUILTIN		=	\
 						builtins/commands.c \
 
-SRCS_TOKOVORE		=	\
-						tokovore/class__tokovore2.c \
+SRCS_AST_BUILDER	=	\
+						ast_builder/ast_builder.c \
 
 SRCS_UTILS			=	\
 						utils/ft_strlen.c \
@@ -121,13 +122,14 @@ SRCS_PRINTF			=	\
 
 SRCS_LIST			=	\
 						main.c \
+						ast_to_dot.c \
 						$(SRCS_TOKEN) \
 						$(SRCS_ENVIRONEMENT) \
 						$(SRCS_LEXER) \
 						$(SRCS_BUILTIN) \
 						$(SRCS_UTILS) \
 						$(SRCS_PRINTF) \
-						$(SRCS_TOKOVORE) \
+						$(SRCS_AST_BUILDER) \
 						$(SRCS_LIBLIST) \
 
 

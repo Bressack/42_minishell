@@ -23,9 +23,9 @@ t_type_to_supertype	g_stype[NB_DEFINED_TOKEN] =
 	{DQUOTE       , ST_WORD},
 	{LPAREN       , ST_ERR}, // pas encore geré
 	{RPAREN       , ST_ERR}, // pas encore geré
-	{REDIREC_IN   , ST_REDIR},
-	{REDIREC_OUT  , ST_REDIR},
-	{DREDIREC_OUT , ST_REDIR},
+	{REDIR_IN   , ST_REDIR},
+	{REDIR_OUT  , ST_REDIR},
+	{DREDIR_OUT , ST_REDIR},
 	{DBL_AND      , ST_SEP},
 	{DBL_OR       , ST_SEP},
 	{PIPE         , ST_SEP},
@@ -345,9 +345,9 @@ t_ast				*toko_master(int sloc)
 ** 	printf(" --- DQUOTE       : "C_G_CYAN"%d"C_RES"\n", DQUOTE);
 ** 	printf(" --- LPAREN       : "C_G_CYAN"%d"C_RES"\n", LPAREN);
 ** 	printf(" --- RPAREN       : "C_G_CYAN"%d"C_RES"\n", RPAREN);
-** 	printf(" --- REDIREC_IN   : "C_G_CYAN"%d"C_RES"\n", REDIREC_IN);
-** 	printf(" --- REDIREC_OUT  : "C_G_CYAN"%d"C_RES"\n", REDIREC_OUT);
-** 	printf(" --- DREDIREC_OUT : "C_G_CYAN"%d"C_RES"\n", DREDIREC_OUT);
+** 	printf(" --- REDIR_IN   : "C_G_CYAN"%d"C_RES"\n", REDIR_IN);
+** 	printf(" --- REDIR_OUT  : "C_G_CYAN"%d"C_RES"\n", REDIR_OUT);
+** 	printf(" --- DREDIR_OUT : "C_G_CYAN"%d"C_RES"\n", DREDIR_OUT);
 ** 	printf(" --- DBL_AND      : "C_G_CYAN"%d"C_RES"\n", DBL_AND);
 ** 	printf(" --- DBL_OR       : "C_G_CYAN"%d"C_RES"\n", DBL_OR);
 ** 	printf(" --- PIPE         : "C_G_CYAN"%d"C_RES"\n", PIPE);

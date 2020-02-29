@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/28 12:06:26 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/29 05:39:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,26 @@ int				token__istype(t_token *token, t_token_type_m type)
 	return (type & token->type);
 }
 
+int				token__isword(t_token *token)
+{
+	return (token__istype(token, WORD));
+}
+
+int				token__issep(t_token *token)
+{
+	return (token__istype(token, SEMICON | DBL_AND | DBL_OR | PIPE));
+}
+
+int				token__isredir(t_token *token)
+{
+	return (token__istype(token, REDIR_IN | REDIR_OUT | DREDIR_OUT));
+}
+
+int				token__isparen(t_token *token)
+{
+	return (token__istype(token, LPAREN | RPAREN));
+}
+
 void			token__print(t_token *t) // for debug
 {
 	printf("[ %s ] --- ", t->value);
@@ -66,9 +86,9 @@ void			token__print(t_token *t) // for debug
 	else if (t->type == WORD)			printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"WORD        "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
 	else if (t->type == LPAREN)			printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"LPAREN      "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
 	else if (t->type == RPAREN)			printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"RPAREN      "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
-	else if (t->type == REDIREC_IN)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"REDIREC_IN  "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
-	else if (t->type == REDIREC_OUT)	printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"REDIREC_OUT "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
-	else if (t->type == DREDIREC_OUT)	printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"DREDIREC_OUT"C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
+	else if (t->type == REDIR_IN)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"REDIR_IN  "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
+	else if (t->type == REDIR_OUT)	printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"REDIR_OUT "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
+	else if (t->type == DREDIR_OUT)	printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"DREDIR_OUT"C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
 	else if (t->type == SQUOTE)			printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"SQUOTE      "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
 	else if (t->type == DQUOTE)			printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"DQUOTE      "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);
 	else if (t->type == DBL_AND)		printf("[ "C_G_GREEN"TOKEN"C_RES" ] { "C_G_CYAN"type:"C_RES" "C_G_MAGENTA"DBL_AND     "C_RES" } { "C_G_CYAN"value:"C_RES" ["C_G_MAGENTA"%s"C_RES"] }\n", t->value);

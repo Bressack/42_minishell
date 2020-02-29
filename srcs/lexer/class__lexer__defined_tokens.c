@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/25 13:41:18 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/29 08:18:21 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,17 @@ int					lexer__isdefined_token(t_lexer *lex, int adv)
 	char			curr;
 	char			next;
 
+	if (!lex->line)
+		return (I_ERR);
 	len = 0;
 	type = EOT;
 	curr = lex->current_char;
-	next = lex->line[lex->pos + 1];
-	if (curr == '>' && next == '>' && (len = 2))
+	next = lex->len_line > 1 ? lex->line[lex->pos + 1] : 0;
+	if (lex->len_line > 1 && curr == '>' && next == '>' && (len = 2))
 		type = I_DREDIREC_OUT;
-	else if (curr == '&' && next == '&' && (len = 2))
+	else if (lex->len_line > 1 && curr == '&' && next == '&' && (len = 2))
 		type = I_DBL_AND;
-	else if (curr == '|' && next == '|' && (len = 2))
+	else if (lex->len_line > 1 && curr == '|' && next == '|' && (len = 2))
 		type = I_DBL_OR;
 	else if (curr == '(' && (len = 1))
 		type = I_LPAREN;
@@ -54,7 +56,7 @@ int					lexer__isdefined_token(t_lexer *lex, int adv)
 		type = I_PIPE;
 	else if (curr == ';' && (len = 1))
 		type = I_SEMICON;
-	else if (curr == '&')
+	else if (curr == '&' || curr == '\\')
 		lexer__error(SGLAND_NOT_HANDLED, lex);
 	else
 		return (I_NONE);

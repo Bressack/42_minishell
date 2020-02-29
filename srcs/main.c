@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/28 19:02:12 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/29 16:14:24 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,27 @@ void	sig_handler(int signo)
 // 	}
 // }
 
+int		get_deep(t_node *root, int i)
+{
+	int	lret;
+	int	rret;
+
+	if (root->left)
+		lret = get_deep(root, i + 1);
+	else
+		lret = i;
+	if (root->right)
+		rret = get_deep(root, i + 1);
+	else
+		rret = i;
+	return (lret > rret ? lret : rret);
+}
+
 int		main(int ac, char **av, char **env)
 {
 	int			sloc;
-	// int			pid;
-	t_ast		*ast;
+	int			pid;
+	t_node		*ast;
 
 	get_env(ac, av, env);
 	sloc = 0;
@@ -72,30 +88,25 @@ int		main(int ac, char **av, char **env)
 	{
 		signal(SIGINT, sig_handler);
 
-		// t_lexer *lex;
-		// t_token *ct;
-		// lex = try_malloc(sizeof(t_lexer), _FL_);
-		// lexer__refill_line(lex, 0, PROMPT_CASUAL);
-		// while ((ct = lexer__get_next_token(lex)))
-		// {
-		// 	token__print(ct);
-		// 	if (ct->type == EOT)
-		// 		break ;
-		// }
-		// try_free_((void **)&lex, _FL_);
-		// continue ;
-
-		// if (!(pid = fork()))
-		// {
-			ast = toko_master(sloc);
+		if (!(pid = fork()))
+		{
+			ast = ast_builder(sloc);
 			if (ast)
+			{
 				printf("AST RECIVED !!\n");
-			print_ast(ast->tree, 0);
-			// exit(0);
-		// }
-		// waitpid(pid, &sloc, WUNTRACED);
-		// if (sloc == 6)
-		// 	printf("[ SEGV  ] You got a segv lmao, you\'re so bad\n");
+				tree_draw(ast);
+			}
+			exit(0);
+		}
+		waitpid(pid, &sloc, WUNTRACED);
+		return (sloc);
+		if (sloc == 6)
+			printf("[ SEGV  ] You got a segv lmao, you\'re so bad\n");
+		if (sloc == 2)
+		{
+			ft_printf("exit\n");
+			return (0);
+		}
 	}
 	try_free_all(_FL_);
 	return (0);
