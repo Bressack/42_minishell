@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/21 19:22:40 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/29 15:16:13 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,22 @@
 
 #include <minishell.h>
 #define BUILTINS 7
+// #define STDOUT 1
+// #define STDERR 2
+// #define STDIN 2
 
-void	xecho(char *args);
-void	xpwd(char *args);
-void	xexit(char *args);
-void	xcd(char *args);
+int		xecho(int argc, char **args);
+int		xpwd(int argc, char **args);
+int		xexit(int argc, char **args);
+int		xcd(int argc, char **args);
+int		launch(char **args, char *env);
+int		execute(t_token *args);
+// int		execute(int ac, char **args);
 
 typedef struct		s_bi
 {
 	char	*name;
-	int		len;
-	void	(*f)(char	*args); //change to const ?
+	int		(*f)(int argc, char	**args); //change to const ?
 }					t_bi;
 
 #endif

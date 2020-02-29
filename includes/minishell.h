@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:20:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 00:05:00 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/02/29 15:38:46 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <errno.h>
 # include <color_shell.h>
 # include <try_malloc.h>
+# include <mmalloc.h>
 # include <double_linked.h>
 # include <utils.h>
 # include <class__token.h>

@@ -6,29 +6,60 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/25 14:10:40 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/29 15:16:41 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENV_H
 # define ENV_H
 
+#include <minishell.h>
+
 typedef struct	s_env
 {
 	char			*name;
 	char			*value;
+	unsigned int	export:2;
 	struct s_env	*next;
 }				t_env;
 
-t_env	*g_env;
+/*
+** typedef struct	s_args
+** {
+** 	char			*value;
+** 	struct	s_args	*next;
+** }				t_args;
+*/
 
-void	print_env();
+t_env	*g_env;
+/*
+** ENV.C
+*/
+int		print_env(int ac, char **args);
 t_env	*ret_env(char *name);
-char	*ft_copsep(char **e, char sep);
+char	*ret_envval(char *name);
 void	set_env(t_env *e, char *env);
 void	get_env(int ac, char **av, char **env);
-void	env_destructor(t_env *f, int flag);
-void	export(char *val);
-void	unset(char *name);
+/*
+** EXPORT.C
+*/
+int		export(int ac, char **args);
+void	set_var(char *name, int op, char *val, int export);
+/*
+** UNSET.C
+*/
+int		unset(int ac, char **args);
+void	env_destructor(t_env *trav);
+/*
+** EXPANSION
+*/
+
+#define IFS " \t\n"
+
+int		ok_envchar(char c);
+// char	**expand(char **args, int *ac);
+// char	*expand(char *args);
+int		expand(t_token **args);
+char	**convert_to_arr(t_token *args, int ac);
 
 #endif

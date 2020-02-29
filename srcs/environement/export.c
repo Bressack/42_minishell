@@ -6,114 +6,90 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/25 14:13:08 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/27 20:41:54 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int		print_exp(void)
+static int	print_exp(void)
 {
 	t_env	*trav;
-	int		i;
 
 	trav = g_env;
 	while (trav)
 	{
-		i = 0;
-		ft_dprintf(1, "declare -x %s", trav->name);
-		if (trav->value)
-			ft_dprintf(1, "=\"%s\"", trav->value);
-		write(1, "\n", 1);
+		if (trav->export == 1)
+		{
+			ft_dprintf(STDOUT_FILENO, "declare -x %s", trav->name);
+			if (trav->value)
+				ft_dprintf(STDOUT_FILENO, "=\"%s\"", trav->value);
+			write(STDOUT_FILENO, "\n", 1);
+		}
 		trav = trav->next;
 	}
 	return (0);
 }
 
-char	*ft_copsep(char **e, char sep)
-{
-	int		i;
-	char	*ret;
-	int		inqt;
-
-	i = 0;
-	while (e && e[0][i] && e[0][i] != ' ' && e[0][i] != sep)
-		i++;
-	if (!(ret = (char *)malloc(i + 1)))
-		return (NULL);
-	i = 0;
-	inqt = 0;
-	while (**e && **e != sep && (**e != ' ' || inqt != 0))
-	{
 /*
-** 		NOT SURE IF THIS IS A GOOD PLACE TO HANDLE QUOTES THOUGH
+** [IF] THE ENV VAR ALREADY EXISTS -> either replace if def value // nothing
+** [ELSE] IF THE ENV DOESN'T EXIST: ADD BACK -- with value if = otherwise NULL
 */
-		if (**e == '\"' || **e == '\'')
-		{
-			if (inqt == 0 || inqt % **e != 0)
-				inqt += **e;
-			else
-				inqt -= **e;
-			(*e)++;
-		}
-		ret[i] = *((*e)++);
-		(sep == '=' && ret[i] == '+') ? 0 : i++; //for not copying + & =
-	}
-	ret[i] = '\0';
-	(**e == sep) ? (*e)++ : 0;
-	return (ret);
-}
 
-void	export(char *val)
+void		set_var(char *name, int op, char *val, int export)
 {
 	t_env	*trav;
-	t_env	*new;
-	int		i;
-	char	cpy[50];
 
-/*
-** HOPEFULLY CAN REMOVE THE SKIP WHITESPACES LATER BC ALREADY REMOVED IN LEXER
-*/
-	while (val && *val && *val == ' ')
-		val++;
-	if ((i = -1) == -1 && (val == NULL || *val == '\0') && !print_exp())
-		return ;
-	while (val[++i] && val[i] != ' ' && val[i] != '=' && val[i] != '+')
-		cpy[i] = val[i];
-/*
-** 	IF THE ENV VAR ALREADY EXISTS -> either replace if def value // nothing
-*/
-	if ((cpy[i] = '\0') == '\0' && (trav = ret_env(cpy)) != NULL)
+	if ((trav = ret_env(name)) != NULL)
 	{
-		val += i;
-		if (*val == '+' && *(++val) == '=' && val++)
-			trav->value = cat_value(trav->value, ft_copsep(&val, '\n'));
-		else if (*val == '=' && val++)
+		(op == '+') ? trav->value = cat_value(trav->value, val) : 0;
+		if (op == '=')
 		{
-			free(trav->value);
-			trav->value = ft_copsep(&val, '\n');
+			mfree(trav->value);
+			trav->value = ft_strdup(val);
 		}
+		trav->export = 1;
 	}
-/*
-** 	IF THE ENV DOESN'T EXIST: ADD BACK -- with value if = otherwise NULL
-*/
 	else
 	{
 		trav = g_env;
 		while (trav && trav->next)
 			trav = trav->next;
-		if (!(new = (t_env *)malloc(sizeof(t_env))))
+		if (!((trav->next) = (t_env *)mmalloc(sizeof(t_env))))
 			return ;
-		new->name = ft_copsep(&val, '=');
-		new->value = (*(val - 1) == '=') ? ft_copsep(&val, '\n') : NULL;
-		new->next = trav->next;
-		trav->next = new;
+		(trav->next)->name = ft_strdup(name);
+		(trav->next)->value = (op == 0) ? NULL : ft_strdup(val);
+		(trav->next)->next = NULL;
+		(trav->next)->export = export;
 	}
-	while (*val && *val == ' ')
-		val++;
-/*
-** 	RECURSIVE TO TAKE CARE ON MULTIPLE
-*/
-	if (*val)
-		export(val);
+}
+
+int			export(int ac, char **av)
+{
+	int		i;
+	int		j;
+	int		op;
+	int		export;
+	char	cpy[LINE_MAX];
+
+	export = (ft_strcmp(av[0], "export")) ? 0 : 1;
+	i = (export) ? 0 : -1;
+	if (export && ac == 1)
+		return (print_exp());
+	while (++i < ac && (j = -1) == -1)
+	{
+		if (av[i] && ((*av[i] >= '0' && *av[i] <= '9') || !ok_envchar(av[i][0])))
+			bi_error(av[0], av[i], "not a valid identifier", 1);
+		else if (av[i])
+		{
+			while (*av[i] && *av[i] != ' ' && *av[i] != '+' && *av[i] != '=')
+				cpy[++j] = *av[i]++;
+			if ((op = *av[i]) != 0 && *av[i]++ == '+' && *av[i] != '=')
+				bi_error(av[0], av[i], "not a valid identifier", 1);
+			else if ((cpy[++j] = '\0') == '\0')
+				(op == '+') ? set_var(cpy, op, ++av[i], export) :
+				set_var(cpy, op, av[i], export);
+		}
+	}
+	return (0);
 }
