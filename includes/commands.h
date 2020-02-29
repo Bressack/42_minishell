@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/29 15:16:13 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/29 21:03:54 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int		xecho(int argc, char **args);
 int		xpwd(int argc, char **args);
 int		xexit(int argc, char **args);
 int		xcd(int argc, char **args);
-int		launch(char **args, char *env);
+int		launch(char **args);
 int		execute(t_token *args);
 // int		execute(int ac, char **args);
 

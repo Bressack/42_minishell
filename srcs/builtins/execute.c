@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/29 16:11:26 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/29 21:27:00 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,63 @@ t_bi		g_builtins[BUILTINS] =
 	{"env", &print_env}
 };
 
-char	*get_next_path(char **env, char *path, char *command)
+/*
+** char	*get_next_path(char **env, char *path, char *command)
+** {
+** 	int		i;
+**
+** 	// i = -1;
+** 	// while (path[++i])
+** 	// 	if (path[i] == '/' && !(env = NULL))
+** 	// 		return (path);
+** 	i = 0;
+** 	while (**env && **env != '\n' && **env != ':')
+** 		path[i++] = *((*env)++);
+** 	if (**env == ':')
+** 		(*env)++;
+** 	path[i++] = '/';
+** 	while (command && *command)
+** 		path[i++] = *command++;
+** 	path[i] = '\0';
+** 	return (path);
+** }
+*/
+
+char	*get_next_path(char *path, char *command)
 {
 	int		i;
+	int		p;
+	static	int c = 0;
+	char *env;
 
-	// i = -1;
-	// while (path[++i])
-	// 	if (path[i] == '/' && !(env = NULL))
-	// 		return (path);
+	i = -1;
+	if (c == -1)
+		return (NULL);
+	while (command[++i])
+		if (command[i] == '/')
+			p = 1;
+	if (p == 1)
+	{
+		if (*command == '.' && (command += 2))
+			env = ret_envval("PWD");
+		else
+			env = NULL;
+		printf("ENV: %s\n", env);
+	}
+	else
+		env = ret_envval("PATH");
 	i = 0;
-	while (**env && **env != '\n' && **env != ':')
-		path[i++] = *((*env)++);
-	if (**env == ':')
-		(*env)++;
+	while (env && env[c] && env[c] != '\n' && env[c] != ':')
+		path[i++] = env[c++];
+	if (env[c] == ':')
+		c++;
+	if (env[c] == '\0')
+		c = -1;
 	path[i++] = '/';
 	while (command && *command)
 		path[i++] = *command++;
 	path[i] = '\0';
+	printf("PATH [%s]\n", path);
 	return (path);
 }
 
@@ -81,7 +121,7 @@ void	sig_exec(int signo)
 
 }
 
-int		launch(char **args, char *env)
+int		launch(char **args)
 {
 	pid_t	pid;
 	pid_t	wpid;
@@ -95,7 +135,7 @@ int		launch(char **args, char *env)
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0) //child
 	{
-		while (env && *env && get_next_path(&env, path, args[0]))
+		while (get_next_path(path, args[0]))
 			execve(path, args, environ); // SHOULD MAYBE NOT USE MALLOC?
 		bi_error(args[0], NULL, "command not found", 0);
 		exit(-1);
@@ -136,5 +176,5 @@ int		execute(t_token *args)
 	while (++j < BUILTINS)
 		if (!ft_strcmp(av[0], g_builtins[j].name))
 			return (g_builtins[j].f(ac, av));
-	return (launch(av, ret_envval("PATH")));
+	return (launch(av));
 }
