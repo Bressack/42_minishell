@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/28 13:34:32 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/29 15:59:19 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int		xcd(int ac, char **args)
 	t_env	*change;
 	char	*tmp;
 	char	*tmp2;
-	char	dir[500];
+	char	dir[LINE_MAX];
 
 	change = ret_env("OLDPWD");
 	tmp = (change) ? change->value : NULL;

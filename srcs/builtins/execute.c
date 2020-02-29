@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/29 15:15:53 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/02/29 16:11:26 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ int		execute(t_token *args)
 	char	**av;
 	int		ac;
 
-
 	ac = expand(&args);
 	av = convert_to_arr(args, ac);
 	j = -1;
@@ -133,6 +132,7 @@ int		execute(t_token *args)
 		return (export(ac, av));
 	ac -= assign;
 	av += assign;
+	j = -1;
 	while (++j < BUILTINS)
 		if (!ft_strcmp(av[0], g_builtins[j].name))
 			return (g_builtins[j].f(ac, av));
