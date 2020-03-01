@@ -6,12 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 21:35:45 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/24 22:41:25 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/02/27 20:35:20 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <minishell.h>
-#include <libc.h>
+#include <minishell.h>
 
 char	*cat_value(char *s1, char *s2)
 {
@@ -24,13 +23,12 @@ char	*cat_value(char *s1, char *s2)
 	j = 0;
 	while (s2 && s2[j])
 		j++;
-	if (!(s1 = (char *)realloc(s1, i + j + 1)))
+	if (!(s1 = (char *)mmalloc(i + j + 1)))
 		return (NULL);
 	j = -1;
 	while (s2 && s2[++j])
 		s1[i + j] = s2[j];
 	s1[i + j] = '\0';
-	free(s2);
 	return (s1);
 }
 

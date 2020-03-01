@@ -6,7 +6,11 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2020/03/01 13:36:06 by tharchen         ###   ########.fr        #
+=======
+#    Updated: 2020/02/29 15:43:41 by fredrikalindh    ###   ########.fr        #
+>>>>>>> fredwtoken
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -32,7 +36,7 @@ CC					=	clang
 FLAGS				=	\
 						-Wall -Wextra -Werror \
 						-ferror-limit=1000 \
-						-g3 -fsanitize=address \
+						#-g3 -fsanitize=address \
 						# -g3 \
 						# -O3 \
 
@@ -69,7 +73,9 @@ SRCS_TOKEN			=	\
 SRCS_ENVIRONEMENT	=	\
 						environement/unset.c \
 						environement/env.c \
+						environement/expansion.c \
 						environement/export.c \
+						environement/to_arr.c \
 
 SRCS_LEXER			=	\
 						lexer/class__lexer.c \
@@ -77,12 +83,14 @@ SRCS_LEXER			=	\
 
 SRCS_BUILTIN		=	\
 						builtins/commands.c \
+						builtins/execute.c \
 
 SRCS_AST_BUILDER	=	\
 						ast_builder/ast_builder.c \
 
 SRCS_UTILS			=	\
 						utils/ft_strlen.c \
+						utils/ft_bzero.c \
 						utils/ft_strjoin.c \
 						utils/ft_memcpy.c \
 						utils/get_next_line.c \
@@ -94,7 +102,12 @@ SRCS_UTILS			=	\
 						utils/ft_strncpy.c \
 						utils/ft_strcmp.c \
 						utils/cat_value.c \
-						utils/ft_bzero.c \
+						utils/ft_atoi.c \
+						utils/ft_isnum.c \
+						utils/bi_error.c \
+						utils/mmalloc.c \
+						utils/ft_split.c \
+
 
 SRCS_LIBLIST		=	\
 						utils/lists/ft_add_node_end_np.c \
