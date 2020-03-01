@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/29 16:14:24 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/01 13:38:30 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int		get_deep(t_node *root, int i)
 int		main(int ac, char **av, char **env)
 {
 	int			sloc;
-	int			pid;
 	t_node		*ast;
 
 	get_env(ac, av, env);
@@ -88,25 +87,22 @@ int		main(int ac, char **av, char **env)
 	{
 		signal(SIGINT, sig_handler);
 
-		if (!(pid = fork()))
-		{
+		// int			pid;
+		// if (!(pid = fork()))
+		// {
 			ast = ast_builder(sloc);
 			if (ast)
 			{
 				printf("AST RECIVED !!\n");
 				tree_draw(ast);
 			}
-			exit(0);
-		}
-		waitpid(pid, &sloc, WUNTRACED);
-		return (sloc);
+			// exit(0);
+		// }
+		// waitpid(pid, &sloc, WUNTRACED);
+		printf("sloc == %d\n", sloc);
 		if (sloc == 6)
 			printf("[ SEGV  ] You got a segv lmao, you\'re so bad\n");
-		if (sloc == 2)
-		{
-			ft_printf("exit\n");
-			return (0);
-		}
+		// return (sloc);
 	}
 	try_free_all(_FL_);
 	return (0);

@@ -115,43 +115,56 @@ ls | cat && ls ; ls | ls
 |       /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \    |
 |     aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  |
 |
+|                                                                              |
+|                                                                              |
+|                     |                                                        |
+|                    / \                                                       |
+|                   ;   ls                                                     |
+|                  / \                                                         |
+|                &&   ls                                                       |
+|               /  \                                                           |
+|              |    ls                                                         |
+|             / \                                                              |
+|           ls   cat                                                           |
+|                                                                              |
+a && b | c | d | e ; f || g | h | i | j
 
-|                                                                   |
-|                                                                   |
-|                     |                                            |
-|                    / \                                        |
-|                   ;   ls                                            |
-|                  / \                                                |
-|                &&   ls                                                |
-|               /  \                                                  |
-|              |    ls                                                 |
-|             / \                                                     |
-|           ls   cat                                                     |
-|                                                                   |
-|                                                                   |
-|                                                                   |
-|                                                                   |
-|                                                                   |
-
-a && b | c | d ; e || f | g | h
-
-|                                                                               |
-|               __[ ;]__                                                        |
-|              /        \                                                       |
-|          [&&]          [||]                                                   |
-|         /    \        /    \                                                  |
-|        a      [ |]   e      [ |]                                              |
-|              /    \        /    \                                             |
-|          [ |]      d    [ |]     h                                            |
-|         /    \         /    \                                                 |
-|        b      c       f      g                                                |
-|                                                                               |
-
+[;]
+L   [&&]
+    L   {a}
+    R   [|]
+        L   [|]
+            L   [|]
+                L   {b}
+                R   {c}
+            R   {d}
+        R   {e}
+R   [||]
+    L   {f}
+    R   [|]
+        L   [|]
+            L   [|]
+                L   {g}
+                R   {h}
+            R   {i}
+        R   {j}
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|               _____[ ;]_____                                                 |
+|              /              \                                                |
+|          [&&]                [||]                                            |
+|         /    \              /    \                                           |
+|        a      [ |]         f      [ |]                                       |
+|              /    \              /    \                                      |
+|          [ |]      e         [ |]      j                                     |
+|         /    \              /    \                                           |
+|     [ |]      d         [ |]      i                                          |
+|    /    \              /    \                                                |
+|   b      c            g      h                                               |
+|                                                                              |
+|                                                                              |
 ls ; ls || ls | ls | ls && ls ; ((ls && ls | ls) | ls)
-
-|                                                                              |
-|                                                                              |
-|                                                                              |
 |                                                                              |
 |                     ___[ ;]___                                               |
 |                   /            \                                             |
@@ -166,3 +179,5 @@ ls ; ls || ls | ls | ls && ls ; ((ls && ls | ls) | ls)
 |                 ls    ls  ls  [ |]                                           |
 |                               /  \                                           |
 |                             ls    ls                                         |
+
+echo | cat ; ls | cat | cat && echo | echo | cat && ls && echo | cat || rm || echo | ls

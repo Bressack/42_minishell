@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/29 05:39:47 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/01 13:33:50 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ void			token__del(t_token **token)
 int				token__istype(t_token *token, t_token_type_m type)
 {
 	return (type & token->type);
+}
+
+int				token__iseot(t_token *token)
+{
+	return (token__istype(token, EOT));
 }
 
 int				token__isword(t_token *token)

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:28:56 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/29 16:36:50 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/01 13:46:54 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,24 @@
 
 void	astb_error(t_astb *tool, int opt)
 {
-	printf(TEST);
-	if (opt == UNEXPECTED_TOKEN)
+	if (opt == UNEXPECTED_TOKEN_AFTER)
 		ft_dprintf(2, "error: unexpected token \'%s\' after \'%s\'\n",
 			tool->current_token->value, tool->prev_token->value);
 	exit(-1);
 }
 
+t_node	*new_node(t_nodetype type)
+{
+	t_node		*new;
+
+	new = try_malloc(sizeof(t_node), _FL_);
+	new->type = type;
+	return (new);
+}
+
 int		print_node(t_node *n)
 {
+
 	printf("[ NODE   "C_G_YELLOW"%-4s"C_RES" | "C_G_GREEN"%-14p"C_RES" ] {["C_G_CYAN"%4s"C_RES"] <- ["C_G_RED"%4s"C_RES"] -> ["C_G_CYAN"%4s"C_RES"]}",
 		n ? n->type == CMD ? "CMD" : "SEP" : "NULL",
 		n,
@@ -42,21 +51,29 @@ int		print_node(t_node *n)
 	return (0);
 }
 
+void	print_ast(t_node *n, int deep)
+{
+	if (!n)
+		printf("("C_G_RED"null"C_RES")\n");
+	else
+	{
+		if (n->type == CMD)
+			printf("{"C_G_YELLOW"%s"C_RES"}\n", n->av ? n->av->value : C_G_RED"null"C_RES);
+		else
+		{
+			printf("["C_G_CYAN"%s"C_RES"]\n", n->sep ? n->sep->value : C_G_RED"null"C_RES);
+			printf("%*sL - ", deep * 4, ""), print_ast(n->left, deep + 1);
+			printf("%*sR - ", deep * 4, ""), print_ast(n->right, deep + 1);
+		}
+	}
+}
+
 void	eat(t_astb *tool, t_token_type_m type)
 {
 	if (!token__istype(tool->current_token, type))
-		printf(TEST), printf(TEST), astb_error(tool, UNEXPECTED_TOKEN);
+		astb_error(tool, UNEXPECTED_TOKEN);
 	tool->prev_token = tool->current_token;
 	tool->current_token = lexer__get_next_token(tool->lex);
-}
-
-t_node	*new_node(t_nodetype type)
-{
-	t_node		*new;
-
-	new = try_malloc(sizeof(t_node), _FL_);
-	new->type = type;
-	return (new);
 }
 
 void	add_token_into_node(t_astb *tool, t_token **tokendest, t_ast_token type)
@@ -87,51 +104,28 @@ void	search_place_node(t_astb *tool, t_node *node, t_token_type_m type)
 {
 	while (tool->tree_pos && (tool->tree_pos->type == CMD ||
 		!token__istype(tool->tree_pos->sep, type)))
-	{
-		dprintf(1, ""C_G_WHITE"tree_pos is on       "C_RES);
-		print_node(tool->tree_pos);
-		dprintf(1, ""C_G_WHITE"tree_pos is going on "C_RES);
-		print_node(tool->tree_pos->parent);
 		tool->tree_pos = tool->tree_pos->parent;
-	}
-	dprintf(1, ""C_G_WHITE"tree_pos is now on   "C_RES);
-	print_node(tool->tree_pos);
 	if (!tool->tree_pos)
 		set_root_to_node(tool, node);
 	else
 	{
 		node->left = tool->tree_pos->right;
-		tool->tree_pos->right = NULL;
 		node->right = NULL;
 		node->parent = tool->tree_pos;
-		tool->tree_pos->left = node;
+		tool->tree_pos->right = node;
 	}
 }
 
 void	add_to_ast(t_astb *tool, t_node *node)
 {
-	/*
-** 	printf("tree_pos: "C_G_GREEN"%p"C_RES" ["C_G_CYAN"type:"C_RES" "C_G_RED"%s"C_RES"] ["C_G_CYAN"value:"C_RES" "C_G_RED"%s"C_RES"]\n",
-** 	tool->tree_pos,
-** 	tool->tree_pos ? tool->tree_pos->type == CMD ? "CMD" : "SEP" : 0,
-** 	tool->tree_pos ? tool->tree_pos->type == CMD ? tool->tree_pos->av->value : tool->tree_pos->sep->value : 0
-** 	);
-** 	printf("node    : "C_G_GREEN"%p"C_RES" ["C_G_CYAN"type:"C_RES" "C_G_RED"%s"C_RES"] ["C_G_CYAN"value:"C_RES" "C_G_RED"%s"C_RES"]\n",
-** 	node,
-** 	node ? node->type == CMD ? "CMD" : "SEP" : 0,
-** 	node ? node->type == CMD ? node->av->value : node->sep->value : 0
-** 	);
-*/
 	if (tool->ast == NULL)
 	{
 		if (node->type == SEP)
-			printf(TEST), astb_error(tool, UNEXPECTED_TOKEN);
+			astb_error(tool, UNEXPECTED_TOKEN);
 		set_root_to_node(tool, node);
 	}
 	else
 	{
-		// if (!tool->tree_pos)
-		// 	printf(TEST), astb_error(tool, UNEXPECTED_TOKEN);
 		if (node->type == CMD)
 		{
 			tool->tree_pos->right = node;
@@ -140,7 +134,7 @@ void	add_to_ast(t_astb *tool, t_node *node)
 		else if (node->type == SEP)
 		{
 			if (!node->sep)
-				printf(TEST), astb_error(tool, UNEXPECTED_TOKEN);
+				astb_error(tool, UNEXPECTED_TOKEN);
 			if (token__istype(node->sep, PIPE))
 				search_place_node(tool, node, DBL_AND | DBL_OR | SEMICON);
 			else if (token__istype(node->sep, DBL_AND | DBL_OR))
@@ -150,45 +144,38 @@ void	add_to_ast(t_astb *tool, t_node *node)
 			tool->tree_pos = node;
 		}
 	}
-	dprintf(1, ""C_G_WHITE"node                 "C_RES);
-	print_node(node);
-}
-
-void	print_ast(t_node *n, int deep)
-{
-	printf("%*s", deep * 4, "");
-	print_node(n);
-	n->left ? print_ast(n->left, deep + 1) : 0;
-	n->right ? print_ast(n->right, deep + 1) : 0;
+	// dprintf(1, ""C_G_WHITE"node                 "C_RES);
+	// print_node(node);
 }
 
 void	process(t_astb *tool)
 {
-	t_node		*cmd;
-	t_node		*sep;
+	t_node		*cmd;                                                           // t_node *cmd; -> new empty node command
+	t_node		*sep;                                                           // t_node *sep; -> new empty node separator
 
-	if (token__issep(tool->current_token))
-		printf(TEST), astb_error(tool, UNEXPECTED_TOKEN);
-	cmd = new_node(CMD);
-	while (token__isword(tool->current_token) ||
-		token__isredir(tool->current_token))
-	{
-		if (token__isredir(tool->current_token))
-		{
-			add_token_into_node(tool, &cmd->redir, AST_REDIR);
-			add_token_into_node(tool, &cmd->file, AST_WORD);
-			continue ;
-		}
-		add_token_into_node(tool, &cmd->av, AST_WORD);
-	}
-	add_to_ast(tool, cmd);
-	if (token__issep(tool->current_token))
-	{
-		sep = new_node(SEP);
-		add_token_into_node(tool, &sep->sep, AST_SEP);
-		add_to_ast(tool, sep);
-		process(tool);
-	}
+	if (token__issep(tool->current_token) || token__iseot(tool->current_token))// Send an error if the first token is a sep. a command cannot begin by a sep
+		astb_error(tool, UNEXPECTED_TOKEN);                                     //
+	printf(TEST);
+	cmd = new_node(CMD);                                                        // init the node cmd
+	while (token__isword(tool->current_token) ||                                // loop on each next token could be a redirection ['&&' | '||' | '|' WORD] or an
+		token__isredir(tool->current_token))                                    // arg (cmd name then args)
+	{                                                                           //
+		if (token__isredir(tool->current_token))                                // handle redir (a redir is a redir token following by a WORD (its file)
+		{                                                                       //
+			add_token_into_node(tool, &cmd->redir, AST_REDIR);                  // add the REDIR token into the node and eat the current_token to reveal the next one
+			add_token_into_node(tool, &cmd->file, AST_WORD);                    // add the WORD token into the node and eat the current_token to reveal the next one
+			continue ;                                                          //
+		}                                                                       // handle args (cmd och args ...)
+		add_token_into_node(tool, &cmd->av, AST_WORD);                          // add the WORD token into the node and eat the current_token to reveal the next one
+	}                                                                           //
+	add_to_ast(tool, cmd);                                                      // add the node cmd to the ast. A cmd is always added to the right child of tree_pos (tree_pos is the last position where a node was added)
+	if (token__issep(tool->current_token))                                      // if a sep is present after the cmd, then add it to the sep node then into the ast
+	{                                                                           //
+		sep = new_node(SEP);                                                    // init the node sep
+		add_token_into_node(tool, &sep->sep, AST_SEP);                          //
+		add_to_ast(tool, sep);                                                  // add the node sep to the ast.
+		process(tool);                                                          // rerun process to the next cmd
+	}                                                                           //
 }
 
 int		init_tool(t_astb *tool, int sloc)
@@ -212,9 +199,10 @@ t_node	*ast_builder(int sloc)
 
 	if (init_tool(&tool, sloc) == -1)
 		return (NULL);
+	printf(TEST);
 	process(&tool);
+	printf(TEST);
 	lexer__del(&tool.lex);
-	printf("\n===============================================\n");
 	print_ast(tool.ast, 0);
 	return (tool.ast);
 }
