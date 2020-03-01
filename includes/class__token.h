@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:21:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 13:34:11 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/01 16:25:39 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ extern t_assign_id_idx	g_assign_id_idx[NB_DEFINED_TOKEN];
 t_token					*token__new(t_token_type_m type, char *value, int pos);
 t_token					*token__copy(t_token *token);
 void					token__del(t_token **token);
+void					token__list_del(t_token **token);
 int						token__istype(t_token *token, t_token_type_m type);
 int						token__iseot(t_token *token);
 int						token__isword(t_token *token);

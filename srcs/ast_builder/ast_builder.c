@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:28:56 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 14:40:12 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/01 16:30:10 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,14 @@
 
 void	astb_error(t_astb *tool, int opt)
 {
-	if (opt == UNEXPECTED_TOKEN_AFTER)
-		ft_dprintf(2, "error: unexpected token \'%s\' after \'%s\'\n",
-			tool->current_token->value, tool->prev_token->value);
+	if (opt == UNEXPECTED_TOKEN)
+	{
+		ft_dprintf(2, "error: unexpected token \'%s\'",
+			tool->current_token->value);
+		if (tool->prev_token)
+			ft_dprintf(2, " after \'%s\'\n", tool->prev_token->value);
+		ft_dprintf(2, "\n");
+	}
 	exit(-1);
 }
 
@@ -27,6 +32,19 @@ t_node	*new_node(t_nodetype type)
 	new = try_malloc(sizeof(t_node), _FL_);
 	new->type = type;
 	return (new);
+}
+
+void	del_node(t_node **node, int opt)
+{
+	token__list_del(&(*node)->av);
+	token__list_del(&(*node)->redir);
+	token__list_del(&(*node)->sep);
+	if (opt == RECURCIVLY)
+	{
+		(*node)->left ? del_node(&(*node)->left, opt) : 0;
+		(*node)->right ? del_node(&(*node)->right, opt) : 0;
+	}
+	try_free_((void **)node, _FL_);
 }
 
 int		print_node(t_node *n)
@@ -120,8 +138,7 @@ void	add_to_ast(t_astb *tool, t_node *node)
 {
 	if (tool->ast == NULL)
 	{
-		if (node->type == SEP)
-			astb_error(tool, UNEXPECTED_TOKEN);
+		node->type == SEP ? astb_error(tool, UNEXPECTED_TOKEN) : 0;
 		set_root_to_node(tool, node);
 	}
 	else
@@ -153,9 +170,8 @@ void	process(t_astb *tool)
 	t_node		*cmd;                                                           // t_node *cmd; -> new empty node command
 	t_node		*sep;                                                           // t_node *sep; -> new empty node separator
 
-	if (token__issep(tool->current_token) || token__iseot(tool->current_token))// Send an error if the first token is a sep. a command cannot begin by a sep
+	if (token__issep(tool->current_token) || token__iseot(tool->current_token)) // Send an error if the first token is a sep. a command cannot begin by a sep
 		astb_error(tool, UNEXPECTED_TOKEN);                                     //
-	printf(TEST);
 	cmd = new_node(CMD);                                                        // init the node cmd
 	while (token__isword(tool->current_token) ||                                // loop on each next token could be a redirection ['&&' | '||' | '|' WORD] or an
 		token__isredir(tool->current_token))                                    // arg (cmd name then args)
@@ -185,7 +201,7 @@ int		init_tool(t_astb *tool, int sloc)
 	if (!tool->current_token || tool->current_token->type == EOT)
 	{
 		lexer__del(&tool->lex);
-		return (-1);
+		return (-1); // line empty
 	}
 	tool->prev_token = NULL;
 	tool->tree_pos = NULL;
@@ -199,9 +215,7 @@ t_node	*ast_builder(int sloc)
 
 	if (init_tool(&tool, sloc) == -1)
 		return (NULL);
-	printf(TEST);
 	process(&tool);
-	printf(TEST);
 	lexer__del(&tool.lex);
 	print_ast(tool.ast, 0);
 	return (tool.ast);

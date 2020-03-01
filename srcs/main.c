@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 14:39:58 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/01 16:27:32 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,58 +40,33 @@ void	print_prompt(int sloc, int prompt_lever)
 void	sig_handler(int signo)
 {
 	if (signo == SIGINT)
-	{
-		write(1, "\n", 1);
-		print_prompt(0, PROMPT_CASUAL);
-		// signal(SIGINT, sig_handler);
-	}
-	if (signo == SIGQUIT)
-		ft_dprintf(0, "\b\b  \b\b");
+		;
+	else if (signo == SIGQUIT)
+		ft_dprintf(0, "\b\b  \b\b"); // tellement laid lmao
 }
 
 int		main(int ac, char **av, char **env)
 {
-	t_lexer		lex;
-	t_token		*current_token;
 	int			sloc;
 	t_node		*ast;
-	// t_ast		ast;
-	t_token		*args;
-	t_token		*trav;
-	t_token		*prev;
+	pid_t		pid;
 
-	g_all_malloc = NULL;
-	bzero(&lex, sizeof(t_lexer));
 	get_env(ac, av, env);
 	while (1)
 	{
-		signal(SIGINT, sig_handler);
+		if (signal(SIGINT, sig_handler) == CONTINUE)
+			continue ;
 		signal(SIGQUIT, sig_handler);
-		if (lex.line[0] < 0 && ft_dprintf(1, "exit\n") && !free_all_malloc()) // CALL XEXIT INSTEAD ?
-			break ;
-		// ast = ast__new(lex);
-		args = NULL;
-		while (1)
+		if (!(pid = fork()))
 		{
-			ast = ast_builder(sloc);
-			if (ast)
-			{
-				printf("AST RECIVED !!\n");
-				tree_draw(ast);
-			}
-			// exit(0);
-		// }
-		// waitpid(pid, &sloc, WUNTRACED);
-		printf("sloc == %d\n", sloc);
-		if (sloc == 6)
-			printf("[ SEGV  ] You got a segv lmao, you\'re so bad\n");
-		// return (sloc);
+			if ((ast = ast_builder(sloc)))
+				ast ? tree_draw(ast) : 0; // gen a tree.dot file used by the cmd dot in the shell
+			del_node(&ast, RECURCIVLY);
+			exit(0);
 		}
-		execute(args);
-		try_free_((void **)&lex.line, _FL_);
+		waitpid(pid, &sloc, WUNTRACED);
 	}
-	try_free_((void **)&lex.line, _FL_);
-	// print_mem__(PRINT_ERR);
 	try_free_all(_FL_);
+	free_all_malloc();
 	return (0);
 }

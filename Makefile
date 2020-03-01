@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/01 14:40:07 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/01 14:41:58 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -104,7 +104,6 @@ SRCS_UTILS			=	\
 						utils/mmalloc.c \
 						utils/ft_split.c \
 
-
 SRCS_LIBLIST		=	\
 						utils/lists/ft_add_node_end_np.c \
 						utils/lists/ft_add_node_f_nextto_np.c \
@@ -140,7 +139,6 @@ SRCS_LIST			=	\
 						$(SRCS_PRINTF) \
 						$(SRCS_AST_BUILDER) \
 						$(SRCS_LIBLIST) \
-
 
 SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
@@ -182,11 +180,4 @@ re: fclean
 real: re
 	@ ./$(NAME)
 
-test:
-	@ echo "OBJS_DIR : " $(OBJS_DIR)
-	@ echo
-	@ echo "OBJS_LIST: " $(OBJS_LIST)
-	@ echo
-	@ echo "OBJS     : " $(OBJS)
-	@ echo
 # **************************************************************************** #

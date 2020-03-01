@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:20:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 14:39:58 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/01 15:53:49 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,10 @@
 # include <ft_printf.h>
 # include <env.h>
 # include <commands.h>
+typedef enum		e_optsignal
+{
+	CONTINUE,
+	NOMATCH
+}					t_optsignal;
 void		tree_draw(t_node *node);
 #endif

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 13:33:50 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/01 16:25:20 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,20 @@ void			token__del(t_token **token)
 	{
 		try_free_((void **)&(*token)->value, _FL_); // free the memory of value
 		try_free_((void **)token, _FL_); // free the token
+	}
+}
+
+void			token__list_del(t_token **token)
+{
+	t_token		*tmp;
+	t_token		*tmpnext;
+
+	tmp = *token;
+	while (tmp)
+	{
+		tmpnext = tmp->next;
+		token__del(&tmp);
+		tmp = tmpnext;
 	}
 }
 
