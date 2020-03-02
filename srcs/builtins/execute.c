@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 06:49:49 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 18:04:40 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,64 +23,88 @@ t_bi		g_builtins[BUILTINS] =
 	{"env", &print_env}
 };
 
-/*
-** char	*get_next_path(char **env, char *path, char *command)
-** {
-** 	int		i;
-**
-** 	// i = -1;
-** 	// while (path[++i])
-** 	// 	if (path[i] == '/' && !(env = NULL))
-** 	// 		return (path);
-** 	i = 0;
-** 	while (**env && **env != '\n' && **env != ':')
-** 		path[i++] = *((*env)++);
-** 	if (**env == ':')
-** 		(*env)++;
-** 	path[i++] = '/';
-** 	while (command && *command)
-** 		path[i++] = *command++;
-** 	path[i] = '\0';
-** 	return (path);
-** }
-*/
-
-char	*get_next_path(char *path, char *command)
+char	*get_next_path(char **env, char *command)
 {
 	int		i;
-	int		p;
-	static	int c = 0;
-	char *env;
+	char	*path;
 
-	i = -1;
-	if (c == -1)
-		return (NULL);
-	while (command[++i])
-		if (command[i] == '/')
-			p = 1;
-	if (p == 1)
-	{
-		if (*command == '.' && (command += 2))
-			env = ret_envval("PWD");
-		else
-			env = NULL;
-		printf("ENV: %s\n", env);
-	}
-	else
-		env = ret_envval("PATH");
 	i = 0;
-	while (env && env[c] && env[c] != '\n' && env[c] != ':')
-		path[i++] = env[c++];
-	if (env[c] == ':')
-		c++;
-	if (env[c] == '\0')
-		c = -1;
+	while ((*env)[i] && (*env)[i] != '\n' && (*env)[i] != ':')
+		i++;
+	path = (char *)mmalloc(sizeof(char) * (i + ft_strlen(command) + 1));
+	i = 0;
+	while (**env && **env != '\n' && **env != ':')
+		path[i++] = *((*env)++);
+	if (**env == ':')
+		(*env)++;
 	path[i++] = '/';
 	while (command && *command)
 		path[i++] = *command++;
 	path[i] = '\0';
-	// printf("PATH [%s]\n", path);
+	printf("GNPATH: [%s]\n", path);
 	return (path);
+}
+
+char	*get_no_path(char *com)
+{
+	int		i;
+	char	*path;
+
+	path = (char *)mmalloc(sizeof(char) * (ft_strlen(com)) + 3);
+	i = 0;
+	path[i++] = '.';
+	path[i++] = '/';
+	while (com && *com)
+		path[i++] = *com++;
+	path[i] = '\0';
+	return(path);
+}
+
+// OBS RETURN OF STAT FUNCTIONS
+// struct stat {
+//     dev_t     st_dev;     /* ID of device containing file */
+//     ino_t     st_ino;     /* inode number */
+//     mode_t    st_mode;    /* protection */
+//     nlink_t   st_nlink;   /* number of hard links */
+//     uid_t     st_uid;     /* user ID of owner */
+//     gid_t     st_gid;     /* group ID of owner */
+//     dev_t     st_rdev;    /* device ID (if special file) */
+//     off_t     st_size;    /* total size, in bytes */
+//     blksize_t st_blksize; /* blocksize for file system I/O */
+//     blkcnt_t  st_blocks;  /* number of 512B blocks allocated */
+//     time_t    st_atime;   /* time of last access */
+//     time_t    st_mtime;   /* time of last modification */
+//     time_t    st_ctime;   /* time of last status change */
+// };
+
+
+char	*get_path(char *command)
+{
+	int		i;
+	char	*env;
+	char	*path;
+	struct stat buf;
+
+	i = -1;
+	path = NULL;
+	while (command[++i])
+		if (command[i] == '/' && (i = -1) < 0)
+			break;
+	if (i == -1)
+		path = command;
+	else if (!ret_envval("PATH"))
+		path = get_no_path(command);
+	else
+		env = ret_envval("PATH");
+	if (path && !stat(path, &buf))
+		return (path);
+	else if (!path)
+		while (env && *env && (path = get_next_path(&env, command)))
+			if (!stat(path, &buf))
+				return (path);
+	bi_error(command, NULL, strerror(errno), 0);
+	// bi_error(command, NULL, "command not found", 0);
+	return (NULL);
 }
 
 char	**env_to_arr(t_env *trav)
@@ -116,7 +140,7 @@ void	sig_exec(int signo)
 	if (signo == SIGQUIT)
 	{
 		ft_dprintf(2, "Quit: 3\n");
-		exit (3);
+		// exit (3);
 	}
 }
 
@@ -125,7 +149,7 @@ int		launch(t_node *cmd, char **av)
 	pid_t	pid;
 	pid_t	wpid;
 	int		sloc;
-	char	path[LINE_MAX]; // BRUH // yes, use malloc, it's better.
+	char	*path; // BRUH // yes, use malloc, it's better.
 	char	**environ;
 
 	environ = env_to_arr(g_env);
@@ -139,10 +163,9 @@ int		launch(t_node *cmd, char **av)
 		dup2(cmd->fd[ISTDIN][PIPE_READ], cmd->stdio[ISTDOUT]);
 		// cmd->stdio[ISTDOUT] != ISTDOUT ? close(ISTDOUT) : 0;
 		// cmd->stdio[ISTDIN] != ISTDIN ? close(ISTDIN) : 0;
-		while (get_next_path(path, av[0]))
+		if ((path = get_path(av[0])))
 			execve(path, av, environ); // SHOULD MAYBE NOT USE MALLOC?
-		bi_error(av[0], NULL, "command not found", 0);
-		exit(-1);
+		exit(1);
 	}
 	else if (pid < 0) //error with fork
 		bi_error(av[0], NULL, strerror(errno), 0);
@@ -174,10 +197,9 @@ int		execute(t_node *cmd)
 	if (assign == ac)
 		return (export(ac, av));
 	ac -= assign;
-	av += assign; // WTF ??? and how do you think to free your mem after a pointer move ? lmao
 	j = -1;
 	while (++j < BUILTINS)
-		if (!ft_strcmp(av[0], g_builtins[j].name))
-			return (g_builtins[j].f(ac, av));
-	return (launch(cmd, av));
+		if (!ft_strcmp(av[assign], g_builtins[j].name))
+			return (g_builtins[j].f(ac, &av[assign]));
+	return (launch(cmd, &av[assign]));
 }

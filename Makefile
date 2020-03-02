@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/02 05:52:50 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/02 14:05:33 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -32,7 +32,7 @@ CC						=	clang
 FLAGS					=	\
 							-Wall -Wextra -Werror \
 							-ferror-limit=1000 \
-							-g3 -fsanitize=address \
+							#-g3 -fsanitize=address \
 							# -g3 \
 							# -O3 \
 
