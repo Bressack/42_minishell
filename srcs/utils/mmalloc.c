@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 18:34:17 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 14:33:52 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 18:29:03 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	*mmalloc(unsigned int size)
 		exit (1);
 	}
 	ft_bzero(new, size);
-	ft_bzero(list, sizeof(t_list));
+	// ft_bzero(list, sizeof(t_list));
 	list->data = new;
 	list->next = g_all_malloc;
 	g_all_malloc = list;
@@ -44,14 +44,27 @@ void	*mrealloc(void *ptr, size_t size)
 	t_list	*list;
 
 	list = g_all_malloc;
-	while (list && list->data != ptr)
+	while (ptr && list && list->data != ptr)
 		list = list->next;
-	if (list)
+	if (ptr && list)
 	{
 		ptr = realloc(ptr, size);
 		list->data = ptr;
 	}
-	else if (!ptr)
+	else if (ptr)
+	{
+		ptr = realloc(ptr, size);
+		if (!(list = (t_list *)malloc(sizeof(t_list))))
+		{
+			free_all_malloc();
+			ft_dprintf(2, "allocation error");
+			exit (1);
+		}
+		list->data = ptr;
+		list->next = g_all_malloc;
+		g_all_malloc = list;
+	}
+	else
 		ptr = mmalloc(size);
 	return (ptr);
 }

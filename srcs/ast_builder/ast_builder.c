@@ -6,7 +6,11 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:28:56 by tharchen          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2020/03/02 16:59:30 by tharchen         ###   ########.fr       */
+=======
+/*   Updated: 2020/03/02 16:56:08 by frlindh          ###   ########.fr       */
+>>>>>>> 44f8c5ad97bc88be0e3ebc5c641ec8aee615262b
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,13 +240,3 @@ t_node	*ast_builder(int sloc)
 	lexer__del(&tool.lex);
 	return (tool.ast);
 }
-
-
-
-
-
-
-
-
-
-

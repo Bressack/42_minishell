@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/29 15:59:19 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/02 14:40:21 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ int		xecho(int ac, char **args)
 
 int		xpwd(int ac, char **args)
 {
-	char	cwd[1024];
+	char	cwd[LINE_MAX];
 
 	(void)ac;
 	(void)args;
-	getcwd(cwd, 1024);
+	getcwd(cwd, LINE_MAX);
 	ft_dprintf(1, "%s\n", cwd);
 	return (0);
 }
@@ -75,11 +75,11 @@ int		xcd(int ac, char **args)
 	else if (chdir(args[1]) != 0)
 		return (bi_error(args[0], args[1], strerror(errno), 0));
 	if (change)
-		change->value = ret_envval("PWD"); // gets previous PWD
-	if ((change = ret_env("PWD"))) // in order to change the value of PWD VAR
+		change->value = ret_envval("PWD");
+	if ((change = ret_env("PWD")))
 	{
-		getcwd(dir, 500);
-		change->value = ft_strdup(dir); //OWN STRDUP
+		getcwd(dir, LINE_MAX);
+		change->value = ft_strdup(dir);
 	}
 	mfree(tmp);
 	return (0);
