@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 18:56:43 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 19:40:12 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ int		xcd(int ac, char **args)
 		return (bi_error(args[0], NULL, "too many arguments", 0));
 	if (ac == 1 && (tmp2 = ret_envval("HOME")))
 		chdir(tmp2);
-	else if (args[1][0] == '-' && tmp)
+	else if (args[1][0] == '-' && tmp) // ADD ERR MESS
 		chdir(tmp);
 	else if (chdir(args[1]) != 0)
 		return (bi_error(args[0], args[1], strerror(errno), 0));
 	if (change)
-		change->value = ret_envval("PWD");
+		change->value = ret_envval("PWD"); // IF NOT SET MALLOC NEW
 	if ((change = ret_env("PWD")))
 	{
 		getcwd(dir, LINE_MAX);

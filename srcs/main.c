@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 16:50:29 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 20:09:28 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	sig_handler(int signo)
 	if (signo == SIGINT)
 		ft_dprintf(1, "\n");
 	else if (signo == SIGQUIT)
-		ft_dprintf(1, "\b\b  \b\b"); // tellement laid lmao
+		ft_dprintf(1, "\b\b  \b\b");
 }
 
 int		main(int ac, char **av, char **env)
@@ -51,8 +51,8 @@ int		main(int ac, char **av, char **env)
 	{
 		// if (!(pid = fork()))
 		// {
-			// signal(SIGINT, sig_handler);
-			// signal(SIGQUIT, sig_handler);
+			signal(SIGINT, sig_handler);
+			signal(SIGQUIT, sig_handler);
 			if ((ast = ast_builder(sloc)))
 			{
 				ast ? tree_draw(ast) : 0; // gen a tree.dot file used by the cmd dot in the shell
