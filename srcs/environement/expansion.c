@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 01:03:07 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 19:21:52 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ int		tilde_exp(char *new)
 
 	home = ret_envval("HOME");
 	i = 0;
-	while (*home)
+	if (!home)
+		new[i++] = '~';
+	while (home && *home)
 		new[i++] = *home++;
 	return (i);
 }
@@ -61,7 +63,6 @@ int		expand_env(char **args, char *new)
 	if (trav && trav->value && (i = -1) == -1)
 		while (trav->value[++i])
 			new[i] = trav->value[i];
-	// new[i] = '\0';
 	return (i);
 }
 

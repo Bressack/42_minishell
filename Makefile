@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/02 14:05:33 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/02 18:39:53 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -81,6 +81,7 @@ SRCS_LEXER				=	\
 SRCS_BUILTIN			=	\
 							builtins/commands.c \
 							builtins/execute.c \
+							builtins/path.c \
 
 SRCS_AST_BUILDER		=	\
 							ast_builder/ast_builder.c \
