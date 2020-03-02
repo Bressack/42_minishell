@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/29 21:27:00 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 06:49:49 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*get_next_path(char *path, char *command)
 	while (command && *command)
 		path[i++] = *command++;
 	path[i] = '\0';
-	printf("PATH [%s]\n", path);
+	// printf("PATH [%s]\n", path);
 	return (path);
 }
 
@@ -91,7 +91,7 @@ char	**env_to_arr(t_env *trav)
 	size = 0;
 	while (trav && ++size != -1)
 		trav = trav->next;
-	if (!(env = (char **)mmalloc(sizeof(char *) * size + 2)))
+	if (!(env = (char **)mmalloc(sizeof(char *) * (size + 2))))
 		return (NULL);
 	trav = g_env;
 	size = 0;
@@ -116,40 +116,43 @@ void	sig_exec(int signo)
 	if (signo == SIGQUIT)
 	{
 		ft_dprintf(2, "Quit: 3\n");
-		// exit (3);
+		exit (3);
 	}
-
 }
 
-int		launch(char **args)
+int		launch(t_node *cmd, char **av)
 {
 	pid_t	pid;
 	pid_t	wpid;
-	int		status;
-	char	path[LINE_MAX]; // BRUH
+	int		sloc;
+	char	path[LINE_MAX]; // BRUH // yes, use malloc, it's better.
 	char	**environ;
 
 	environ = env_to_arr(g_env);
+	sloc = 0;
 	pid = fork();
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0) //child
 	{
-		while (get_next_path(path, args[0]))
-			execve(path, args, environ); // SHOULD MAYBE NOT USE MALLOC?
-		bi_error(args[0], NULL, "command not found", 0);
+		dup2(cmd->fd[ISTDOUT][PIPE_WRITE], cmd->stdio[ISTDIN]);
+		dup2(cmd->fd[ISTDIN][PIPE_READ], cmd->stdio[ISTDOUT]);
+		// cmd->stdio[ISTDOUT] != ISTDOUT ? close(ISTDOUT) : 0;
+		// cmd->stdio[ISTDIN] != ISTDIN ? close(ISTDIN) : 0;
+		while (get_next_path(path, av[0]))
+			execve(path, av, environ); // SHOULD MAYBE NOT USE MALLOC?
+		bi_error(av[0], NULL, "command not found", 0);
 		exit(-1);
 	}
 	else if (pid < 0) //error with fork
-		bi_error(args[0], NULL, strerror(errno), 0);
+		bi_error(av[0], NULL, strerror(errno), 0);
 	else //parent
-		wpid = waitpid(pid, &status, WUNTRACED);
-		// while (!WIFEXITED(status) && !WIFSIGNALED(status)) // kill here?
+		wpid = waitpid(pid, &sloc, WUNTRACED);
 	mfree(environ);
-	return (1);
+	return (sloc);
 }
 
-int		execute(t_token *args)
+int		execute(t_node *cmd)
 {
 	int		i;
 	int		j;
@@ -157,8 +160,8 @@ int		execute(t_token *args)
 	char	**av;
 	int		ac;
 
-	ac = expand(&args);
-	av = convert_to_arr(args, ac);
+	ac = expand(&cmd->av);
+	av = convert_to_arr(cmd->av, ac);
 	j = -1;
 	assign = 0;
 	while (++j < ac && assign == j)
@@ -171,10 +174,10 @@ int		execute(t_token *args)
 	if (assign == ac)
 		return (export(ac, av));
 	ac -= assign;
-	av += assign;
+	av += assign; // WTF ??? and how do you think to free your mem after a pointer move ? lmao
 	j = -1;
 	while (++j < BUILTINS)
 		if (!ft_strcmp(av[0], g_builtins[j].name))
 			return (g_builtins[j].f(ac, av));
-	return (launch(av));
+	return (launch(cmd, av));
 }

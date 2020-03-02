@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/29 15:19:11 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/02 01:03:07 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,8 @@ void	expand_split_env(t_token **args, int *ac)
 		*args = (*args)->next;
 		return ;
 	}
-	arr = (ifs = ret_envval("IFS")) ?
-	ft_split((*args)->value, ifs) : ft_split((*args)->value, IFS);
+	ifs = ret_envval("IFS");
+	arr = ifs ? ft_split((*args)->value, ifs) : ft_split((*args)->value, IFS);
 	if (!(*arr) && (*args = ((*args)->next)))
 		return ;
 	(*args)->value = arr[0];

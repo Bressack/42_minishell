@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 14:40:14 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 00:22:45 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ t_lexer			*lexer__new(int sloc)
 
 	lex = try_malloc(sizeof(t_lexer), _FL_);
 	lexer__refill_line(lex, sloc, PROMPT_CASUAL);
-	printf("line refilled with: ["C_G_CYAN"%s"C_RES"]\n", lex->line);
 	return (lex);
 }
 

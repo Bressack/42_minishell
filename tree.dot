@@ -1,0 +1,4 @@
+digraph BST {
+    node [fontname="Arial"];
+    "[ ls ]_(0)";
+}

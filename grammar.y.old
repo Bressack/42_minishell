@@ -96,7 +96,8 @@ arg				: WORD
 ////////////////////////////////////////////////////////////////////////////////
 
 
-ls | cat && ls ; ls | ls
+ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat
+ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat : ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat
 |                                                                                                                                                                                                 |
 |                                                                                                                                                                                                 |
 |                                                                                                                                                                                                 |
@@ -105,13 +106,13 @@ ls | cat && ls ; ls | ls
 |                                                                                                                                                                                                 |
 |                                                      __________________________________________[ ;]__________________________________________                                                   |
 |                                                     /                                                                                        \                                                  |
-|                               __________________[||]___________________                                                     __________________[||]___________________                           |
+|                               __________________[ ;]___________________                                                     __________________[ ;]___________________                           |
 |                              /                                         \                                                   /                                         \                          |
-|                   _______[ ;]_______                             _______[ ;]_______                             _______[ ;]_______                             _______[ ;]_______               |
+|                   _______[||]_______                             _______[||]_______                             _______[||]_______                             _______[||]_______               |
 |                  /                  \                           /                  \                           /                  \                           /                  \              |
 |             _[&&]_                 _[&&]_                  _[&&]_                 _[&&]_                  _[&&]_                 _[&&]_                  _[&&]_                 _[&&]_          |
 |            /      \               /      \                /      \               /      \                /      \               /      \                /      \               /      \         |
-|        [||]        [||]       [||]        [||]        [||]        [||]       [||]        [||]        [||]        [||]       [||]        [||]        [||]        [||]       [||]        [||]     |
+|        [ |]        [ |]       [ |]        [ |]        [ |]        [ |]       [ |]        [ |]        [ |]        [ |]       [ |]        [ |]        [ |]        [ |]       [ |]        [ |]     |
 |       /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \    |
 |     aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  |
 |
@@ -151,17 +152,17 @@ R   [||]
 |                                                                              |
 |                                                                              |
 |                                                                              |
-|               _____[ ;]_____                                                 |
-|              /              \                                                |
-|          [&&]                [||]                                            |
-|         /    \              /    \                                           |
-|        a      [ |]         f      [ |]                                       |
-|              /    \              /    \                                      |
-|          [ |]      e         [ |]      j                                     |
-|         /    \              /    \                                           |
-|     [ |]      d         [ |]      i                                          |
-|    /    \              /    \                                                |
-|   b      c            g      h                                               |
+|               ___[ ;]___                                                     |
+|              /          \                                                    |
+|          [&&]            [||]                                                |
+|         /    \          /    \                                               |
+|        a      [ |]     f      [ |]                                           |
+|              /    \          /    \                                          |
+|          [ |]      e     [ |]      j                                         |
+|         /    \          /    \                                               |
+|     [ |]      d     [ |]      i                                              |
+|    /    \          /    \                                                    |
+|   b      c        g      h                                                   |
 |                                                                              |
 |                                                                              |
 ls ; ls || ls | ls | ls && ls ; ((ls && ls | ls) | ls)
@@ -180,4 +181,57 @@ ls ; ls || ls | ls | ls && ls ; ((ls && ls | ls) | ls)
 |                               /  \                                           |
 |                             ls    ls                                         |
 
-echo | cat ; ls | cat | cat && echo | echo | cat && ls && echo | cat || rm || echo | ls
+ls -l | cat -e | wc -l && echo \"Salut \'les\' amis\" > test && cat < test | wc -l ; rm -rf test
+ls | cat | wc && echo "Salut 'les' amis" > test && cat | wc ; rm
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                       [stdin]                 [stdout]                        |
+|                             I=================I                               |
+|                             |                 |                               |
+|                             |                 |                               |
+|                             |\___[ pipe_ ]___/|                               |
+|                             |                 |                               |
+|                             |                 |                               |
+|                             |____[ cmd_1 ]____|                               |
+|                            /|                 |\                              |
+|                           | |                 | |                             |
+|                           |  \___[ cmd_2 ]___/  |                             |
+|                           |  /               \  |                             |
+|                           | |                 | |                             |
+|            [cmd_2_stdout] | I=================I | [cmd_2_stdout]              |
+|                           |                     |                             |
+|                           |                     |                             |
+|                            \                   /                              |
+|            [cmd_1_stdout]   I=================I   [cmd_1_stdout]              |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |

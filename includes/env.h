@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/29 15:16:41 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/02 05:58:45 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct	s_env
 ** }				t_args;
 */
 
-t_env	*g_env;
+extern t_env		*g_env;
 /*
 ** ENV.C
 */

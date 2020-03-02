@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/01 14:41:58 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/02 05:52:50 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -25,130 +25,135 @@
 #                                                                              #
 # *** NAME - CC - FLAGS ****************************************************** #
 
-NAME				=	minishell
+NAME					=	minishell
 
-CC					=	clang
+CC						=	clang
 
-FLAGS				=	\
-						-Wall -Wextra -Werror \
-						-ferror-limit=1000 \
-						#-g3 -fsanitize=address \
-						# -g3 \
-						# -O3 \
+FLAGS					=	\
+							-Wall -Wextra -Werror \
+							-ferror-limit=1000 \
+							-g3 -fsanitize=address \
+							# -g3 \
+							# -O3 \
 
 # *** PROJECT HEADER ********************************************************* #
 
-HDIR				=	$(addprefix -I, $(HEADER_DIR))
+HDIR					=	$(addprefix -I, $(HEADER_DIR))
 
-HEADER_DIR			=	\
-						./includes/
+HEADER_DIR				=	\
+							./includes/
 
-HEADER				=	\
-						class__lexer.h \
-						class__token.h \
-						ast_builder.h \
-						color_shell.h \
-						get_next_line.h \
-						minishell.h \
-						try_malloc.h \
-						ft_printf.h \
-						env.h \
-						utils.h \
-						commands.h \
-						class__tokovore.h \
+HEADER					=	\
+							class__lexer.h \
+							class__token.h \
+							ast_builder.h \
+							ast_interpreter.h \
+							color_shell.h \
+							get_next_line.h \
+							minishell.h \
+							try_malloc.h \
+							ft_printf.h \
+							env.h \
+							utils.h \
+							commands.h \
+							class__tokovore.h \
 
 # *** SRCS ******************************************************************* #
 
-SRCS_DIR			=	./srcs/
+SRCS_DIR				=	./srcs/
 
 
-SRCS_TOKEN			=	\
-						token/class__token.c \
-						token/class__token__global_arrays.c \
+SRCS_TOKEN				=	\
+							token/class__token.c \
+							token/class__token__global_arrays.c \
 
-SRCS_ENVIRONEMENT	=	\
-						environement/unset.c \
-						environement/env.c \
-						environement/expansion.c \
-						environement/export.c \
-						environement/to_arr.c \
+SRCS_ENVIRONEMENT		=	\
+							environement/unset.c \
+							environement/env.c \
+							environement/expansion.c \
+							environement/export.c \
+							environement/to_arr.c \
 
-SRCS_LEXER			=	\
-						lexer/class__lexer.c \
-						lexer/class__lexer__defined_tokens.c \
+SRCS_LEXER				=	\
+							lexer/class__lexer.c \
+							lexer/class__lexer__defined_tokens.c \
 
-SRCS_BUILTIN		=	\
-						builtins/commands.c \
-						builtins/execute.c \
+SRCS_BUILTIN			=	\
+							builtins/commands.c \
+							builtins/execute.c \
 
-SRCS_AST_BUILDER	=	\
-						ast_builder/ast_builder.c \
+SRCS_AST_BUILDER		=	\
+							ast_builder/ast_builder.c \
 
-SRCS_UTILS			=	\
-						utils/ft_strlen.c \
-						utils/ft_bzero.c \
-						utils/ft_strjoin.c \
-						utils/ft_memcpy.c \
-						utils/get_next_line.c \
-						utils/try_malloc.c \
-						utils/ft_strncmp.c \
-						utils/ft_strcpy.c \
-						utils/ft_strdup.c \
-						utils/ft_strsub.c \
-						utils/ft_strncpy.c \
-						utils/ft_strcmp.c \
-						utils/cat_value.c \
-						utils/ft_atoi.c \
-						utils/ft_isnum.c \
-						utils/bi_error.c \
-						utils/mmalloc.c \
-						utils/ft_split.c \
+SRCS_AST_INTERPRETER	=	\
+							ast_interpreter/ast_interpreter.c \
 
-SRCS_LIBLIST		=	\
-						utils/lists/ft_add_node_end_np.c \
-						utils/lists/ft_add_node_f_nextto_np.c \
-						utils/lists/ft_add_node_f_prevto_np.c \
-						utils/lists/ft_add_node_nextto_np.c \
-						utils/lists/ft_add_node_prevto_np.c \
-						utils/lists/ft_add_node_start_np.c \
-						utils/lists/ft_del_list_np.c \
-						utils/lists/ft_del_node_end_np.c \
-						utils/lists/ft_del_node_np.c \
-						utils/lists/ft_del_node_start_np.c \
-						utils/lists/ft_foreach_node_f_np.c \
-						utils/lists/ft_new_node.c \
-						utils/lists/ft_swap_node_np.c \
+SRCS_UTILS				=	\
+							utils/ft_strlen.c \
+							utils/ft_bzero.c \
+							utils/ft_strjoin.c \
+							utils/ft_memcpy.c \
+							utils/get_next_line.c \
+							utils/try_malloc.c \
+							utils/ft_strncmp.c \
+							utils/ft_strcpy.c \
+							utils/ft_strdup.c \
+							utils/ft_strsub.c \
+							utils/ft_strncpy.c \
+							utils/ft_strcmp.c \
+							utils/cat_value.c \
+							utils/ft_atoi.c \
+							utils/ft_isnum.c \
+							utils/bi_error.c \
+							utils/mmalloc.c \
+							utils/ft_split.c \
 
-SRCS_PRINTF			=	\
-						utils/ft_printf/to_n.c \
-						utils/ft_printf/skip_atoi.c \
-						utils/ft_printf/ft_strnlen.c \
-						utils/ft_printf/to_c.c \
-						utils/ft_printf/ft_printf.c \
-						utils/ft_printf/to_nbr.c \
-						utils/ft_printf/to_s.c \
+SRCS_LIBLIST			=	\
+							utils/lists/ft_add_node_end_np.c \
+							utils/lists/ft_add_node_f_nextto_np.c \
+							utils/lists/ft_add_node_f_prevto_np.c \
+							utils/lists/ft_add_node_nextto_np.c \
+							utils/lists/ft_add_node_prevto_np.c \
+							utils/lists/ft_add_node_start_np.c \
+							utils/lists/ft_del_list_np.c \
+							utils/lists/ft_del_node_end_np.c \
+							utils/lists/ft_del_node_np.c \
+							utils/lists/ft_del_node_start_np.c \
+							utils/lists/ft_foreach_node_f_np.c \
+							utils/lists/ft_new_node.c \
+							utils/lists/ft_swap_node_np.c \
 
-SRCS_LIST			=	\
-						main.c \
-						ast_to_dot.c \
-						$(SRCS_TOKEN) \
-						$(SRCS_ENVIRONEMENT) \
-						$(SRCS_LEXER) \
-						$(SRCS_BUILTIN) \
-						$(SRCS_UTILS) \
-						$(SRCS_PRINTF) \
-						$(SRCS_AST_BUILDER) \
-						$(SRCS_LIBLIST) \
+SRCS_PRINTF				=	\
+							utils/ft_printf/to_n.c \
+							utils/ft_printf/skip_atoi.c \
+							utils/ft_printf/ft_strnlen.c \
+							utils/ft_printf/to_c.c \
+							utils/ft_printf/ft_printf.c \
+							utils/ft_printf/to_nbr.c \
+							utils/ft_printf/to_s.c \
 
-SRCS				=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
+SRCS_LIST				=	\
+							main.c \
+							ast_to_dot.c \
+							$(SRCS_TOKEN) \
+							$(SRCS_ENVIRONEMENT) \
+							$(SRCS_LEXER) \
+							$(SRCS_BUILTIN) \
+							$(SRCS_UTILS) \
+							$(SRCS_PRINTF) \
+							$(SRCS_AST_BUILDER) \
+							$(SRCS_AST_INTERPRETER) \
+							$(SRCS_LIBLIST) \
+
+SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
 # *** OBJS ******************************************************************* #
 
-OBJS_DIR			=	./objs/
+OBJS_DIR				=	./objs/
 
-OBJS_LIST			=	$(patsubst %.c, %.o, $(SRCS_LIST))
+OBJS_LIST				=	$(patsubst %.c, %.o, $(SRCS_LIST))
 
-OBJS				=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
+OBJS					=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 
 # *** RULES ****************************************************************** #
 

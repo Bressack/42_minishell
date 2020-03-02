@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/29 21:03:54 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 05:24:33 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int		xecho(int argc, char **args);
 int		xpwd(int argc, char **args);
 int		xexit(int argc, char **args);
 int		xcd(int argc, char **args);
-int		launch(char **args);
-int		execute(t_token *args);
+int		launch(t_node *cmd, char **av);
+int		execute(t_node *cmd);
 // int		execute(int ac, char **args);
 
 typedef struct		s_bi

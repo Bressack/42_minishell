@@ -6,11 +6,13 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 18:34:17 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/28 13:33:25 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 06:06:41 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+t_list	*g_all_malloc;
 
 void	*mmalloc(unsigned int size)
 {
@@ -29,6 +31,8 @@ void	*mmalloc(unsigned int size)
 		ft_dprintf(2, "allocation error");
 		exit (1);
 	}
+	ft_bzero(new, size);
+	ft_bzero(list, sizeof(t_list));
 	list->data = new;
 	list->next = g_all_malloc;
 	g_all_malloc = list;
@@ -44,11 +48,12 @@ void	*mrealloc(void *ptr, size_t size)
 		list = list->next;
 	if (list)
 	{
-		ptr = realloc(ptr, size);
+		ptr = realloc(ptr, size); // hein ???? mdrrr
 		list->data = ptr;
 	}
 	else if (!ptr)
 		ptr = mmalloc(size);
+	ft_bzero(ptr, size);
 	return (ptr);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:37:21 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 16:29:57 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 03:29:04 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,9 @@ typedef struct		s_node
 	t_token			*av;
 	t_token			*redir;
 	t_token			*file;
+
+	int				fd[2][2];
+	int				stdio[2];
 /*
 ** 	sep data
 */
@@ -94,6 +97,7 @@ typedef struct		s_astb
 ** *****************************************************************************
 */
 t_node				*ast_builder(int sloc);
+void				print_ast(t_node *n, int deep);
 t_node				*new_node(t_nodetype type);
 void				del_node(t_node **node, int opt);
 /*

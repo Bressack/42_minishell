@@ -6,11 +6,13 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 15:06:47 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/27 18:57:13 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 06:09:20 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+t_env	*g_env = NULL;
 
 int		print_env(int ac, char **args)
 {
@@ -70,7 +72,6 @@ void	set_env(t_env *e, char *env)
 	i = -1;
 	while (env && env[++i] && env[i] != '=')
 		e->name[i] = env[i];
-	e->name[i] = '\0';
 	c = 0;
 	while (env && env[i + c])
 		c++;
@@ -79,7 +80,6 @@ void	set_env(t_env *e, char *env)
 	c = 0;
 	while (env && env[++i])
 		e->value[c++] = env[i];
-	e->value[c] = '\0';
 	e->export = 1;
 }
 

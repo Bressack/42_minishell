@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:28:56 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 16:30:10 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 06:33:53 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@ void	astb_error(t_astb *tool, int opt)
 {
 	if (opt == UNEXPECTED_TOKEN)
 	{
-		ft_dprintf(2, "error: unexpected token \'%s\'",
+		if (tool->current_token->type == EOT)
+			ft_dprintf(2, "error: unexpected \'end of file\'");
+		else
+			ft_dprintf(2, "error: unexpected token \'%s\'",
 			tool->current_token->value);
 		if (tool->prev_token)
-			ft_dprintf(2, " after \'%s\'\n", tool->prev_token->value);
+			ft_dprintf(2, " after \'%s\'", tool->prev_token->value);
 		ft_dprintf(2, "\n");
 	}
 	exit(-1);
@@ -49,7 +52,6 @@ void	del_node(t_node **node, int opt)
 
 int		print_node(t_node *n)
 {
-
 	printf("[ NODE   "C_G_YELLOW"%-4s"C_RES" | "C_G_GREEN"%-14p"C_RES" ] {["C_G_CYAN"%4s"C_RES"] <- ["C_G_RED"%4s"C_RES"] -> ["C_G_CYAN"%4s"C_RES"]}",
 		n ? n->type == CMD ? "CMD" : "SEP" : "NULL",
 		n,
@@ -71,17 +73,29 @@ int		print_node(t_node *n)
 
 void	print_ast(t_node *n, int deep)
 {
+	!deep ? printf("\n") : 0;
 	if (!n)
 		printf("("C_G_RED"null"C_RES")\n");
 	else
 	{
 		if (n->type == CMD)
-			printf("{"C_G_YELLOW"%s"C_RES"}\n", n->av ? n->av->value : C_G_RED"null"C_RES);
+		{
+			if (!n->av)
+				printf(""C_G_RED"null"C_RES);
+			else
+				for (t_token *tmp = n->av ; tmp ; tmp = tmp->next)
+					printf("{"C_G_YELLOW"%s"C_RES"} ", tmp->value);
+			printf("\n");
+		}
 		else
 		{
 			printf("["C_G_CYAN"%s"C_RES"]\n", n->sep ? n->sep->value : C_G_RED"null"C_RES);
-			printf("%*sL - ", deep * 4, ""), print_ast(n->left, deep + 1);
-			printf("%*sR - ", deep * 4, ""), print_ast(n->right, deep + 1);
+			for (int i = 0; i < deep; i++)
+				printf("|   ");
+			printf("L - "), print_ast(n->left, deep + 1);
+			for (int i = 0; i < deep; i++)
+				printf("|   ");
+			printf("R - "), print_ast(n->right, deep + 1);
 		}
 	}
 }
@@ -147,6 +161,8 @@ void	add_to_ast(t_astb *tool, t_node *node)
 		{
 			tool->tree_pos->right = node;
 			node->parent = tool->tree_pos;
+			node->stdio[ISTDOUT] = ISTDOUT;
+			node->stdio[ISTDIN] = ISTDIN;
 		}
 		else if (node->type == SEP)
 		{
@@ -196,9 +212,11 @@ void	process(t_astb *tool)
 
 int		init_tool(t_astb *tool, int sloc)
 {
+	ft_bzero(tool, sizeof(t_astb));
 	tool->lex = lexer__new(sloc);
 	tool->current_token = lexer__get_next_token(tool->lex);
-	if (!tool->current_token || tool->current_token->type == EOT)
+	if (!tool->current_token || tool->current_token->type == EOT ||
+		!ft_strcmp(tool->lex->line, "exit"))
 	{
 		lexer__del(&tool->lex);
 		return (-1); // line empty
@@ -217,7 +235,6 @@ t_node	*ast_builder(int sloc)
 		return (NULL);
 	process(&tool);
 	lexer__del(&tool.lex);
-	print_ast(tool.ast, 0);
 	return (tool.ast);
 }
 
