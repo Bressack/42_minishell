@@ -1,4 +1,4 @@
 digraph BST {
     node [fontname="Arial"];
-    "[ exit ]_(0)";
+    "[ echo$HOME ]_(0)";
 }

@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 06:49:49 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 16:03:49 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,10 @@ int		launch(t_node *cmd, char **av)
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0) //child
 	{
-		dup2(cmd->fd[ISTDOUT][PIPE_WRITE], cmd->stdio[ISTDIN]);
-		dup2(cmd->fd[ISTDIN][PIPE_READ], cmd->stdio[ISTDOUT]);
+		dup2(cmd->fd[ISTDOUT][PIPE_WRITE], cmd->stdio[ISTDOUT]);
+		dup2(cmd->fd[ISTDIN][PIPE_READ], cmd->stdio[ISTDIN]);
+		// close(cmd->stdio[ISTDOUT]);
+		// close(cmd->stdio[ISTDIN]);
 		// cmd->stdio[ISTDOUT] != ISTDOUT ? close(ISTDOUT) : 0;
 		// cmd->stdio[ISTDIN] != ISTDIN ? close(ISTDIN) : 0;
 		while (get_next_path(path, av[0]))
@@ -174,7 +176,7 @@ int		execute(t_node *cmd)
 	if (assign == ac)
 		return (export(ac, av));
 	ac -= assign;
-	av += assign; // WTF ??? and how do you think to free your mem after a pointer move ? lmao
+	av += assign;
 	j = -1;
 	while (++j < BUILTINS)
 		if (!ft_strcmp(av[0], g_builtins[j].name))

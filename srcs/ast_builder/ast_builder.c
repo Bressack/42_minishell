@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:28:56 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 06:33:53 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 16:59:30 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,8 +215,7 @@ int		init_tool(t_astb *tool, int sloc)
 	ft_bzero(tool, sizeof(t_astb));
 	tool->lex = lexer__new(sloc);
 	tool->current_token = lexer__get_next_token(tool->lex);
-	if (!tool->current_token || tool->current_token->type == EOT ||
-		!ft_strcmp(tool->lex->line, "exit"))
+	if (!tool->current_token || tool->current_token->type == EOT)
 	{
 		lexer__del(&tool->lex);
 		return (-1); // line empty

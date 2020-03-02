@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 18:34:17 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 06:06:41 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 14:33:52 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,11 @@ void	*mrealloc(void *ptr, size_t size)
 		list = list->next;
 	if (list)
 	{
-		ptr = realloc(ptr, size); // hein ???? mdrrr
+		ptr = realloc(ptr, size);
 		list->data = ptr;
 	}
 	else if (!ptr)
 		ptr = mmalloc(size);
-	ft_bzero(ptr, size);
 	return (ptr);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 07:18:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 15:48:06 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	sig_handler(int signo)
 	if (signo == SIGINT)
 		;
 	else if (signo == SIGQUIT)
-		ft_dprintf(0, "\b\b  \b\b"); // tellement laid lmao
+		ft_dprintf(0, "\b\b  \b\b");
 }
 
 int		main(int ac, char **av, char **env)
