@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2020/03/02 16:03:49 by tharchen         ###   ########.fr       */
-=======
-/*   Updated: 2020/03/02 18:10:37 by frlindh          ###   ########.fr       */
->>>>>>> 44f8c5ad97bc88be0e3ebc5c641ec8aee615262b
+/*   Created: 2020/03/02 18:31:01 by tharchen          #+#    #+#             */
+/*   Updated: 2020/03/02 18:32:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,10 +199,6 @@ int		execute(t_node *cmd)
 	if (assign == ac)
 		return (export(ac, av));
 	ac -= assign;
-<<<<<<< HEAD
-	av += assign;
-=======
->>>>>>> 44f8c5ad97bc88be0e3ebc5c641ec8aee615262b
 	j = -1;
 	while (++j < BUILTINS)
 		if (!ft_strcmp(av[assign], g_builtins[j].name))
