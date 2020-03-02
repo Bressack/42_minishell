@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 20:01:20 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 21:24:28 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,8 @@ void			lexer__refill_line(t_lexer *lex, int sloc, int prompt)
 	print_prompt(sloc, prompt);
 	if (get_next_line(0, &lex->line) == -1)
 		lexer__error(ERR_GNL, lex);
+	if (*lex->line < 0 && ft_dprintf(1, "exit\n"))
+		exit (0);
 	lex->pos = 0;
 	lex->start = 0;
 	lex->len_line = ft_strlen(lex->line);
