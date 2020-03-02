@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 18:04:40 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 18:10:37 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char	*get_path(char *command)
 
 	i = -1;
 	path = NULL;
-	while (command[++i])
+	while (command[++i] && (command[i] == '.' || command[i] == '/'))
 		if (command[i] == '/' && (i = -1) < 0)
 			break;
 	if (i == -1)
