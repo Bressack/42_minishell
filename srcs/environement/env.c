@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 15:06:47 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 06:09:20 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/02 20:42:05 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 t_env	*g_env = NULL;
 
+/*
+** ENV BUILTIN
+*/
 int		print_env(int ac, char **args)
 {
 	t_env	*trav;
@@ -31,6 +34,10 @@ int		print_env(int ac, char **args)
 	return (0);
 }
 
+/*
+** FUNCTIONS THAT RETURN AN ENV VARIABLE.
+** 1. Returns full structure 2. Returns just the value
+*/
 t_env	*ret_env(char *name)
 {
 	t_env	*trav;

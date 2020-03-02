@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 20:09:28 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 20:40:14 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	print_prompt(int sloc, int prompt_lever)
 
 void	sig_handler(int signo)
 {
-	if (signo == SIGINT)
-		ft_dprintf(1, "\n");
+	if (signo == SIGINT && ft_dprintf(1, "\n")) //RESET LINE
+		print_prompt(0, PROMPT_CASUAL);
 	else if (signo == SIGQUIT)
 		ft_dprintf(1, "\b\b  \b\b");
 }

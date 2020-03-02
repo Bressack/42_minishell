@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 19:59:46 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 20:53:55 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int		tilde_exp(char *new)
 	return (i);
 }
 
+// EXPANDING ENV VAR, SKIPPING CURLY BRACKETS IF ${NAME}
+
 int		expand_env(char **args, char *new)
 {
 	t_env	*trav;
@@ -53,7 +55,7 @@ int		expand_env(char **args, char *new)
 			curl = ((*args)[i] == '{') ? curl + 1 : curl - 1;
 	(**args == '{' && curl == 0) ? (*args)++ : 0;
 	i = 0;
-	while (**args && ok_envchar(**args))
+	while (**args && ok_envchar(**args)) // ADD SAFETY FOR NAME ? 
 		name[i++] = *((*args)++);
 	(**args == '}' && curl == 0) ? (*args)++ : 0;
 	name[i] = '\0';
@@ -63,14 +65,31 @@ int		expand_env(char **args, char *new)
 	if (trav && trav->value && (i = -1) == -1)
 		while (trav->value[++i])
 			new[i] = trav->value[i];
+	new[i] = '\0';
 	return (i);
 }
+
+/*
+** SPECIAL CHARS FOR \ ---> the bashslash wont be printed
+*/
 
 int		spec_char(char c)
 {
 	return (c == '\\' || c == '$' || c == '\"' || c == '`');
 }
 
+/*
+** EXPAND QUOTE ITERATES AN ENTIRE ARG GIVEN BY LEXER, MEANING EITHER IT HAS
+** THE QUOTES SAVED. A SINGLE QUOTE ' WILL PRESERVE EVERY CHARACTER INSIDE
+** WHICH IS WHY IT HAS IT'S OWN WHILE LOOP
+** A DOUBLE QUOTE " WILL STILL EXPAND $ UNLESS IT IS QUOTED BY A BACKSLASH \
+** THE BACKSLASH IS PRINTED WITH NORMAL CHARS IF INSIDE QUOTES AND REMOVED
+** OUTSIDE FOR ALL.
+** A TILDE WILL BE EXPANDED TO THE HOME VAR IF SET
+** "$HOME $RAND \$HOME" ---> [Users/frlindh  $HOME]
+** '$HOME \\' ---> [$HOME \\]
+** echo \t \\ \$HOME "~ \t \\ \$HOME" ---> [t \ $HOME Users/frlindh \t \ $HOME]
+*/
 char	*expand_qt(char *args)
 {
 	int		quote;
@@ -129,6 +148,12 @@ void	expand_split_env(t_token **args, int *ac)
 	(*args)->next = next;
 }
 
+/*
+** START OF EXPANSION:
+** IF first char is a $ it will call expand and split env
+** ELSE it will call only expand. Meaning if LS="     ls     -l"
+** $LS ---> [ls] [-l] && "$LS" ---> [     ls     -l]
+*/
 int		expand(t_token **args)
 {
 	int	ac;

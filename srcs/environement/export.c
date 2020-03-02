@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/02 19:23:12 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 21:01:41 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	print_exp(void)
 }
 
 /*
-** [IF] THE ENV VAR ALREADY EXISTS -> either replace if def value // nothing
+** [IF] THE ENV VAR ALREADY EXISTS -> replace if def value || make sure export == 1 || nothing
 ** [ELSE] IF THE ENV DOESN'T EXIST: ADD BACK -- with value if = otherwise NULL
 */
 
@@ -48,7 +48,8 @@ void		set_var(char *name, int op, char *val, int export)
 			mfree(trav->value);
 			trav->value = ft_strdup(val);
 		}
-		trav->export = 1;
+		if (export == 1)
+			trav->export = 1;
 	}
 	else
 	{
@@ -64,6 +65,15 @@ void		set_var(char *name, int op, char *val, int export)
 	}
 }
 
+/*
+** EXPORT CAN BE CALLED EITHER WITH EXPORT OR JUST WITH ASSIGNMENTS
+** SO "export C=1 B=2" AND "C=1 B=2" ARE BOTH OKAY. IF CALLED WITH ONLY
+** "export" IT WILL PRINT WITH print_exp(). IF AN ASSIGNMENT START WITH AN
+** INVALID CHAR OR IF IT'S C+3 ---> ERRMESS AND SKIP. OTHERWISE IT WILL
+** CALL SET VAR WITH CPY(=NAME), THE OPERATOR(='+' || '=' || 0) AND THE
+** VALUE TO BE SET.
+*/
+
 int			export(int ac, char **av)
 {
 	int		i;
@@ -73,7 +83,7 @@ int			export(int ac, char **av)
 	char	cpy[LINE_MAX]; //secure for over ?
 
 	export = (ft_strcmp(av[0], "export")) ? 0 : 1;
-	if ((i = -1) < 0 && export && ac == 1)
+	if ((i = -1) == -1 && export && i++ && ac == 1)
 		return (print_exp());
 	while (++i < ac && (j = -1) == -1)
 	{

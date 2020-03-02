@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 19:24:06 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 21:08:17 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ t_bi		g_builtins[BUILTINS] =
 	{"env", &print_env}
 };
 
+/*
+** PUTS THE ENVIRONMENT VARS IN A CHAR ARRAR TO PASS ON TO FUNCTIONS.
+*/
 char	**env_to_arr(t_env *trav)
 {
 	int		size;
@@ -95,6 +98,13 @@ int		launch(t_node *cmd, char **av)
 	mfree(path);
 	return (sloc);
 }
+
+/*
+** EXECUTE FIRST CALLS EXPAND FUNCTION AND THEN CONVERTS THE EXPANDED ARG LIST
+** TO CHAR ARRAY. AFTER THAT IT CHECKS IF ALL ARGS ARE ASSIGNMENTS IF SO IT
+** CALLS EXPORT. IF NOT IT SKIPS POSSIBLE FIRST ASSIGNMENTS AND CHECKS IF FIRST
+** NON-ASS IS A BUILT-IN, OTHERWISE IT TRIES TO LAUNCH IT.
+*/
 
 int		execute(t_node *cmd)
 {

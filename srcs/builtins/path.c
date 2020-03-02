@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 20:21:57 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/02 21:10:23 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,13 @@ char	*get_no_path(char *com)
 	path[i] = '\0';
 	return (path);
 }
-
+/*
+** WILL EITHER RETURN
+** 1. THE COMMAND IF A FULL PATH MEANING FOR EX [./test] [../test] [/bin/ls]
+** 2. ADD A ./ TO THE COMMAND AND SEARCH CURRENT DIR IF PATH IS UNSET
+** 3. WILL SEARCH IN ALL DIR DEFINES BY PATH TO SEE IF EXECUTABLE IS THERE
+** 4. NULL IF NOT FOUND
+*/
 char	*get_path(char *command)
 {
 	int			i;
