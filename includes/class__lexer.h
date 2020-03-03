@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/29 02:52:02 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/03 07:41:32 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ typedef enum		e_foreach_opt
 }					t_foreach_opt;
 typedef enum		e_error_id
 {
-	UNEXPECTED_EOT,
-	SGLAND_NOT_HANDLED,
+	ERR_UNEXPECTED_EOT,
+	ERR_SGLAND_NOT_HANDLED,
 	ERR_GNL
 }					t_error_id;
 typedef enum		e_debug
@@ -55,6 +55,7 @@ typedef struct		s_lexer
 	int				len_line;
 	int				start;
 	int				pos;
+	char			prev_char;
 	char			current_char;
 	char			start_char;
 }					t_lexer;

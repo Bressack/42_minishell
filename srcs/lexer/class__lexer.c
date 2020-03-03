@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 21:24:28 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 07:42:18 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ void			lexer__del(t_lexer **lex)
 
 void			lexer__error(int opt, t_lexer *lex)
 {
-	if (opt == UNEXPECTED_EOT)
-		printf("error: unexpected \'EOT\' after \'%c\'\n", lex->current_char);
-	else if (opt == SGLAND_NOT_HANDLED)
+	if (opt == ERR_UNEXPECTED_EOT)
+		printf("error: unexpected \'end of line\' after \'%c\'\n", lex->prev_char);
+	else if (opt == ERR_SGLAND_NOT_HANDLED)
 		printf("error: functionality not supported \'%c\'\n", lex->current_char);
 	else if (opt == ERR_GNL)
 		printf("error: unable to read on stdout");
@@ -92,6 +92,7 @@ int				lexer__advance(t_lexer *lex, int n)
 {
 	if (lex->current_char == CHR_EOT)
 		return (0);
+	lex->prev_char = lex->current_char;
 	lex->pos += 1;
 	if (lex->pos > lex->len_line - 1)
 	{
@@ -136,7 +137,7 @@ void			lexer__pass_quotes(t_lexer *lex, t_char_type type)
 			break ;
 	}
 	if (!lexer__istype(lex, type))
-		lexer__error(UNEXPECTED_EOT, lex);
+		lexer__error(ERR_UNEXPECTED_EOT, lex);
 
 }
 
@@ -193,9 +194,15 @@ t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
 		return (token__copy(&g_defined_tokens[I_EOT]));
 	if ((rtype = lexer__isdefined_token(lex, ADVANCE)) != I_NONE)
 		return (token__copy(&g_defined_tokens[rtype]));
-	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR | CHR_BSLASH))
+	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR))
 	{
-		lexer__istype(lex, CHR_BSLASH) ? lexer__advance(lex, 2) : 0;
+		if (lexer__istype(lex, CHR_BSLASH))
+	 	{
+			lexer__advance(lex, 1);
+			if (lexer__istype(lex, CHR_EOT))
+				lexer__error(ERR_UNEXPECTED_EOT, lex);
+			lexer__advance(lex, 1);
+		}
 		if (lexer__isdefined_token(lex, NOADVANCE) != I_NONE)
 			break ;
 		if ((rtype = lexer__isquote(lex)))
