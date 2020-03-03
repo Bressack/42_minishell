@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 16:08:25 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 22:09:56 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		ok_envchar(char c) //FUNCTION TO CHECK NAMES --- TO BE UPDATED ---
 {
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
 			(c >= '0' && c <= '9') || c == '@' || c == '*' || c == '#' ||
-			c == '-' || c == '!' || c == '{' || c == '('); //
+			c == '-' || c == '!' || c == '?' || c == '{' || c == '('); //
 }
 
 int		tilde_exp(char *new)
@@ -44,12 +44,11 @@ int		tilde_exp(char *new)
 
 int		expand_env(char **args, char *new)
 {
-	t_env	*trav;
+	char	*val;
 	int		i;
 	int		curl;
 	char	name[LINE_MAX];
 
-	trav = g_env;
 	i = -1;
 	curl = 0;
 	while ((*args)[++i] && (ok_envchar((*args)[i]) || (*args)[i] == '}'))
@@ -61,13 +60,15 @@ int		expand_env(char **args, char *new)
 		name[i++] = *((*args)++);
 	(**args == '}' && curl == 0) ? (*args)++ : 0;
 	name[i] = '\0';
-	while (trav && ft_strcmp(name, trav->name) != 0)
-		trav = trav->next;
+	val = ret_envval(name);
 	i = 0;
-	if (trav && trav->value && (i = -1) == -1)
-		while (trav->value[++i])
-			new[i] = trav->value[i];
+	while (val && val[i])
+	{
+		new[i] = val[i];
+		i++;
+	}
 	new[i] = '\0';
+	!ft_strcmp(name, "?") ? mfree(val) : 0;
 	return (i);
 }
 
@@ -118,9 +119,15 @@ char	*expand_qt(char *args)
 			new[j++] = *args++;
 	}
 	new[j] = '\0';
-	// mfree(args);
+	//mfree
 	return (j > 0) ? (ft_strdup(new)) : NULL;
 }
+
+/*
+** EXPAND AND SPLIT: IF AN ENVIRONMENT VAR IS EXPANDED OUTSIDE QUOTES IT
+** WILL BE SPLIT BY \t\n and space OR BY IFS IF SET. IF RETURN BY EXPAND QT
+** IS NULL IT WILL NOT KEEP ARGUMENT. AFTER SPLIT IT INSERTS IN LIST
+*/
 
 void	expand_split_env(t_token **args, int *ac)
 {
@@ -168,6 +175,7 @@ int		expand(t_token **args)
 		else if (++ac != -1)
 		{
 			(*args)->value = expand_qt((*args)->value);
+			(!(*args)->value) ? (*args)->value = ft_strdup("") : 0;
 			args = &((*args)->next);
 		}
 	}

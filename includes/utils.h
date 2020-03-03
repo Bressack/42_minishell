@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 13:36:27 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/29 15:40:30 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/03 21:00:43 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,5 @@ int		ft_atoi(const char *str);
 int		bi_error(char *ft, char *arg, char *mess, int f);
 char	**ft_split(char *str, char *charset);
 void	ft_bzero(void *s, int n);
+char	*ft_ctoa(unsigned int n);
 #endif

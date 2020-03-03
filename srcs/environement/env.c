@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 15:06:47 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 16:01:26 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 21:14:25 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ char	*ret_envval(char *name)
 {
 	t_env	*trav;
 
+	if (!ft_strcmp(name, "?"))
+		return (ft_ctoa(g_exit));
 	trav = g_env;
 	while (trav)
 	{

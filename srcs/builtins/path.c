@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 21:10:23 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 22:14:50 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,10 @@ char	*get_path(char *command)
 	else
 		env = ret_envval("PATH");
 	if (path)
-		return (!stat(path, &buf)) ? (path) : (NULL);
+		return (path); // return (stat(path, &buf) >= 0 && buf.st_mode & S_IXUSR) ? (path) : (NULL);
 	while (env && *env && (path = get_next_path(&env, command)))
 	{
-		if (!stat(path, &buf))
+		if (stat(path, &buf) >= 0 && buf.st_mode & S_IXUSR)
 			return (path);
 		mfree(path);
 	}

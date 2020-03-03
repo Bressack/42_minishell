@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 21:08:17 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 22:04:10 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ int		launch(t_node *cmd, char **av)
 		// cmd->stdio[ISTDIN] != ISTDIN ? close(ISTDIN) : 0;
 		if (path)
 			execve(path, av, environ);
-		errno == 2 ? bi_error(av[0], NULL, strerror(errno), 0) :
-		bi_error(av[0], NULL, "command not found", 0);
-		// printf("errno [%d]\n", errno);
-		exit(1);
+		if ((errno == 14 || errno == 22) && bi_error(av[0], NULL, "command not found", 0))
+			exit (127);
+		bi_error(av[0], NULL, strerror(errno), 0);
+		exit(126);
 	}
 	else if (pid < 0) //error with fork
 		bi_error(av[0], NULL, strerror(errno), 0);
@@ -96,7 +96,7 @@ int		launch(t_node *cmd, char **av)
 		wpid = waitpid(pid, &sloc, WUNTRACED);
 	mfree(environ);
 	mfree(path);
-	return (sloc);
+	return (WEXITSTATUS(sloc));
 }
 
 /*

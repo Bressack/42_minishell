@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bi_error.c                                         :+:      :+:    :+:   */
+/*   ft_ctoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/26 10:32:31 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 17:32:28 by frlindh          ###   ########.fr       */
+/*   Created: 2020/03/03 20:35:31 by frlindh           #+#    #+#             */
+/*   Updated: 2020/03/03 22:10:28 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-/*
-** TWO TYPES OF ERRMESS:
-** 	WITHOUT ARG: minishell: cd: too many arguments
-** 	WITH	ARG: minishell: cd: xxx: No such file or directory
-** 				 minishell: export: `5+H\': not a valid identifier
-*/
-
-int		bi_error(char *ft, char *arg, char *mess, int f)
+char	*ft_ctoa(unsigned int n)
 {
-	ft_dprintf(2, "minishell: %s: ", ft);
-	if (arg != NULL)
-		f == 1 ? ft_dprintf(2, "`%s\': ", arg) : ft_dprintf(2, "%s: ", arg);
-	ft_dprintf(2, "%s\n", mess);
-	return (1);
+	char	*num;
+	int		i;
+	int		div;
+
+	num = (char *)mmalloc(5);
+	i = 0;
+	div = 1000;
+	while (n / div == 0 && div > 1)
+		div = div / 10;
+	while (div >= 1)
+	{
+		num[i++] = n / div + '0';
+		n = n % div;
+		div = div / 10;
+	}
+	num[i] = '\0';
+	return (num);
 }
