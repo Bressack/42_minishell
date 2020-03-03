@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 20:53:55 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 16:08:25 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 /*
 ** ALLOWED CHARACTERS TO FOLLOW A $. MIGHT BE BETTER CHANGING TO JUST
-** ALLOWED CHARACTERS IN VARIABLE + ?
+** ALLOWED CHARACTERS IN VARIABLE + ? <---
 */
 
-int		ok_envchar(char c)
+int		ok_envchar(char c) //FUNCTION TO CHECK NAMES --- TO BE UPDATED ---
 {
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
 			(c >= '0' && c <= '9') || c == '@' || c == '*' || c == '#' ||
@@ -38,7 +38,9 @@ int		tilde_exp(char *new)
 	return (i);
 }
 
-// EXPANDING ENV VAR, SKIPPING CURLY BRACKETS IF ${NAME}
+/*
+** EXPANDING ENV VAR, SKIPPING CURLY BRACKETS IF ${NAME}
+*/
 
 int		expand_env(char **args, char *new)
 {
@@ -55,7 +57,7 @@ int		expand_env(char **args, char *new)
 			curl = ((*args)[i] == '{') ? curl + 1 : curl - 1;
 	(**args == '{' && curl == 0) ? (*args)++ : 0;
 	i = 0;
-	while (**args && ok_envchar(**args)) // ADD SAFETY FOR NAME ? 
+	while (**args && ok_envchar(**args)) // ADD SAFETY FOR NAME ?
 		name[i++] = *((*args)++);
 	(**args == '}' && curl == 0) ? (*args)++ : 0;
 	name[i] = '\0';
