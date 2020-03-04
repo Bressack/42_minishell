@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/02 18:39:09 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 21:00:48 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 
 #include <minishell.h>
 #define BUILTINS 7
-// #define STDOUT 1
-// #define STDERR 2
-// #define STDIN 2
 
+unsigned int	g_exit;
 /*
 ** COMMANDS
 */

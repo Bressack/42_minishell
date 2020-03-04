@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/02 21:01:41 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 16:06:57 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,30 +38,30 @@ static int	print_exp(void)
 
 void		set_var(char *name, int op, char *val, int export)
 {
-	t_env	*trav;
+	t_env	**trav;
+	t_env	*set;
 
-	if ((trav = ret_env(name)) != NULL)
+	if ((set = ret_env(name)))
 	{
-		(op == '+') ? trav->value = cat_value(trav->value, val) : 0;
+		(op == '+') ? set->value = cat_value(set->value, val) : 0;
 		if (op == '=')
 		{
-			mfree(trav->value);
-			trav->value = ft_strdup(val);
+			mfree(set->value);
+			set->value = ft_strdup(val);
 		}
 		if (export == 1)
-			trav->export = 1;
+			set->export = 1;
 	}
 	else
 	{
-		trav = g_env;
-		while (trav && trav->next)
-			trav = trav->next;
-		if (!((trav->next) = (t_env *)mmalloc(sizeof(t_env))))
-			return ;
-		(trav->next)->name = ft_strdup(name);
-		(trav->next)->value = (op == 0) ? NULL : ft_strdup(val);
-		(trav->next)->next = NULL;
-		(trav->next)->export = export;
+		trav = &g_env;
+		while (*trav)
+			trav = &((*trav)->next);
+		(*trav) = (t_env *)mmalloc(sizeof(t_env));
+		(*trav)->name = ft_strdup(name);
+		(*trav)->value = (op == 0) ? NULL : ft_strdup(val);
+		(*trav)->next = NULL;
+		(*trav)->export = export;
 	}
 }
 
@@ -80,7 +80,7 @@ int			export(int ac, char **av)
 	int		j;
 	int		op;
 	int		export;
-	char	cpy[LINE_MAX]; //secure for over ?
+	char	cpy[LINE_MAX];
 
 	export = (ft_strcmp(av[0], "export")) ? 0 : 1;
 	if ((i = -1) == -1 && export && i++ && ac == 1)
@@ -92,7 +92,7 @@ int			export(int ac, char **av)
 		else if (av[i])
 		{
 			while (*av[i] && *av[i] != ' ' && *av[i] != '+' && *av[i] != '=')
-				cpy[++j] = *av[i]++;
+				(j < LINE_MAX) ? cpy[++j] = *av[i]++ : i++;
 			if ((op = *av[i]) != 0 && *av[i]++ == '+' && *av[i] != '=')
 				bi_error(av[0], av[i], "not a valid identifier", 1);
 			else if ((cpy[++j] = '\0') == '\0')

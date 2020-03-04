@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/02 18:39:53 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/03 22:14:32 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -108,6 +108,7 @@ SRCS_UTILS				=	\
 							utils/bi_error.c \
 							utils/mmalloc.c \
 							utils/ft_split.c \
+							utils/ft_ctoa.c \
 
 SRCS_LIBLIST			=	\
 							utils/lists/ft_add_node_end_np.c \

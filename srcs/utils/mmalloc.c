@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 18:34:17 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 18:55:40 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 22:16:33 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ void	mfree(void *to_free)
 	while (*indir && (*indir)->data != to_free)
 		indir = &((*indir)->next);
 	f = *indir;
+	*indir = (*indir)->next;
 	if (f)
-		*indir = f->next;
-	free(f->data);
+		free(f->data);
 	free(f);
 }

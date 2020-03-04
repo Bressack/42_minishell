@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 15:06:47 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/02 20:42:05 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 21:14:25 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int		print_env(int ac, char **args)
 	(void)args;
 	if (ac > 1)
 		return (bi_error(args[0], NULL, "too many arguments", 0));
+	if (!g_env)
+		return (bi_error(args[0], NULL, "No such file or directory", 0));
 	trav = g_env;
 	while (trav != NULL)
 	{
@@ -56,6 +58,8 @@ char	*ret_envval(char *name)
 {
 	t_env	*trav;
 
+	if (!ft_strcmp(name, "?"))
+		return (ft_ctoa(g_exit));
 	trav = g_env;
 	while (trav)
 	{

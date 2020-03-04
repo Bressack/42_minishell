@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 20:40:14 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/03 20:56:48 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	print_prompt(int sloc, int prompt_lever)
 		while (prompt[++i])
 			if (prompt[i] == '/')
 				last = i + 1;
-		ft_dprintf(0, "%s➜  %s%s > %s", !sloc ? C_G_GREEN : C_G_RED, C_G_CYAN, &prompt[last], C_RES);
+		ft_dprintf(2, "%s➜  %s%s > %s", !sloc ? C_G_GREEN : C_G_RED, C_G_CYAN, &prompt[last], C_RES);
 	}
 	else
 		print_prompt(sloc, PROMPT_CASUAL);
@@ -36,7 +36,7 @@ void	sig_handler(int signo)
 	if (signo == SIGINT && ft_dprintf(1, "\n")) //RESET LINE
 		print_prompt(0, PROMPT_CASUAL);
 	else if (signo == SIGQUIT)
-		ft_dprintf(1, "\b\b  \b\b");
+		ft_dprintf(2, "\b\b  \b\b");
 }
 
 int		main(int ac, char **av, char **env)
@@ -47,6 +47,7 @@ int		main(int ac, char **av, char **env)
 
 	get_env(ac, av, env);
 	sloc = 0;
+	g_exit = 0;
 	while (1)
 	{
 		// if (!(pid = fork()))
@@ -56,7 +57,7 @@ int		main(int ac, char **av, char **env)
 			if ((ast = ast_builder(sloc)))
 			{
 				ast ? tree_draw(ast) : 0; // gen a tree.dot file used by the cmd dot in the shell
-				print_ast(ast, 0);
+				// print_ast(ast, 0);
 				ast_interpreter(ast);
 				del_node(&ast, RECURCIVLY);
 			}
