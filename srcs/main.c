@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/04 12:02:29 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 17:42:30 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	print_prompt(int sloc, int prompt_lever)
 		while (prompt[++i])
 			if (prompt[i] == '/')
 				last = i + 1;
-		ft_dprintf(2, "%s➜  %s%s > %s", !sloc ? C_G_GREEN : C_G_RED, C_G_CYAN, &prompt[last], C_RES);
+		ft_dprintf(2, "%s➜  %s%s > %s", !sloc ? C_G_GREEN : C_G_RED, C_G_CYAN,
+			&prompt[last], C_RES);
 	}
 	else
 		print_prompt(sloc, PROMPT_CASUAL);
@@ -56,9 +57,9 @@ int		main(int ac, char **av, char **env)
 			signal(SIGQUIT, sig_handler);
 			if ((ast = ast_builder(sloc)))
 			{
-				ast ? tree_draw(ast) : 0; // gen a tree.dot file used by the cmd dot in the shell
-				print_ast(ast, 0);
-				ast_interpreter(ast);
+				// ast ? tree_draw(ast) : 0;
+				// print_ast(ast, 0);
+				sloc = ast_interpreter(ast);
 				del_node(&ast, RECURCIVLY);
 			}
 			// exit(0);

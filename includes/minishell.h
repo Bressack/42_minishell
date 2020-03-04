@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:20:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/03 21:55:48 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 17:54:35 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 #include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h> 
+#include <unistd.h>
 typedef enum		e_optsignal
 {
 	CONTINUE,

@@ -20,7 +20,7 @@ void		ft_add_node_f_prevto_np(
 
 	tmp = *begin_list;
 	tmp1 = NULL;
-	while (f(tmp) != SUCCESS)
+	while (f(tmp) != DLL_SUCCESS)
 	{
 		tmp1 = tmp;
 		tmp = tmp->next;

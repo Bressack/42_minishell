@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/04 11:45:33 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 17:03:44 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 #define BUILTINS 7
 
 unsigned int	g_exit;
+typedef enum		e_err_value
+{
+	ERROR,
+	SUCCESS
+}					t_err_value;
 /*
 ** COMMANDS
 */

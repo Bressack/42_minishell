@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/03 07:41:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 17:55:24 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void				print_prompt(int sloc, int prompt_lever);
 */
 t_lexer				*lexer__new(int sloc);
 void				lexer__del(t_lexer **lex);
-void				lexer__error(int opt, t_lexer *lex);
+int					lexer__error(int opt, t_lexer *lex);
 /*
 ** **************************************************************************
 ** **** is something and peek ***********************************************
@@ -100,27 +100,13 @@ int					lexer__istype_start(t_lexer *lex, t_char_type type);
 char				lexer__peek(t_lexer *lex);
 int					lexer__isword(t_lexer *lex);
 int					lexer__isquote(t_lexer *lex);
-int					lexer__isdefined_token(t_lexer *lex, int adv);
-/*
-** **************************************************************************
-** **** advance and pass function *******************************************
-** **************************************************************************
-*/
-int					lexer__advance(t_lexer *lex, int n);
-void				lexer__advence_foreach(t_lexer *lex, t_char_type type, int whis);
-void				lexer__pass_quotes(t_lexer *lex, t_char_type type);
-/*
-** **************************************************************************
-** **** set and init ********************************************************
-** **************************************************************************
-*/
-void				lexer__set_start_pos(t_lexer *lex, int new_pos);
 /*
 ** **************************************************************************
 ** **** body functions ******************************************************
 ** **************************************************************************
 */
-void				lexer__refill_line(t_lexer *lex, int sloc, int prompt);
-t_token				*lexer__token_grabber(t_lexer *lex, t_token_type_m type);
+int					lexer__advance(t_lexer *lex, int n);
+int					lexer__refill_line(t_lexer *lex, int sloc, int prompt);
+int					lexer__isdefined_token(t_lexer *lex, int adv);
 t_token				*lexer__get_next_token(t_lexer *lex);
 #endif
