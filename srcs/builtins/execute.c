@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 17:14:56 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 21:07:20 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int		launch(t_node *cmd, char **av)
 	if (!(path = get_path(av[0], &sloc)))
 	{
 		mfree(environ);
+		// if (sloc == 125 && printf("%s\n", path))
+		// 	return (chdir(path));
 		return (bi_error(av[0], NULL, NULL, sloc));
 	}
 	pid = fork();

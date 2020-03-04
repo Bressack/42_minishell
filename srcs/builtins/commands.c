@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 16:59:09 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 18:49:38 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int		xexit(int ac, char **args, int out)
 {
 	int code;
 
-	(void)out;
 	ft_dprintf(1, "exit\n");
 	code = g_exit; // set as LAST
 	if (ac > 1 && !ft_strisnum(args[1]) && (code = 2))
@@ -60,6 +59,7 @@ int		xexit(int ac, char **args, int out)
 		return (1);
 	(ac == 2 && code == 0) ? code = ft_atoi(args[1]) : 0;
 	free_all_malloc();
+	out == -1 ? code = 0 : 0;
 	exit(code);
 }
 
