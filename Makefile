@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/03 22:14:32 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/04 18:37:36 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -104,7 +104,9 @@ SRCS_UTILS				=	\
 							utils/ft_strcmp.c \
 							utils/cat_value.c \
 							utils/ft_atoi.c \
-							utils/ft_isnum.c \
+							utils/ft_strisnum.c \
+							utils/is_num.c \
+							utils/is_letter.c \
 							utils/bi_error.c \
 							utils/mmalloc.c \
 							utils/ft_split.c \

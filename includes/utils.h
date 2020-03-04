@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 13:36:27 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/04 16:51:34 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 18:36:25 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,6 @@ int		bi_error(char *ft, char *arg, char *mess, int f);
 char	**ft_split(char *str, char *charset);
 void	ft_bzero(void *s, int n);
 char	*ft_ctoa(unsigned int n);
+int		is_letter(char c);
+int		is_num(char c);
 #endif

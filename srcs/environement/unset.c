@@ -6,21 +6,11 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 18:27:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/04 17:04:28 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 18:35:44 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-int		is_letter(char c)
-{
-	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
-}
-
-int		is_num(char c)
-{
-	return (c >= '0' && c <= '9');
-}
 
 int		is_valid_variable(char *args, int flag)
 {
