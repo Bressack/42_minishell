@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 17:25:26 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 18:15:28 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/03 17:09:45 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,96 @@
 
 # define PIPE_READ		0 // the side of the pipe where the cmd will read
 # define PIPE_WRITE		1 // the side of the pipe where the cmd will write
-# define STDOUT			0 // where the cmd will write
-# define STDIN			1 // where the cmd will read
+# define STDIN			0 // where the cmd will read
+# define STDOUT			1 // where the cmd will write
+# define STDERR			2 // where the cmd will write
 
-int		child(char *path, char **av, char **env, int *fd, int fd_to)
+typedef int			fd_t;
+
+typedef struct		s_cmd
 {
-	pid_t	pid;
-	int		sloc;
+	pid_t			pid;
+	int				sloc;
+	char			**av;
+	char			**env;
+	fd_t			stdin;
+	fd_t			stdout;
+}					t_cmd;
+typedef struct		s_pipe
+{
+	int				sloc;
+	int				pipeline[2];
+	t_cmd			left;
+	t_cmd			right;
+}					t_pipe;
 
-	// printf("path  : {%s}\n", path);
-	// printf("av[0] : {%s}\n", av[0]);
-	// printf("av[1] : {%s}\n", av[1]);
-	// printf("fd    : {%d}\n", *fd);
-	// printf("fd_to : {%d}\n", fd_to);
-	sloc = 0;
-	if (!(pid = fork()))
+int		child(t_cmd	*cmd)
+{
+	if (!(cmd->pid = fork()))
 	{
-		dup2(*fd, fd_to);
-		close(fd_to);
-		execve(path, av, env);
+		dup2(cmd->stdout, STDOUT);
+		dup2(cmd->stdin, STDIN);
+		execve(cmd->av[0], cmd->av, cmd->env);
 		dprintf(2, "error\n");
 		exit(-1);
 	}
-	waitpid(pid, &sloc, WUNTRACED);
-	return (sloc);
+	waitpid(cmd->pid, &cmd->sloc, WUNTRACED);
+	return (cmd->sloc);
 }
+
+int		pipe_handle(t_pipe *ppln)
+{
+	if (pipe(ppln->pipeline) == -1)
+		return (-1);
+	ppln->left.stdout = ppln->pipeline[PIPE_WRITE];
+	ppln->right.stdin = ppln->pipeline[PIPE_READ];
+	if (!(ppln->sloc = child(&ppln->left)))
+	{
+		close(ppln->left.stdout);
+		ppln->sloc = child(&ppln->right);
+	}
+	return (ppln->sloc);
+}
+
+a | b | c | d
+
+           |
+         /   \
+       |      d
+     /   \
+   |      c
+ /   \
+a     b
 
 int		main(int ac, char **av, char **env)
 {
 	(void)ac, (void)av;
 
-	char *av_ls[3] = {"/bin/ls", "-l", NULL};
-	char *av_cat[3] = {"/bin/cat", "-e", NULL};
-	// ls -l | cat -e
-	int		fd_pipe[2];
-
-	if (pipe(fd_pipe) == -1)
-		return (-1);
-
-	if (!(child("/bin/ls", (char **)&av_ls, env, &fd_pipe[PIPE_WRITE], STDIN)))
-		child("/bin/cat", (char **)&av_cat, env, &fd_pipe[PIPE_READ], STDOUT);
+	char			*av_ls[3] = {"/bin/ls", "-l", NULL};
+	char			*av_av[3] = {"/bin/cat", "-e", NULL};
+	t_pipe			ppln =
+	{
+		/*sloc     = */ 0,
+		/*pipeline = */ {0, 0},
+		/*left     = */
+		{
+			/*pid      = */ 0,
+			/*sloc     = */ 0,
+			/*av       = */ (char **)&av_ls,
+			/*env      = */ env,
+			/*stdin    = */ STDIN,
+			/*stdout   = */ STDOUT
+		},
+		/*right = */
+		{
+			/*pid      = */ 0,
+			/*sloc     = */ 0,
+			/*av       = */ (char **)&av_av,
+			/*env      = */ env,
+			/*stdin    = */ STDIN,
+			/*stdout   = */ STDOUT
+		}
+	};
+	pipe_handle(&ppln);
 	return (0);
 }

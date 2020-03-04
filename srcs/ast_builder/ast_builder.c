@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:31:13 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/03 07:41:34 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/03 11:00:21 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,8 @@ void	add_to_ast(t_astb *tool, t_node *node)
 		{
 			tool->tree_pos->right = node;
 			node->parent = tool->tree_pos;
-			node->stdio[ISTDOUT] = ISTDOUT;
-			node->stdio[ISTDIN] = ISTDIN;
+			node->stdin = STDOUT;
+			node->stdout = STDIN;
 		}
 		else if (node->type == SEP)
 		{

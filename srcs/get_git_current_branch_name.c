@@ -16,8 +16,8 @@
 # define PIPE_READ			0
 # define PIPE_WRITE			1
 
-# define ISTDOUT			0
-# define ISTDIN			1
+# define STDOUT			0
+# define STDIN			1
 
 
 static void	*join(char **ret, char *arg, int *retsize)
@@ -82,8 +82,8 @@ int			run_shell_cmd(char **env, int opt, char *path_cmd, int ac, ...)
 	int		stt;
 	int		fd[2][2];
 
-	fd[ISTDOUT] = {ISTDOUT, ISTDIN};
-	fd[ISTDIN] = {ISTDIN, ISTDOUT};
+	fd[STDOUT] = {STDOUT, STDIN};
+	fd[STDIN] = {STDIN, STDOUT};
 	va_start(ap, ac);
 	if (!(av = calloc(sizeof(char *), ac + 2)))
 		exit(-1);
@@ -93,10 +93,10 @@ int			run_shell_cmd(char **env, int opt, char *path_cmd, int ac, ...)
 	function_before();
 	if (!(pid = fork()))
 	{
-		dup2(fd[ISTDOUT][PIPE_READ], ISTDOUT);
-		dup2(fd[ISTDIN][PIPE_WRITE], ISTDIN);
-		close(ISTDOUT);
-		close(ISTDIN);
+		dup2(fd[STDOUT][PIPE_READ], STDOUT);
+		dup2(fd[STDIN][PIPE_WRITE], STDIN);
+		close(STDOUT);
+		close(STDIN);
 		execve(path_cmd, av, env);
 		exit(-1);
 	}
@@ -122,7 +122,7 @@ char		*git__get_current_branch_name(char **env)
 	av[2] = NULL;
 	if (!(pid = fork()))
 	{
-		dup2(fd[PIPE_WRITE], ISTDIN);
+		dup2(fd[PIPE_WRITE], STDIN);
 		close(0);
 		execve("/bin/cat", av, env);
 		exit(-1);

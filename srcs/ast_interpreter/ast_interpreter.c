@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 15:05:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/03 17:08:14 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ void	asti_error(char *name, int opt)
 
 int		node__pipe_handle(t_node *cmd_sep)
 {
-	int		fd[2];                                                              // pipe between the output of the left child and the input on the right one
-	int		ret;                                                                // the return of the two commands (second call (l:31) overwrite ret, but its normal)
-
-	if (pipe(fd) != 0)                                                          // create pipe
-		exit(-1); // TODO error function;                                       // (TODO) add a correct message into asti_error() to delete this warning
-	cmd_sep->left->stdio[ISTDOUT] = fd[ISTDIN];                                 // (not sure about that) assign the pipe to left child's output
-	cmd_sep->right->stdio[ISTDIN] = fd[ISTDOUT];                                // (not sure about that) assign the pipe to right child's input
-	ret = node__controller(cmd_sep->left);                                      //
-	ret = node__controller(cmd_sep->right);                                     //
-	return (ret);                                                               //
+	if (pipe(ppln->pipeline) == -1)
+		return (-1);
+	ppln->left.stdout = ppln->pipeline[PIPE_WRITE];
+	ppln->right.stdin = ppln->pipeline[PIPE_READ];
+	if (!(ppln->sloc = child(&ppln->left)))
+	{
+		close(ppln->left.stdout);
+		ppln->sloc = child(&ppln->right);
+	}
+	return (ppln->sloc);
 }
 
 int		node__dbl_and_handle(t_node *cmd_sep)
@@ -71,6 +71,7 @@ int		node__sep_controller(t_node *sep)
 		return (node__semicon_handle(sep));
 	else
 		return (ASTI_FAILURE);
+	return (0);
 }
 
 void	redir_handle(t_node *cmd)
@@ -85,22 +86,22 @@ void	redir_handle(t_node *cmd)
 	{
 		if (tmp_redir->type == REDIR_IN)
 		{
-			(cmd->fd[ISTDIN][PIPE_READ] > 2) ? close(cmd->fd[ISTDIN][PIPE_READ]) : 0;
-			if ((cmd->fd[ISTDIN][PIPE_READ] = open(tmp_file->value,
+			(cmd->fd[STDIN][PIPE_READ] > 2) ? close(cmd->fd[STDIN][PIPE_READ]) : 0;
+			if ((cmd->fd[STDIN][PIPE_READ] = open(tmp_file->value,
 				O_RDWR, 0644)) == -1)
 				asti_error(tmp_file->value, OPEN_ERROR);
 		}
 		else if (tmp_redir->type == REDIR_OUT)
 		{
-			(cmd->fd[ISTDOUT][PIPE_WRITE] > 2) ? close(cmd->fd[ISTDOUT][PIPE_WRITE]) : 0;
-			if ((cmd->fd[ISTDOUT][PIPE_WRITE] = open(tmp_file->value,
+			(cmd->fd[STDOUT][PIPE_WRITE] > 2) ? close(cmd->fd[STDOUT][PIPE_WRITE]) : 0;
+			if ((cmd->fd[STDOUT][PIPE_WRITE] = open(tmp_file->value,
 				O_TRUNC | O_CREAT | O_RDWR)) == -1)
 				asti_error(tmp_file->value, OPEN_ERROR);
 		}
 		else if (tmp_redir->type == DREDIR_OUT)
 		{
-			(cmd->fd[ISTDOUT][PIPE_WRITE] > 2) ? close(cmd->fd[ISTDOUT][PIPE_WRITE]) : 0;
-			if ((cmd->fd[ISTDOUT][PIPE_WRITE] = open(tmp_file->value,
+			(cmd->fd[STDOUT][PIPE_WRITE] > 2) ? close(cmd->fd[STDOUT][PIPE_WRITE]) : 0;
+			if ((cmd->fd[STDOUT][PIPE_WRITE] = open(tmp_file->value,
 				O_CREAT | O_RDWR)) == -1)
 				asti_error(tmp_file->value, OPEN_ERROR);
 		}

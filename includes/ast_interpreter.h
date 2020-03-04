@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 03:39:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/02 05:48:58 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/03 16:04:19 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 # include <minishell.h>
 # define PIPE_READ		0 // the side of the pipe where the cmd will read
 # define PIPE_WRITE		1 // the side of the pipe where the cmd will write
-# define ISTDOUT		0 // where the cmd will write
-# define ISTDIN			1 // where the cmd will read
+# define STDIN			0 // where the cmd will read
+# define STDOUT			1 // where the cmd will write
 /*
-** fd[ISTDOUT] : [PIPE_READ]   [PIPE_WRITE]
-** fd[ISTDIN]  : [PIPE_READ]   [PIPE_WRITE]
+** fd[STDOUT] : [PIPE_READ]   [PIPE_WRITE]
+** fd[STDIN]  : [PIPE_READ]   [PIPE_WRITE]
 **
-** child reads on fd[ISTDIN][PIPE_READ]
-**  and writes on fd[ISTDOUT][PIPE_WRITE]
+** child reads on fd[STDIN][PIPE_READ]
+**  and writes on fd[STDOUT][PIPE_WRITE]
 **
-** parent reads on fd[ISTDOUT][PIPE_READ]
-**   and writes on fd[ISTDIN][PIPE_WRITE]
+** parent reads on fd[STDOUT][PIPE_READ]
+**   and writes on fd[STDIN][PIPE_WRITE]
 **
 ** yes it's weird for the parent side,
 ** but more easy for the child process.

@@ -1,107 +1,5 @@
-/****************************/
-/*** Grammar of minishell ***/
-/****************************/
-
-%token  WORD
-%token  LPAREN       RPAREN
-/*      '('          ')'                           */
-%token  REDIR_IN   REDIR_OUT    DREDIR_OUT
-/*      '<'          '>'            '>>'           */
-%token  SQUOTE       DQUOTE
-/*      '''          '"'                           */
-%token  PIPE
-/*      '|'                                        */
-%token  AND          OR
-/*      '&'          '|'                          */
-%token  SEMICON
-/*      ';'                                        */
-%token  SPACE        TAB
-/*      ' '          '\t'                          */
-
-%start expr
-%%
-expr            : (redirection)*
-				| ((redirection)* cmd (redirection | (space arg))* (cmd_sep | expr_end)*)*
-                | (LPAREN expr RPAREN (cmd_sep expr | expr_end)*)*
-                | (expr_end)*
-                ;
-redirection     : REDIR_IN file
-                | REDIR_OUT file
-                | REDIR_OUT REDIR_OUT file
-                ;
-cmd             : word
-                ;
-arg             : word
-                ;
-file            : word
-                ;
-word            : WORD
-                ;
-cmd_sep         : ((dbl_and | dbl_or | pipe) expr)*
-                ;
-expr_end        : SEMICON (expr)*
-                ;
-dbl_and         : AND AND
-                ;
-dbl_or          : PIPE PIPE
-                ;
-pipe            : PIPE
-                ;
-space           : SPACE
-                | TAB
-                ;
-/* END :) */
-
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-%token	REDIR_IN
-%token	REDIR_OUT
-%token	DREDIR_OUT
-%token	WORD
-%token	DBL_AND
-%token	DBL_OR
-%token	PIPE
-%token	SEMI
-%token	LPAREN
-%token	RPAREN
-
-ls;(ls;);
-
-expr			: subshell
-
-subshell		: complexe_cmd
-				| LPAREN complexe_cmd RPAREN
-
-complexe_cmd	: simple_cmd
-				| simple_cmd DBL_AND
-				| simple_cmd DBL_OR
-				| simple_cmd DBL_OR
-
-simple_cmd		: cmd
-				| cmd PIPE simple_cmd
-
-cmd				: arg
-				| arg cmd
-
-arg				: WORD
-				| REDIR_IN WORD
-				| REDIR_OUT WORD
-				| DREDIR_OUT WORD
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-
 ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat
 ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat : ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat && ls | cat
-|                                                                                                                                                                                                 |
-|                                                                                                                                                                                                 |
-|                                                                                                                                                                                                 |
-|                                                                                                                                                                                                 |
 |                                                                                                                                                                                                 |
 |                                                                                                                                                                                                 |
 |                                                      __________________________________________[ ;]__________________________________________                                                   |
@@ -115,7 +13,9 @@ ls | cat && ls | cat || ls | cat && ls | cat ; ls | cat && ls | cat || ls | cat 
 |        [ |]        [ |]       [ |]        [ |]        [ |]        [ |]       [ |]        [ |]        [ |]        [ |]       [ |]        [ |]        [ |]        [ |]       [ |]        [ |]     |
 |       /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \      /    \      /    \     /    \      /    \    |
 |     aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  aa      ab  ac      aa aa      ab  ac      aa  |
-|
+|                                                                                                                                                                                                 |
+|                                                                                                                                                                                                 |
+|                                                                                                                                                                                                 |
 |                                                                              |
 |                                                                              |
 |                     |                                                        |
@@ -195,43 +95,17 @@ ls | cat | wc && echo "Salut 'les' amis" > test && cat | wc ; rm
 |                             |\___[ pipe_ ]___/|                               |
 |                             |                 |                               |
 |                             |                 |                               |
-|                             |____[ cmd_1 ]____|                               |
+|                             x____[ cmd_1 ]____X                               |
 |                            /|                 |\                              |
 |                           | |                 | |                             |
-|                           |  \___[ cmd_2 ]___/  |                             |
+|                           |  X___[ cmd_2 ]___X  |                             |
 |                           |  /               \  |                             |
 |                           | |                 | |                             |
-|            [cmd_2_stdout] | I=================I | [cmd_2_stdout]              |
+|            [cmd_2_stdin]  | I=================I | [cmd_2_stdout]              |
 |                           |                     |                             |
 |                           |                     |                             |
 |                            \                   /                              |
-|            [cmd_1_stdout]   I=================I   [cmd_1_stdout]              |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
+|            [cmd_1_stdin]    I=================I   [cmd_1_stdout]              |
 |                                                                               |
 |                                                                               |
 |                                                                               |
