@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 18:27:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/02/27 20:46:04 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 11:44:48 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@
 ** SO BASICALLY A LIST REMOVE IF WITH EVERY ARGS
 */
 
-int		unset(int ac, char **args)
+int		unset(int ac, char **args, int i)
 {
-	int		i;
 	t_env	**indir;
 	t_env	*f;
 

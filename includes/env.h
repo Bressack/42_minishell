@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/02 05:58:45 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 11:45:41 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ extern t_env		*g_env;
 /*
 ** ENV.C
 */
-int		print_env(int ac, char **args);
+int		print_env(int ac, char **args, int out);
 t_env	*ret_env(char *name);
 char	*ret_envval(char *name);
 void	set_env(t_env *e, char *env);
@@ -43,12 +43,12 @@ void	get_env(int ac, char **av, char **env);
 /*
 ** EXPORT.C
 */
-int		export(int ac, char **args);
+int		export(int ac, char **args, int out);
 void	set_var(char *name, int op, char *val, int export);
 /*
 ** UNSET.C
 */
-int		unset(int ac, char **args);
+int		unset(int ac, char **args, int out);
 void	env_destructor(t_env *trav);
 /*
 ** EXPANSION

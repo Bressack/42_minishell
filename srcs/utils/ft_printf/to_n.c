@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/08 11:43:30 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/21 13:44:26 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/04 12:26:49 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@ void	to_n(int printed, int *dir, va_list ap)
 {
 	int	*ptr;
 
-	if (dir[PRINTF_LONG] >= 0)
+	if (dir[PF_LONG] >= 0)
 	{
-		if (dir[PRINTF_LONG] == 0)
+		if (dir[PF_LONG] == 0)
 			ptr = (int *)va_arg(ap, long *);
 		else
 			ptr = (int *)va_arg(ap, long long *);
 	}
-	else if (dir[PRINTF_SHORT] >= 0)
+	else if (dir[PF_SHORT] >= 0)
 	{
-		if (dir[PRINTF_SHORT] == 0)
+		if (dir[PF_SHORT] == 0)
 			ptr = (int *)va_arg(ap, short int *);
 		else
 			ptr = (int *)va_arg(ap, signed char *);

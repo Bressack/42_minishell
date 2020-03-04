@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 14:26:50 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 16:13:57 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int		launch(t_node *cmd, char **av)
 	if (!(path = get_path(av[0])))
 	{
 		mfree(environ);
+		bi_error(av[0], NULL, "command not executable", 0);
+		// bi_error(av[0], NULL, "command not found", 0);
 		return (127);
 	}
 	sloc = 0;
@@ -85,12 +87,9 @@ int		launch(t_node *cmd, char **av)
 	{
 		dup2(cmd->stdout, STDOUT);
 		dup2(cmd->stdin, STDIN);
-		if (path)
-			execve(path, av, environ);
-		if ((errno == 14 || errno == 22) && bi_error(av[0], NULL, "command not found", 0))
-			exit (127);
+		execve(path, av, environ);
 		bi_error(av[0], NULL, strerror(errno), 0);
-		exit(126);
+		exit(errno); // errno ?
 	}
 	else if (pid < 0) //error with fork
 		bi_error(av[0], NULL, strerror(errno), 0);
@@ -128,11 +127,11 @@ int		execute(t_node *cmd)
 					break ;
 	}
 	if (assign == ac)
-		return (export(ac, av));
+		return (export(ac, av, 1));
 	ac -= assign;
 	j = -1;
 	while (++j < BUILTINS)
 		if (!ft_strcmp(av[assign], g_builtins[j].name))
-			return (g_builtins[j].f(ac, &av[assign]));
+			return (g_builtins[j].f(ac, &av[assign], cmd->stdout));
 	return (launch(cmd, &av[assign]));
 }

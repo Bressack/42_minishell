@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 18:34:17 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 22:16:33 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 14:37:11 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*mmalloc(unsigned int size)
 	void	*new;
 	t_list	*list;
 
-	if (!(new = malloc(size)))
+	if (!(new = malloc(size + 1)))
 	{
 		free_all_malloc();
 		ft_dprintf(2, "allocation error");
@@ -32,14 +32,13 @@ void	*mmalloc(unsigned int size)
 		exit (1);
 	}
 	ft_bzero(new, size);
-	// ft_bzero(list, sizeof(t_list));
 	list->data = new;
 	list->next = g_all_malloc;
 	g_all_malloc = list;
 	return (new);
 }
 
-void	*mrealloc(void *ptr, size_t size)
+void	*mrealloc(void *ptr, size_t size) // REVIEW THIS ONE
 {
 	t_list	*list;
 
@@ -48,7 +47,7 @@ void	*mrealloc(void *ptr, size_t size)
 		list = list->next;
 	if (ptr && list)
 	{
-		ptr = realloc(ptr, size); // hein ???? mdrrr
+		ptr = realloc(ptr, size + 1); // hein ???? mdrrr
 		list->data = ptr;
 	}
 	else if (ptr)
@@ -94,8 +93,10 @@ void	mfree(void *to_free)
 	while (*indir && (*indir)->data != to_free)
 		indir = &((*indir)->next);
 	f = *indir;
-	*indir = (*indir)->next;
 	if (f)
+	{
+		*indir = (*indir)->next;
 		free(f->data);
+	}
 	free(f);
 }
