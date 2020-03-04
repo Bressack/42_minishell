@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/03 20:56:48 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 12:02:29 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		main(int ac, char **av, char **env)
 			if ((ast = ast_builder(sloc)))
 			{
 				ast ? tree_draw(ast) : 0; // gen a tree.dot file used by the cmd dot in the shell
-				// print_ast(ast, 0);
+				print_ast(ast, 0);
 				ast_interpreter(ast);
 				del_node(&ast, RECURCIVLY);
 			}

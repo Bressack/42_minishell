@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 10:30:40 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 14:26:50 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,11 @@ int		launch(t_node *cmd, char **av)
 	char	**environ;
 
 	environ = env_to_arr(g_env);
-	path = get_path(av[0]);
+	if (!(path = get_path(av[0])))
+	{
+		mfree(environ);
+		return (127);
+	}
 	sloc = 0;
 	pid = fork();
 	signal(SIGINT, sig_exec);
