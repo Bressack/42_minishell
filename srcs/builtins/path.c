@@ -6,7 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2020/03/04 16:21:14 by frlindh          ###   ########.fr       */
+=======
+/*   Updated: 2020/03/04 16:14:14 by tharchen         ###   ########.fr       */
+>>>>>>> 7bb9d0f0577bc749b181c9d75c389b7b6949c174
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +95,17 @@ char	*get_path(char *command, int *err)
 	else
 		env = ret_envval("PATH");
 	if (path)
+<<<<<<< HEAD
 		return (check_stat(path, err)) ? (path) : (NULL);
 	while (env && *env && (path = get_next_path(&env, command)))
 	{
 		if (check_stat(path, err))
+=======
+		return (stat(path, &buf) > 0 && buf.st_mode & S_IXUSR) ? (path) : (NULL); // return (path); //
+	while (env && *env && (path = get_next_path(&env, command)))
+	{
+		if (stat(path, &buf) > 0 && buf.st_mode & S_IXUSR)
+>>>>>>> 7bb9d0f0577bc749b181c9d75c389b7b6949c174
 			return (path);
 		mfree(path);
 	}

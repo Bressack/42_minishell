@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:31:13 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/03 11:00:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 13:19:52 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	del_node(t_node **node, int opt)
 
 int		print_node(t_node *n)
 {
-	printf("[ NODE   "C_G_YELLOW"%-4s"C_RES" | "C_G_GREEN"%-14p"C_RES" ] {["C_G_CYAN"%4s"C_RES"] <- ["C_G_RED"%4s"C_RES"] -> ["C_G_CYAN"%4s"C_RES"]}",
+	ft_printf("[ NODE   "C_G_YELLOW"%-4s"C_RES" | "C_G_GREEN"%-14p"C_RES" ] {["C_G_CYAN"%4s"C_RES"] <- ["C_G_RED"%4s"C_RES"] -> ["C_G_CYAN"%4s"C_RES"]}",
 		n ? n->type == CMD ? "CMD" : "SEP" : "NULL",
 		n,
 		n && n->left ? n->left->type == CMD ? n->left->av->value : n->left->sep->value : "NULL",
@@ -60,42 +60,42 @@ int		print_node(t_node *n)
 		n && n->right ? n->right->type == CMD ? n->right->av->value : n->right->sep->value : "NULL"
 	);
 	n = n ? n->parent : NULL;
-	printf(" "C_G_MAGENTA"####"C_RES" [ PARENT "C_G_YELLOW"%-4s"C_RES" | "C_G_GREEN"%-14p"C_RES" ] {["C_G_CYAN"%4s"C_RES"] <- ["C_G_RED"%4s"C_RES"] -> ["C_G_CYAN"%4s"C_RES"]}",
+	ft_printf(" "C_G_MAGENTA"####"C_RES" [ PARENT "C_G_YELLOW"%-4s"C_RES" | "C_G_GREEN"%-14p"C_RES" ] {["C_G_CYAN"%4s"C_RES"] <- ["C_G_RED"%4s"C_RES"] -> ["C_G_CYAN"%4s"C_RES"]}",
 		n ? n->type == CMD ? "CMD" : "SEP" : "NULL",
 		n,
 		n && n->left ? n->left->type == CMD ? n->left->av->value : n->left->sep->value : "NULL",
 		n ? n->type == CMD ? n->av->value : n->sep->value : "NULL",
 		n && n->right ? n->right->type == CMD ? n->right->av->value : n->right->sep->value : "NULL"
 	);
-	printf("\n");
+	ft_printf("\n");
 	return (0);
 }
 
 void	print_ast(t_node *n, int deep)
 {
-	!deep ? printf("\n") : 0;
+	!deep ? ft_printf("\n") : 0;
 	if (!n)
-		printf("("C_G_RED"null"C_RES")\n");
+		ft_printf("("C_G_RED"null"C_RES")\n");
 	else
 	{
 		if (n->type == CMD)
 		{
 			if (!n->av)
-				printf(""C_G_RED"null"C_RES);
+				ft_printf(""C_G_RED"null"C_RES);
 			else
 				for (t_token *tmp = n->av ; tmp ; tmp = tmp->next)
-					printf("{"C_G_YELLOW"%s"C_RES"} ", tmp->value);
-			printf("\n");
+					ft_printf("{"C_G_YELLOW"%s"C_RES"} ", tmp->value);
+			ft_printf("\n");
 		}
 		else
 		{
-			printf("["C_G_CYAN"%s"C_RES"]\n", n->sep ? n->sep->value : C_G_RED"null"C_RES);
+			ft_printf("["C_G_CYAN"%s"C_RES"]\n", n->sep ? n->sep->value : C_G_RED"null"C_RES);
 			for (int i = 0; i < deep; i++)
-				printf("|   ");
-			printf("L - "), print_ast(n->left, deep + 1);
+				ft_printf("|   ");
+			ft_printf("L - "), print_ast(n->left, deep + 1);
 			for (int i = 0; i < deep; i++)
-				printf("|   ");
-			printf("R - "), print_ast(n->right, deep + 1);
+				ft_printf("|   ");
+			ft_printf("R - "), print_ast(n->right, deep + 1);
 		}
 	}
 }

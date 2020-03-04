@@ -1,4 +1,0 @@
-digraph BST {
-    node [fontname="Arial"];
-    "[ git ]_(0)";
-}

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/04 11:08:15 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 16:08:39 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	asti_error(char *name, int opt)
 {
 	if (opt == OPEN_ERROR)
-		printf("minishell: %s: %s\n", name, strerror(errno));
+		printf("minishell (asti_error): %s: %s\n", name, strerror(errno));
 }
 
 int		node__pipe_handle(t_node *ppln)
@@ -109,7 +109,7 @@ void	redir_handle(t_node *cmd)
 			(cmd->stdout > 2) ? close(cmd->stdout) : 0;
 			if ((cmd->stdout = open(tmp_file->value,
 				O_CREAT | O_RDWR, 0644)) == -1)
-				asti_error(tmp_file->value, OPEN_ERROR);
+					asti_error(tmp_file->value, OPEN_ERROR);
 		}
 		tmp_redir = tmp_redir->next;
 		tmp_file = tmp_file->next;
@@ -119,7 +119,8 @@ void	redir_handle(t_node *cmd)
 int		node__cmd_controller(t_node *cmd)
 {
 	redir_handle(cmd);
-	return (execute(cmd));
+	g_exit = execute(cmd);
+	return (g_exit);
 }
 
 int		node__controller(t_node *node)
