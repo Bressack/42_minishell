@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 10:32:31 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 17:32:28 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 16:01:07 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,17 @@ int		bi_error(char *ft, char *arg, char *mess, int f)
 	ft_dprintf(2, "minishell: %s: ", ft);
 	if (arg != NULL)
 		f == 1 ? ft_dprintf(2, "`%s\': ", arg) : ft_dprintf(2, "%s: ", arg);
-	ft_dprintf(2, "%s\n", mess);
+	if (mess)
+		ft_dprintf(2, "%s\n", mess);
+	else
+	{
+		if (f == 127)
+			ft_dprintf(2, "command not found\n");
+		else if (f == 126)
+			ft_dprintf(2, "Permission denied\n");
+		else if (f++)
+			ft_dprintf(2, "Is a directory\n");
+		return (f);
+	}
 	return (1);
 }

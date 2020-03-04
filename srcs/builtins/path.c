@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 14:38:03 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 16:21:14 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,24 @@ char	*get_no_path(char *com)
 	path[i] = '\0';
 	return (path);
 }
+
+int		check_stat(char *path, int *err)
+{
+	int			ret;
+	struct stat	buf;
+
+	ret = stat(path, &buf);
+	if (ret < 0)
+		*err = 127;
+	else if ((buf.st_mode & S_IXUSR) != S_IXUSR)
+		*err = 126;
+	else if (S_ISDIR(buf.st_mode))
+		*err = 125;
+	else if (!(*err = 0))
+		return (1);
+	return (0);
+}
+
 /*
 ** WILL EITHER RETURN
 ** 1. THE COMMAND IF A FULL PATH MEANING FOR EX [./test] [../test] [/bin/ls]
@@ -54,12 +72,12 @@ char	*get_no_path(char *com)
 ** 3. WILL SEARCH IN ALL DIR DEFINES BY PATH TO SEE IF EXECUTABLE IS THERE
 ** 4. NULL IF NOT FOUND
 */
-char	*get_path(char *command)
+
+char	*get_path(char *command, int *err)
 {
 	int			i;
 	char		*env;
 	char		*path;
-	struct stat	buf;
 
 	i = -1;
 	path = NULL;
@@ -73,10 +91,10 @@ char	*get_path(char *command)
 	else
 		env = ret_envval("PATH");
 	if (path)
-		return (stat(path, &buf) >= 0 && buf.st_mode & S_IXUSR) ? (path) : (NULL); // return (path); // 
+		return (check_stat(path, err)) ? (path) : (NULL);
 	while (env && *env && (path = get_next_path(&env, command)))
 	{
-		if (stat(path, &buf) >= 0 && buf.st_mode & S_IXUSR)
+		if (check_stat(path, err))
 			return (path);
 		mfree(path);
 	}

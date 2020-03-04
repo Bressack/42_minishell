@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/04 11:45:33 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 15:29:33 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		execute(t_node *cmd);
 /*
 ** PATH.C
 */
-char	*get_path(char *command);
+char	*get_path(char *command, int *err);
 
 typedef struct		s_bi
 {

@@ -6,13 +6,13 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 16:17:07 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/25 16:46:04 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 16:51:14 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <utils.h>
 
-int		ft_isnum(char *str)
+int		ft_strisnum(char *str)
 {
 	while (str && *str)
 	{
