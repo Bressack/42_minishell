@@ -6,7 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2020/03/04 17:09:25 by frlindh          ###   ########.fr       */
+=======
 /*   Updated: 2020/03/04 16:13:57 by tharchen         ###   ########.fr       */
+>>>>>>> 7bb9d0f0577bc749b181c9d75c389b7b6949c174
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +76,11 @@ int		launch(t_node *cmd, char **av)
 	char	**environ;
 
 	environ = env_to_arr(g_env);
-	if (!(path = get_path(av[0])))
+	if (!(path = get_path(av[0], &sloc)))
 	{
 		mfree(environ);
-		bi_error(av[0], NULL, "command not executable", 0);
-		// bi_error(av[0], NULL, "command not found", 0);
-		return (127);
+		return (bi_error(av[0], NULL, NULL, sloc));
 	}
-	sloc = 0;
 	pid = fork();
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
@@ -121,7 +122,7 @@ int		execute(t_node *cmd)
 	assign = 0;
 	while (++j < ac && assign == j && (i = -1) == -1)
 	{
-		if (ok_envchar(av[j][0]) && ((av[j][0] < '0' || av[j][0] > '9')))
+		if (is_valid_variable(av[j], 1))
 			while (av[j][++i])
 				if (av[j][i] == '=' && ++assign)
 					break ;

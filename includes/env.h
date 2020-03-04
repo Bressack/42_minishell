@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/04 11:45:41 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 17:02:14 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	set_var(char *name, int op, char *val, int export);
 /*
 ** UNSET.C
 */
+int		is_valid_variable(char *args, int flag);
 int		unset(int ac, char **args, int out);
-void	env_destructor(t_env *trav);
 /*
 ** EXPANSION
 */
