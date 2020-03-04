@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 15:06:47 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 21:14:25 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 11:41:45 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_env	*g_env = NULL;
 /*
 ** ENV BUILTIN
 */
-int		print_env(int ac, char **args)
+int		print_env(int ac, char **args, int out)
 {
 	t_env	*trav;
 
@@ -30,7 +30,7 @@ int		print_env(int ac, char **args)
 	while (trav != NULL)
 	{
 		if (trav->value != NULL && trav->export == 1)
-			ft_dprintf(1, "%s=%s\n", trav->name, trav->value);
+			ft_dprintf(out, "%s=%s\n", trav->name, trav->value);
 		trav = trav->next;
 	}
 	return (0);

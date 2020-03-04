@@ -6,13 +6,13 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/03 16:06:57 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 11:42:31 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static int	print_exp(void)
+static int	print_exp(int out)
 {
 	t_env	*trav;
 
@@ -21,10 +21,10 @@ static int	print_exp(void)
 	{
 		if (trav->export == 1)
 		{
-			ft_dprintf(STDOUT_FILENO, "declare -x %s", trav->name);
+			ft_dprintf(out, "declare -x %s", trav->name);
 			if (trav->value)
-				ft_dprintf(STDOUT_FILENO, "=\"%s\"", trav->value);
-			write(STDOUT_FILENO, "\n", 1);
+				ft_dprintf(out, "=\"%s\"", trav->value);
+			write(out, "\n", 1);
 		}
 		trav = trav->next;
 	}
@@ -74,7 +74,7 @@ void		set_var(char *name, int op, char *val, int export)
 ** VALUE TO BE SET.
 */
 
-int			export(int ac, char **av)
+int			export(int ac, char **av, int out)
 {
 	int		i;
 	int		j;
@@ -84,7 +84,7 @@ int			export(int ac, char **av)
 
 	export = (ft_strcmp(av[0], "export")) ? 0 : 1;
 	if ((i = -1) == -1 && export && i++ && ac == 1)
-		return (print_exp());
+		return (print_exp(out));
 	while (++i < ac && (j = -1) == -1)
 	{
 		if (av[i] && ((*av[i] >= '0' && *av[i] <= '9') || !ok_envchar(*av[i])))

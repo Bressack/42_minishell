@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 10:37:08 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/26 04:22:03 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 12:25:00 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,40 +28,39 @@ static void	ft_specifier(int *dir, const char **format, int i, va_list ap)
 	while (**format == 'h' || **format == 'l')
 	{
 		if (**format == 'l')
-			dir[PRINTF_LONG]++;
+			dir[PF_LONG]++;
 		if (**format == 'h')
-			dir[PRINTF_SHORT]++;
+			dir[PF_SHORT]++;
 		(*format)++;
 	}
-	(dir[PRINTF_SPEC] = ft_iscspec(**format)) >= 0 ? (*format)++ : 0;
-	if (dir[PRINTF_SPEC] == 9)
+	(dir[PF_SPEC] = ft_iscspec(**format)) >= 0 ? (*format)++ : 0;
+	if (dir[PF_SPEC] == 9)
 		to_n(i, dir, ap);
 }
 
 static void	ft_initdir(int *dir, const char **f, va_list ap)
 {
-	while (**f == '+' || **f == '-' || **f == '.' || **f == '#' || **f == ' ' ||
-	**f == '\'' || (**f >= '0' && **f <= '9'))
+	while (**f == '+' || **f == '*' || **f == '-' || **f == '.' || **f == '#'
+	|| **f == ' ' || **f == '\'' || (**f >= '0' && **f <= '9'))
 	{
-		dir[PRINTF_ZERO] = (**f == '0') ? 1 : dir[PRINTF_ZERO];
-		dir[PRINTF_LEFT] = (**f == '-') ? 1 : dir[PRINTF_LEFT];
-		dir[PRINTF_PLUS] = (**f == '+') ? 1 : dir[PRINTF_PLUS];
-		dir[PRINTF_SPACE] = (**f == ' ') ? 1 : dir[PRINTF_SPACE];
-		dir[PRINTF_S] = (**f == '#') ? 1 : dir[PRINTF_S];
-		if (**f == '.' && (*f)++ && (dir[PRINTF_PREC] = 0) == 0)
+		dir[PF_ZERO] = (**f == '0') ? 1 : dir[PF_ZERO];
+		dir[PF_LEFT] = (**f == '-') ? 1 : dir[PF_LEFT];
+		dir[PF_PLUS] = (**f == '+') ? 1 : dir[PF_PLUS];
+		dir[PF_SPACE] = (**f == ' ') ? 1 : dir[PF_SPACE];
+		dir[PF_S] = (**f == '#') ? 1 : dir[PF_S];
+		if (**f == '.' && (*f)++ && (dir[PF_PREC] = 0) == 0)
 		{
 			if (**f >= '0' && **f <= '9')
-				dir[PRINTF_PREC] = skip_atoi(f);
-			else if (**f == '*' && (*f)++ && (dir[PRINTF_PREC] = va_arg(ap, int)) < 0)
-				dir[PRINTF_PREC] = -dir[PRINTF_PREC];
+				dir[PF_PREC] = skip_atoi(f);
+			else if (**f == '*' && (*f)++ &&
+			(dir[PF_PREC] = va_arg(ap, int)) < 0)
+				dir[PF_PREC] = -dir[PF_PREC];
 		}
 		else if (**f >= '1' && **f <= '9')
-			dir[PRINTF_WIDTH] = skip_atoi(f);
-		else if (**f == '*' && (*f)++ && (dir[PRINTF_WIDTH] = va_arg(ap, int)) < 0)
-		{
-			dir[PRINTF_LEFT] = 1;
-			dir[PRINTF_WIDTH] = -dir[PRINTF_WIDTH];
-		}
+			dir[PF_WIDTH] = skip_atoi(f);
+		else if (**f == '*' && (*f)++ && (dir[PF_WIDTH] = va_arg(ap, int)))
+			(dir[PF_WIDTH] < 0 && (dir[PF_LEFT] = 1)) ?
+			dir[PF_WIDTH] = -dir[PF_WIDTH] : 0;
 		else
 			(*f)++;
 	}
@@ -83,11 +82,11 @@ static int	ft_cont(char *buf, const char **format, va_list ap, int i)
 				dir[--j] = -1;
 			ft_initdir(dir, format, ap);
 			ft_specifier(dir, format, i, ap);
-			if (dir[PRINTF_SPEC] < 1 || dir[PRINTF_SPEC] == 8)
+			if (dir[PF_SPEC] < 1 || dir[PF_SPEC] == 8)
 				i += to_c(&buf[i], dir, ap);
-			else if (dir[PRINTF_SPEC] == 1)
+			else if (dir[PF_SPEC] == 1)
 				i += to_s(&buf[i], dir, ap);
-			else if (dir[PRINTF_SPEC] > 1 && dir[PRINTF_SPEC] < 9)
+			else if (dir[PF_SPEC] > 1 && dir[PF_SPEC] < 9)
 				i += to_nbr(&buf[i], dir, ap);
 		}
 		if (*(*format - 1) == '\n')

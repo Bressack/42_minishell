@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 10:30:40 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 11:44:20 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,11 @@ int		execute(t_node *cmd)
 					break ;
 	}
 	if (assign == ac)
-		return (export(ac, av));
+		return (export(ac, av, 1));
 	ac -= assign;
 	j = -1;
 	while (++j < BUILTINS)
 		if (!ft_strcmp(av[assign], g_builtins[j].name))
-			return (g_builtins[j].f(ac, &av[assign]));
+			return (g_builtins[j].f(ac, &av[assign], cmd->stdout));
 	return (launch(cmd, &av[assign]));
 }

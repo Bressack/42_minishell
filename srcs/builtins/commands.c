@@ -6,13 +6,13 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 21:21:42 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 11:47:43 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int		xecho(int ac, char **args)
+int		xecho(int ac, char **args, int out)
 {
 	int n;
 	int i;
@@ -24,14 +24,18 @@ int		xecho(int ac, char **args)
 		while (ft_strcmp(args[i], "-n") == 0 && i++ > 0)
 			n = 1;
 		while (i < ac)
-			ft_dprintf(1, "%s ", args[i++]);
+		{
+			ft_dprintf(out, "%s", args[i++]);
+			if (i < ac)
+				ft_dprintf(out, " ");
+		}
 	}
 	if (n != 1)
-		ft_dprintf(1, "\n");
+		ft_dprintf(out, "\n");
 	return (0);
 }
 
-int		xpwd(int ac, char **args)
+int		xpwd(int ac, char **args, int out)
 {
 	char	cwd[LINE_MAX];
 
@@ -39,14 +43,15 @@ int		xpwd(int ac, char **args)
 	(void)args;
 	if (!(getcwd(cwd, LINE_MAX)))
 		return (errno);
-	ft_dprintf(1, "%s\n", cwd);
+	ft_dprintf(out, "%s\n", cwd);
 	return (0);
 }
 
-int		xexit(int ac, char **args)
+int		xexit(int ac, char **args, int out)
 {
 	int code;
 
+	(void)out;
 	ft_dprintf(1, "exit\n");
 	code = g_exit; // set as LAST
 	if (ac > 1 && !ft_isnum(args[1]) && (code = 2))
@@ -58,13 +63,14 @@ int		xexit(int ac, char **args)
 	exit(code);
 }
 
-int		xcd(int ac, char **args)
+int		xcd(int ac, char **args, int out)
 {
 	t_env	*change;
 	char	*tmp;
 	char	*tmp2;
 	char	dir[LINE_MAX];
 
+	(void)out;
 	change = ret_env("OLDPWD");
 	tmp = (change) ? change->value : NULL;
 	if (ac > 2 && bi_error(args[0], NULL, "too many arguments", 0))
