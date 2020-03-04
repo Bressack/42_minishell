@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 22:04:10 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 10:30:40 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,8 @@ int		launch(t_node *cmd, char **av)
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0) //child
 	{
-		dup2(cmd->fd[ISTDOUT][PIPE_WRITE], cmd->stdio[ISTDIN]);
-		dup2(cmd->fd[ISTDIN][PIPE_READ], cmd->stdio[ISTDOUT]);
-		// cmd->stdio[ISTDOUT] != ISTDOUT ? close(ISTDOUT) : 0;
-		// cmd->stdio[ISTDIN] != ISTDIN ? close(ISTDIN) : 0;
+		dup2(cmd->stdout, STDOUT);
+		dup2(cmd->stdin, STDIN);
 		if (path)
 			execve(path, av, environ);
 		if ((errno == 14 || errno == 22) && bi_error(av[0], NULL, "command not found", 0))

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/03 17:08:14 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 11:08:15 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,45 +18,51 @@ void	asti_error(char *name, int opt)
 		printf("minishell: %s: %s\n", name, strerror(errno));
 }
 
-int		node__pipe_handle(t_node *cmd_sep)
+int		node__pipe_handle(t_node *ppln)
 {
-	if (pipe(ppln->pipeline) == -1)
+	int	sloc;
+
+	if (ppln->parent && ppln->parent->type == SEP && ppln->parent->sep->type == PIPE)
+		ppln->right->stdout = ppln->parent->stdin;
+	if (pipe(ppln->pipe_ltor) == -1)
 		return (-1);
-	ppln->left.stdout = ppln->pipeline[PIPE_WRITE];
-	ppln->right.stdin = ppln->pipeline[PIPE_READ];
-	if (!(ppln->sloc = child(&ppln->left)))
+	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
+	ppln->right->stdin = ppln->pipe_ltor[PIPE_READ];
+	if (!(sloc = node__controller(ppln->left)))
 	{
-		close(ppln->left.stdout);
-		ppln->sloc = child(&ppln->right);
+		close(ppln->left->stdout);
+		sloc = node__controller(ppln->right);
 	}
-	return (ppln->sloc);
+	close(ppln->right->stdin);
+	return (sloc);
 }
 
 int		node__dbl_and_handle(t_node *cmd_sep)
 {
-	int	ret;
+	int	sloc;
 
-	ret = node__controller(cmd_sep->left);
-	if (ret == ASTI_SUCCESS)
-		ret = node__controller(cmd_sep->right);
-	return (ret);
+	sloc = node__controller(cmd_sep->left);
+	if (sloc == ASTI_SUCCESS)
+		sloc = node__controller(cmd_sep->right);
+	return (sloc);
 }
 int		node__dbl_or_handle(t_node *cmd_sep)
 {
-	int	ret;
+	int	sloc;
 
-	ret = node__controller(cmd_sep->left);
-	if (ret != ASTI_SUCCESS)
-		ret = node__controller(cmd_sep->right);
-	return (ret);
+	sloc = node__controller(cmd_sep->left);
+	if (sloc != ASTI_SUCCESS)
+		sloc = node__controller(cmd_sep->right);
+	return (sloc);
 }
 int		node__semicon_handle(t_node *cmd_sep)
 {
-	int	ret;
+	int	sloc;
 
-	ret = node__controller(cmd_sep->left);
-	ret = node__controller(cmd_sep->right);
-	return (ret);
+	sloc = node__controller(cmd_sep->left);
+	if (cmd_sep->right)
+		sloc = node__controller(cmd_sep->right);
+	return (sloc);
 }
 
 int		node__sep_controller(t_node *sep)
@@ -86,23 +92,23 @@ void	redir_handle(t_node *cmd)
 	{
 		if (tmp_redir->type == REDIR_IN)
 		{
-			(cmd->fd[STDIN][PIPE_READ] > 2) ? close(cmd->fd[STDIN][PIPE_READ]) : 0;
-			if ((cmd->fd[STDIN][PIPE_READ] = open(tmp_file->value,
+			(cmd->stdin > 2) ? close(cmd->stdin) : 0;
+			if ((cmd->stdin = open(tmp_file->value,
 				O_RDWR, 0644)) == -1)
 				asti_error(tmp_file->value, OPEN_ERROR);
 		}
 		else if (tmp_redir->type == REDIR_OUT)
 		{
-			(cmd->fd[STDOUT][PIPE_WRITE] > 2) ? close(cmd->fd[STDOUT][PIPE_WRITE]) : 0;
-			if ((cmd->fd[STDOUT][PIPE_WRITE] = open(tmp_file->value,
-				O_TRUNC | O_CREAT | O_RDWR)) == -1)
+			(cmd->stdout > 2) ? close(cmd->stdout) : 0;
+			if ((cmd->stdout = open(tmp_file->value,
+				O_TRUNC | O_CREAT | O_RDWR, 0644)) == -1)
 				asti_error(tmp_file->value, OPEN_ERROR);
 		}
 		else if (tmp_redir->type == DREDIR_OUT)
 		{
-			(cmd->fd[STDOUT][PIPE_WRITE] > 2) ? close(cmd->fd[STDOUT][PIPE_WRITE]) : 0;
-			if ((cmd->fd[STDOUT][PIPE_WRITE] = open(tmp_file->value,
-				O_CREAT | O_RDWR)) == -1)
+			(cmd->stdout > 2) ? close(cmd->stdout) : 0;
+			if ((cmd->stdout = open(tmp_file->value,
+				O_CREAT | O_RDWR, 0644)) == -1)
 				asti_error(tmp_file->value, OPEN_ERROR);
 		}
 		tmp_redir = tmp_redir->next;
@@ -123,7 +129,7 @@ int		node__controller(t_node *node)
 	else if (node->type == CMD)
 		return (node__cmd_controller(node));
 	else
-		return (FAILURE);
+		return (ASTI_SUCCESS);
 }
 
 int		ast_interpreter(t_node *ast)

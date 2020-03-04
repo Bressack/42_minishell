@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 17:25:26 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/03 17:09:45 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/04 10:12:03 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,22 +65,38 @@ int		pipe_handle(t_pipe *ppln)
 	return (ppln->sloc);
 }
 
-a | b | c | d
+[ a | b | c | d ]
 
-           |
-         /   \
-       |      d
-     /   \
-   |      c
- /   \
-a     b
+
+            [1]
+           /   \
+        [2]     [d]
+       /   \
+    [3]     [c]
+   /   \
+[a]     [b]
+
+
++---+----+----+----+
+|   |READ|WRIT|WRIT|
+|   | 0  | 1  | 2  |
+|   | IN | OUT| ERR|
+|[1]|[--]|[--]|[--]|
+|[2]|[  ]|[  ]|[--]|
+|[d]|[c ]|[OU]|[--]|
+|[3]|[  ]|[  ]|[--]|
+|[c]|[b ]|[d ]|[--]|
+|[a]|[IN]|[b ]|[--]|
+|[b]|[a ]|[c ]|[--]|
++---+----+----+----+
+
 
 int		main(int ac, char **av, char **env)
 {
 	(void)ac, (void)av;
 
 	char			*av_ls[3] = {"/bin/ls", "-l", NULL};
-	char			*av_av[3] = {"/bin/cat", "-e", NULL};
+	char			*av_cat[3] = {"/bin/cat", "-e", NULL};
 	t_pipe			ppln =
 	{
 		/*sloc     = */ 0,
@@ -98,7 +114,7 @@ int		main(int ac, char **av, char **env)
 		{
 			/*pid      = */ 0,
 			/*sloc     = */ 0,
-			/*av       = */ (char **)&av_av,
+			/*av       = */ (char **)&av_cat,
 			/*env      = */ env,
 			/*stdin    = */ STDIN,
 			/*stdout   = */ STDOUT
