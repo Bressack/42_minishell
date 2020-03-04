@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 11:44:20 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 14:39:00 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,13 @@ int		launch(t_node *cmd, char **av)
 	char	**environ;
 
 	environ = env_to_arr(g_env);
-	path = get_path(av[0]);
+	if (!(path = get_path(av[0])))
+	{
+		mfree(environ);
+		bi_error(av[0], NULL, "command not executable", 0);
+		// bi_error(av[0], NULL, "command not found", 0);
+		return (127);
+	}
 	sloc = 0;
 	pid = fork();
 	signal(SIGINT, sig_exec);
@@ -81,12 +87,9 @@ int		launch(t_node *cmd, char **av)
 	{
 		dup2(cmd->stdout, STDOUT);
 		dup2(cmd->stdin, STDIN);
-		if (path)
-			execve(path, av, environ);
-		if ((errno == 14 || errno == 22) && bi_error(av[0], NULL, "command not found", 0))
-			exit (127);
+		execve(path, av, environ);
 		bi_error(av[0], NULL, strerror(errno), 0);
-		exit(126);
+		exit(errno); // errno ?
 	}
 	else if (pid < 0) //error with fork
 		bi_error(av[0], NULL, strerror(errno), 0);

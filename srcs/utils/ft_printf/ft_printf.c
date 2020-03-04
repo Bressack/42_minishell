@@ -6,25 +6,16 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 10:37:08 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 12:25:00 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 12:57:51 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_printf.h>
 
-static int	ft_iscspec(const char c)
+static void	ft_specifier(int *dir, const char **format, int i, va_list ap) //DID A CHANGE TO MERGE FUNCTIONS SO HOPE IT STILL WORKS HAHA
 {
-	int		i;
+	int		c;
 
-	i = -1;
-	while (C_SPEC[++i])
-		if (C_SPEC[i] == c)
-			return (i);
-	return (-1);
-}
-
-static void	ft_specifier(int *dir, const char **format, int i, va_list ap)
-{
 	while (**format == 'h' || **format == 'l')
 	{
 		if (**format == 'l')
@@ -33,7 +24,13 @@ static void	ft_specifier(int *dir, const char **format, int i, va_list ap)
 			dir[PF_SHORT]++;
 		(*format)++;
 	}
-	(dir[PF_SPEC] = ft_iscspec(**format)) >= 0 ? (*format)++ : 0;
+	c = -1;
+	while (C_SPEC[++c])
+		if (C_SPEC[c] == **format)
+			break ;
+	if (!C_SPEC[c])
+		c = -1;
+	(dir[PF_SPEC] = c) >= 0 ? (*format)++ : 0;
 	if (dir[PF_SPEC] == 9)
 		to_n(i, dir, ap);
 }
