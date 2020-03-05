@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 10:32:31 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 16:01:07 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 11:29:50 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int		bi_error(char *ft, char *arg, char *mess, int f)
 	else
 	{
 		if (f == 127)
+			ft_dprintf(2, "No such file or directory\n");
+		else if (f == 128 && f--)
 			ft_dprintf(2, "command not found\n");
 		else if (f == 126)
 			ft_dprintf(2, "Permission denied\n");

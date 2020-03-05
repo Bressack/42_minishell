@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 21:07:20 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 11:47:21 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	**env_to_arr(t_env *trav)
 		return (NULL);
 	trav = g_env;
 	size = 0;
-	while (trav && size > -1)
+	while (trav)
 	{
 		if (trav->export && (env[size] =
 		(char *)mmalloc(ft_strlen(trav->name) + ft_strlen(trav->value) + 1)))
@@ -133,4 +133,48 @@ int		execute(t_node *cmd)
 		if (!ft_strcmp(av[assign], g_builtins[j].name))
 			return (g_builtins[j].f(ac, &av[assign], cmd->stdout));
 	return (launch(cmd, &av[assign]));
+}
+
+int		execute_pipe(char **a1, char **a2)
+{
+	int		pipefd[2];
+	pid_t	p[2];
+	char	**environ;
+	char	*path[2];
+
+	environ = env_to_arr(g_env);
+	if (pipe(pipefd) < 0)
+		return (bi_error("pipe", NULL, "failed", 0));
+	if (!(path[0] = get_path(a1[0], &p[0])))
+		bi_error(a1[0], NULL, NULL, p[0]);
+	else if ((p[0] = fork()) < 0)
+		return (bi_error("fork", NULL, "failed", 0));
+	if (path[0] && p[0] == 0)
+	{
+		close(pipefd[0]);
+		dup2(pipefd[1], 1);
+		close(pipefd[1]);
+		execve(path, a1, environ);
+		bi_error(a1[0], NULL, strerror(errno), 0);
+		exit(errno);
+	}
+	if (!(path[1] = get_path(a2[0], &p[1])))
+		bi_error(a1[0], NULL, NULL, p[1]);
+	else if ((p[1] = fork()) < 0)
+		return (bi_error("fork", NULL, "failed", 0));
+	if (path[1] && p[1] == 0)
+	{
+		close(pipefd[1]);
+		dup2(pipefd[0], 0);
+		close(pipefd[0]);
+		execve(path, a2, environ);
+		bi_error(a2[0], NULL, strerror(errno), 0);
+		exit(errno);
+	}
+	wait();
+	wait();
+	mfree(environ);
+	mfree(path[0]);
+	mfree(path[1]);
+	return (WEXITSTATUS(p[1]));
 }

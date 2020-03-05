@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 15:06:47 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 11:41:45 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 22:44:12 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*ret_envval(char *name)
 	return (NULL);
 }
 
-void	set_env(t_env *e, char *env)
+int		set_env(t_env *e, char *env)
 {
 	int		i;
 	int		c;
@@ -78,8 +78,10 @@ void	set_env(t_env *e, char *env)
 	i = 0;
 	while (env && env[i] && env[i] != '=')
 		i++;
+	if (!env || env[i] != '=')
+		return (0);
 	if (!(e->name = (char *)mmalloc(i + 1)))
-		return ;
+		return (0);
 	i = -1;
 	while (env && env[++i] && env[i] != '=')
 		e->name[i] = env[i];
@@ -87,11 +89,12 @@ void	set_env(t_env *e, char *env)
 	while (env && env[i + c])
 		c++;
 	if (!(e->value = (char *)mmalloc(c + 1)))
-		return ;
+		return (0);
 	c = 0;
 	while (env && env[++i])
 		e->value[c++] = env[i];
 	e->export = 1;
+	return (1);
 }
 
 /*
@@ -113,11 +116,15 @@ void	get_env(int ac, char **av, char **env)
 	{
 		if (!(new = (t_env *)mmalloc(sizeof(t_env))))
 			break ;
-		set_env(new, env[i]);
-		if (g_env == NULL && (new->next = NULL) == NULL)
-			g_env = new;
+		if ((set_env(new, env[i])))
+		{
+				if (g_env == NULL && (new->next = NULL) == NULL)
+				g_env = new;
+			else
+				prev->next = new;
+			prev = new;
+		}
 		else
-			prev->next = new;
-		prev = new;
+			mfree(new);
 	}
 }
