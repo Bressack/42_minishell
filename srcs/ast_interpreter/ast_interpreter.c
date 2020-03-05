@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 02:57:00 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 18:08:02 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int		asti_error(char *name, int opt)
 {
 	if (opt == ERR_OPEN)
-		printf("minishell: %s: %s\n", name, strerror(errno));
+		ft_dprintf(2, "minishell: %s: %s\n", name, strerror(errno));
 	else if (opt == ERR_PIPE)
-		printf("minishell: %s\n", strerror(errno));
+		ft_dprintf(2, "minishell: %s\n", strerror(errno));
 		return (ERROR);
 }
 
@@ -62,16 +62,17 @@ int		node__waitnclose(int pid, int opt, int *sloc)
 	return (first);
 }
 
-// [ a | b | c | d ]
+// [ ls | cat | head | wc ]
 //
-//             [|]
-//            /   \
-//         [|]     {d}
-//        /   \
-//     [|]     {c}
-//    /   \
-// {a}     {b}
+//               I[|]O
+//              /     \
+//           I[|]O --> I{wc}O
+//          /     \
+//       I[|]O --> I{head}O
+//      /     \
+// I{ls}O --> I{cat}O
 //
+// ;
 
 int		node__parent_ispipe(t_node *node)
 {
@@ -81,22 +82,27 @@ int		node__parent_ispipe(t_node *node)
 int		node__pipe_handle(t_node *ppln)
 {
 	int	sloc;
-	int	first;
+	// int	first;
 
-	if (pipe(ppln->pipe) == -1)
+	if (pipe(ppln->pipe_ltor) == -1)
 		return (asti_error(NULL, ERR_PIPE));
-	if (node__parent_ispipe(ppln->parent) && ppln->parent->right)
-		ppln->parent->right->stdin = ppln->right->stdout;
-	if (!node__parent_ispipe(ppln->parent))
-		ppln->left->stdin = 0;
-	ppln->left->stdout = ppln->pipe[PIPE_WRITE];
-	ppln->right->stdin = ppln->pipe[PIPE_READ];
-	node__controller(ppln->left);
-	first = node__waitnclose(ppln->left->pid, ADD, &sloc);
-	node__controller(ppln->right);
-	node__waitnclose(ppln->right->pid, ADD, &sloc);
-	if (first == 1)
-		node__waitnclose(0, CLOSE, &sloc);
+	ppln->left->stdout != STDOUT ? close(ppln->left->stdout) : 0;
+	ppln->right->stdin != STDIN ? close(ppln->right->stdin) : 0;
+	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
+	ppln->right->stdin = ppln->pipe_ltor[PIPE_READ];
+	ppln->right->stdout = ppln->stdout;
+	sloc = node__controller(ppln->left);
+	close(ppln->pipe_ltor[PIPE_WRITE]);
+	// first = node__waitnclose(ppln->left->pid, ADD, &sloc);
+	sloc = node__controller(ppln->right);
+	close(ppln->pipe_ltor[PIPE_READ]);
+	// if (printf(TEST), ppln->left->pid && waitpid(ppln->left->pid, &sloc, WUNTRACED) == -1)
+	// 	asti_error("insert_cmd_name_here", ERR_PIPE);
+	// if (printf(TEST), ppln->right->pid && waitpid(ppln->right->pid, &sloc, WUNTRACED) == -1)
+	// 	asti_error("insert_cmd_name_here", ERR_PIPE);
+	// node__waitnclose(ppln->right->pid, ADD, &sloc);
+	// if (first == 1)
+		// node__waitnclose(0, CLOSE, &sloc);
 	return (sloc);
 }
 
@@ -169,21 +175,21 @@ int		redir_handle(t_node *cmd)
 	{
 		if (tmp_redir->type == REDIR_IN)
 		{
-			(cmd->stdin > 2) ? close(cmd->stdin) : 0;
+			(cmd->stdin != STDIN) ? close(cmd->stdin) : 0;
 			if ((cmd->stdin = open(tmp_file->value,
 				O_RDWR, 0644)) == -1)
 				return (asti_error(tmp_file->value, ERR_OPEN));
 		}
 		else if (tmp_redir->type == REDIR_OUT)
 		{
-			(cmd->stdout > 2) ? close(cmd->stdout) : 0;
+			(cmd->stdout != STDOUT) ? close(cmd->stdout) : 0;
 			if ((cmd->stdout = open(tmp_file->value,
 				O_TRUNC | O_CREAT | O_RDWR, 0644)) == -1)
 				return (asti_error(tmp_file->value, ERR_OPEN));
 		}
 		else if (tmp_redir->type == DREDIR_OUT)
 		{
-			(cmd->stdout > 2) ? close(cmd->stdout) : 0;
+			(cmd->stdout != STDOUT) ? close(cmd->stdout) : 0;
 			if ((cmd->stdout = open(tmp_file->value,
 				O_CREAT | O_RDWR, 0644)) == -1)
 					return (asti_error(tmp_file->value, ERR_OPEN));

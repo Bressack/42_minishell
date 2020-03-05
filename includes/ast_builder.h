@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:37:21 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 02:41:28 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 18:16:15 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef struct		s_node
 ** 	sep data
 */
 	t_token			*sep;
-	int				pipe[2]; // pipe left to right
+	int				pipe_ltor[2]; // pipe left to right
 }					t_node;
 /*
 ** *****************************************************************************

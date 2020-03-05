@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/04 22:00:08 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 10:35:31 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,18 @@ void			lexer__del(t_lexer **lex)
 int				lexer__error(int opt, t_lexer *lex)
 {
 	if (opt == ERR_UNEXPECTED_EOT)
-		printf("minishell: unexpected \'end of line\' after \'%c\'\n",
+		ft_dprintf(2, "minishell: unexpected \'end of line\' after \'%c\'\n",
 		lex->prev_char);
 	else if (opt == ERR_SGLAND_NOT_HANDLED)
-		printf("minishell: functionality not supported \'%c\'\n",
+		ft_dprintf(2, "minishell: functionality not supported \'%c\'\n",
 		lex->current_char);
 	else if (opt == ERR_GNL)
 	{
-		printf("minishell: unable to read on stdout\n");
+		ft_dprintf(2, "minishell: unable to read on stdout\n");
 		exit(0); // if i put that here, I do like bash
 	}
 	else
-		printf("minishell: invalid character \'%c\' (%#x)\n",
+		ft_dprintf(2, "minishell: invalid character \'%c\' (%#x)\n",
 			lex->current_char, lex->current_char);
 	return (ERROR);
 }

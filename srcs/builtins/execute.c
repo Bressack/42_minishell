@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 03:03:52 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 18:06:41 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int		launch(t_node *cmd, char **av)
 	pid = fork();
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
-	if (pid == 0) //child
+	if (pid == 0) // child
 	{
 		if (cmd->stdin != STDIN)
 		{
@@ -97,7 +97,9 @@ int		launch(t_node *cmd, char **av)
 		bi_error(av[0], NULL, strerror(errno), 0);
 		exit(errno); // errno ?
 	}
-	else if (pid < 0) //error with fork
+	else if (pid < 0) // error with fork
+		bi_error(av[0], NULL, strerror(errno), 0);
+	else if (waitpid(pid, &sloc, WUNTRACED) == -1)
 		bi_error(av[0], NULL, strerror(errno), 0);
 	cmd->pid = pid;
 	mfree(environ);
