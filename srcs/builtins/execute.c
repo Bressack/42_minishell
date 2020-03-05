@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 15:34:23 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 18:08:42 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ int		launch(t_node *cmd, char **av)
 		mfree(environ);
 		return (bi_error(av[0], NULL, NULL, sloc));
 	}
-	pid = fork();
+	if ((pid = fork()) < 0)
+		bi_error(av[0], NULL, strerror(errno), 0); // return ?
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0) //child
@@ -86,26 +87,20 @@ int		launch(t_node *cmd, char **av)
 		dup2(cmd->stdin, STDIN);
 		execve(path, av, environ);
 		mfree(path);
-		// return (-1);
-		// bi_error(av[0], NULL, strerror(errno), 0);
 		exit(errno); // errno ?
 	}
-	else if (pid < 0) //error with fork
-		bi_error(av[0], NULL, strerror(errno), 0);
-	else //parent
-		wpid = waitpid(pid, &sloc, WUNTRACED);
+	wpid = waitpid(pid, &sloc, WUNTRACED);
 	mfree(environ);
 	mfree(path);
 	return (WEXITSTATUS(sloc));
 }
 
 /*
-** EXECUTE FIRST CALLS EXPAND FUNCTION AND THEN CONVERTS THE EXPANDED ARG LIST
-** TO CHAR ARRAY. AFTER THAT IT CHECKS IF ALL ARGS ARE ASSIGNMENTS IF SO IT
-** CALLS EXPORT. IF NOT IT SKIPS POSSIBLE FIRST ASSIGNMENTS AND CHECKS IF FIRST
-** NON-ASS IS A BUILT-IN, OTHERWISE IT TRIES TO LAUNCH IT.
+** CHECK COMMAND:
+** IF ASSIGNMENTS (ALL) ---> SETS TYPE TO -1,  (NOT ALL) ---> SKIPS AND FREES THE ONES IN BEGINNING
+** ELSE IF BUILTINS ---> SETS TYPE TO THE CORRESPONDING NUMBER IN ARRAY OF BUILTINS
+** ELSE (COMMAND) ---> SETS TYPE TO -2
 */
-
 char	**check_cmd(t_node *cmd, int *ac, int *type)
 {
 	int		i;
@@ -117,14 +112,14 @@ char	**check_cmd(t_node *cmd, int *ac, int *type)
 	av = convert_to_arr(cmd->av, *ac);
 	j = -1;
 	assign = 0;
-	while (++j < ac && assign == j && (i = -1) == -1)
+	while (++j < *ac && assign == j && (i = -1) == -1)
 	{
 		if (is_valid_variable(av[j], 1))
 			while (av[j][++i])
 				if (av[j][i] == '=' && ++assign)
 					break ;
 	}
-	if (assign == ac && (*type = -1))
+	if (assign == *ac && (*type = -1))
 		return (av);
 	j = -1;
 	while (++j < assign) // else freee ?
@@ -134,11 +129,11 @@ char	**check_cmd(t_node *cmd, int *ac, int *type)
 	while (++j < BUILTINS)
 		if (!ft_strcmp(av[assign], g_builtins[j].name) && (*type = j) > -1)
 			return (&av[assign]);
-	*type = -1;
+	*type = -2;
 	return (&av[assign]);
 }
 
-int		execute(t_node *cmd)
+int		execute_simple(t_node *cmd) // EXECUTION OF SIMPLE COMMAND, MEANING --NO-- FORK FOR ASSIGNMENTS && BUILTINS
 {
 	char	**av;
 	int		ac;
@@ -146,68 +141,115 @@ int		execute(t_node *cmd)
 
 	av = check_cmd(cmd, &ac, &type);
 	if (type >= 0)
-		g_builtins[j].f(ac, &av[assign], cmd->stdout);
+		return (g_builtins[type].f(ac, av, cmd->stdout));
 	else if (type == -1)
-		export(ac, av, 1);
-	else
-		launch(cmd, &av[assign]);
+		return (export(ac, av, 1));
+	return (launch(cmd, av));
 }
 
-int		execute2(t_node *cmd)
+int		execute_nofork(t_node *cmd) //USED IF FORKING IS DONE IN PIPE FUNCTION
 {
 	char	**av;
 	int		ac;
 	int		type;
-
-	av = check_cmd(cmd, &ac, &type);
-	if (type >= 0)
-		g_builtins[j].f(ac, &av[assign], cmd->stdout);
-	else if (type == -1)
-		export(ac, av, 1);
-	else
-		launch(cmd, &av[assign]);
-}
-
-int		execute_pipe(char *t_node)
-{
-	int		pipefd[2];
-	pid_t	p[2];
+	char	*path;
+	int		sig;
 	char	**environ;
-	char	*path[2];
 
+	av = check_cmd(cmd, &ac, &type);
 	environ = env_to_arr(g_env);
-	if (pipe(pipefd) < 0)
-		return (bi_error("pipe", NULL, "failed", 0));
-	if (!(path[0] = get_path(a1[0], &p[0])))
-		bi_error(a1[0], NULL, NULL, p[0]);
-	else if ((p[0] = fork()) < 0)
-		return (bi_error("fork", NULL, "failed", 0));
-	if (path[0] && p[0] == 0)
+	if (type >= 0)
+		return (g_builtins[type].f(ac, av, cmd->stdout));
+	else if (type == -1)
+		return (export(ac, av, 1));
+	else
 	{
-		close(pipefd[0]);
-		dup2(pipefd[1], 1);
-		close(pipefd[1]);
-		execute2(path, a1, environ);
-		bi_error(a1[0], NULL, strerror(errno), 0);
+		if (!(path = get_path(av[0], &sig)))
+			return (bi_error(av[0], NULL, NULL, sig));
+		execve(path, av, environ);
+		bi_error(av[0], NULL, strerror(errno), 0);
 		exit(errno);
 	}
-	if (!(path[1] = get_path(a2[0], &p[1])))
-		bi_error(a1[0], NULL, NULL, p[1]);
-	else if ((p[1] = fork()) < 0)
-		return (bi_error("fork", NULL, "failed", 0));
-	if (path[1] && p[1] == 0)
-	{
-		close(pipefd[1]);
-		dup2(pipefd[0], 0);
-		close(pipefd[0]);
-		execve(path, a2, environ);
-		bi_error(a2[0], NULL, strerror(errno), 0);
-		exit(errno);
-	}
-	wait();
-	wait();
-	mfree(environ);
-	mfree(path[0]);
-	mfree(path[1]);
-	return (WEXITSTATUS(p[1]));
 }
+
+int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCTION
+{
+	char	**av;
+	int		ac;
+	int		type;
+	char	*path;
+	int		p;
+	int		ret;
+	char	**environ;
+
+	if ((p = fork()) < 0)
+		return (bi_error("fork", NULL, "failed", 0));
+	av = check_cmd(cmd, &ac, &type);
+	signal(SIGINT, sig_exec);
+	signal(SIGQUIT, sig_exec);
+	if (p == 0)
+	{
+		if (type >= 0)
+			ret = g_builtins[type].f(ac, av, cmd->stdout);
+		else if (type == -1)
+			ret = export(ac, av, 1);
+		else
+		{
+			dup2(cmd->stdout, STDOUT);
+			dup2(cmd->stdin, STDIN);
+			if (!(path = get_path(av[0], &type)))
+				exit (bi_error(av[0], NULL, NULL, type));
+			environ = env_to_arr(g_env);
+			execve(path, av, environ);
+			mfree(environ);
+			bi_error(av[0], NULL, strerror(errno), 0);
+			exit(errno);
+		}
+		exit (ret);
+	}
+	waitpid(p, &type, WUNTRACED);
+	return (WEXITSTATUS(type));
+}
+
+/*
+** int		execute_pipe(t_node *node) //EXAMPLE PSUEDO FOR PIPE FUNCTION W FORK
+** {
+** 	int		pipefd[2];
+** 	pid_t	p[2];
+** 	// char	**environ;
+** 	char	*path[2];
+** 	int		ret;
+**
+** 	signal(SIGINT, sig_exec);
+** 	signal(SIGQUIT, sig_exec);
+** 	// environ = env_to_arr(g_env);
+** 	if (pipe(pipefd) < 0)
+** 		return (bi_error("pipe", NULL, "failed", 0));
+** 	if ((p[0] = fork()) < 0)
+** 		return (bi_error("fork", NULL, "failed", 0));
+** 	if (path[0] && p[0] == 0)
+** 	{
+** 		close(pipefd[0]);
+** 		dup2(pipefd[1], 1);
+** 		close(pipefd[1]);
+** 		ret = execute_next_node(node->left);
+** 		exit (ret);
+** 	}
+** 	if ((p[1] = fork()) < 0)
+** 		return (bi_error("fork", NULL, "failed", 0));
+** 	if (path[1] && p[1] == 0)
+** 	{
+** 		close(pipefd[1]);
+** 		dup2(pipefd[0], 0);
+** 		close(pipefd[0]);
+** 		ret = execute_nofork(node->right);
+** 		exit (ret);
+** 	}
+** 	wait();
+** 	wait();
+** 	mfree(environ);
+** 	mfree(path[0]);
+** 	mfree(path[1]);
+** 	return (WEXITSTATUS(p[1]));
+** }
+*/
