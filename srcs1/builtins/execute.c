@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 15:34:23 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 11:47:21 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int		launch(t_node *cmd, char **av)
 	if (!(path = get_path(av[0], &sloc)))
 	{
 		mfree(environ);
+		// if (sloc == 125 && printf("%s\n", path))
+		// 	return (chdir(path));
 		return (bi_error(av[0], NULL, NULL, sloc));
 	}
 	pid = fork();
@@ -85,9 +87,7 @@ int		launch(t_node *cmd, char **av)
 		dup2(cmd->stdout, STDOUT);
 		dup2(cmd->stdin, STDIN);
 		execve(path, av, environ);
-		mfree(path);
-		// return (-1);
-		// bi_error(av[0], NULL, strerror(errno), 0);
+		bi_error(av[0], NULL, strerror(errno), 0);
 		exit(errno); // errno ?
 	}
 	else if (pid < 0) //error with fork
@@ -106,15 +106,16 @@ int		launch(t_node *cmd, char **av)
 ** NON-ASS IS A BUILT-IN, OTHERWISE IT TRIES TO LAUNCH IT.
 */
 
-char	**check_cmd(t_node *cmd, int *ac, int *type)
+int		execute(t_node *cmd)
 {
 	int		i;
 	int		j;
 	int		assign;
 	char	**av;
+	int		ac;
 
-	*ac = expand(&cmd->av);
-	av = convert_to_arr(cmd->av, *ac);
+	ac = expand(&cmd->av);
+	av = convert_to_arr(cmd->av, ac);
 	j = -1;
 	assign = 0;
 	while (++j < ac && assign == j && (i = -1) == -1)
@@ -124,51 +125,17 @@ char	**check_cmd(t_node *cmd, int *ac, int *type)
 				if (av[j][i] == '=' && ++assign)
 					break ;
 	}
-	if (assign == ac && (*type = -1))
-		return (av);
-	j = -1;
-	while (++j < assign) // else freee ?
-		free(av[j]);
+	if (assign == ac)
+		return (export(ac, av, 1));
 	ac -= assign;
 	j = -1;
 	while (++j < BUILTINS)
-		if (!ft_strcmp(av[assign], g_builtins[j].name) && (*type = j) > -1)
-			return (&av[assign]);
-	*type = -1;
-	return (&av[assign]);
+		if (!ft_strcmp(av[assign], g_builtins[j].name))
+			return (g_builtins[j].f(ac, &av[assign], cmd->stdout));
+	return (launch(cmd, &av[assign]));
 }
 
-int		execute(t_node *cmd)
-{
-	char	**av;
-	int		ac;
-	int		type;
-
-	av = check_cmd(cmd, &ac, &type);
-	if (type >= 0)
-		g_builtins[j].f(ac, &av[assign], cmd->stdout);
-	else if (type == -1)
-		export(ac, av, 1);
-	else
-		launch(cmd, &av[assign]);
-}
-
-int		execute2(t_node *cmd)
-{
-	char	**av;
-	int		ac;
-	int		type;
-
-	av = check_cmd(cmd, &ac, &type);
-	if (type >= 0)
-		g_builtins[j].f(ac, &av[assign], cmd->stdout);
-	else if (type == -1)
-		export(ac, av, 1);
-	else
-		launch(cmd, &av[assign]);
-}
-
-int		execute_pipe(char *t_node)
+int		execute_pipe(char **a1, char **a2)
 {
 	int		pipefd[2];
 	pid_t	p[2];
@@ -187,7 +154,7 @@ int		execute_pipe(char *t_node)
 		close(pipefd[0]);
 		dup2(pipefd[1], 1);
 		close(pipefd[1]);
-		execute2(path, a1, environ);
+		execve(path, a1, environ);
 		bi_error(a1[0], NULL, strerror(errno), 0);
 		exit(errno);
 	}

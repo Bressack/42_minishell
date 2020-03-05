@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute.c                                          :+:      :+:    :+:   */
+/*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 15:34:23 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 14:41:57 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int		launch(t_node *cmd, char **av)
 	if (!(path = get_path(av[0], &sloc)))
 	{
 		mfree(environ);
+		// if (sloc == 125 && printf("%s\n", path))
+		// 	return (chdir(path));
 		return (bi_error(av[0], NULL, NULL, sloc));
 	}
 	pid = fork();
@@ -106,15 +108,16 @@ int		launch(t_node *cmd, char **av)
 ** NON-ASS IS A BUILT-IN, OTHERWISE IT TRIES TO LAUNCH IT.
 */
 
-char	**check_cmd(t_node *cmd, int *ac, int *type)
+int		execute(t_node *cmd)
 {
 	int		i;
 	int		j;
 	int		assign;
 	char	**av;
+	int		ac;
 
-	*ac = expand(&cmd->av);
-	av = convert_to_arr(cmd->av, *ac);
+	ac = expand(&cmd->av);
+	av = convert_to_arr(cmd->av, ac);
 	j = -1;
 	assign = 0;
 	while (++j < ac && assign == j && (i = -1) == -1)
@@ -124,90 +127,12 @@ char	**check_cmd(t_node *cmd, int *ac, int *type)
 				if (av[j][i] == '=' && ++assign)
 					break ;
 	}
-	if (assign == ac && (*type = -1))
-		return (av);
-	j = -1;
-	while (++j < assign) // else freee ?
-		free(av[j]);
+	if (assign == ac)
+		return (export(ac, av, 1));
 	ac -= assign;
 	j = -1;
 	while (++j < BUILTINS)
-		if (!ft_strcmp(av[assign], g_builtins[j].name) && (*type = j) > -1)
-			return (&av[assign]);
-	*type = -1;
-	return (&av[assign]);
-}
-
-int		execute(t_node *cmd)
-{
-	char	**av;
-	int		ac;
-	int		type;
-
-	av = check_cmd(cmd, &ac, &type);
-	if (type >= 0)
-		g_builtins[j].f(ac, &av[assign], cmd->stdout);
-	else if (type == -1)
-		export(ac, av, 1);
-	else
-		launch(cmd, &av[assign]);
-}
-
-int		execute2(t_node *cmd)
-{
-	char	**av;
-	int		ac;
-	int		type;
-
-	av = check_cmd(cmd, &ac, &type);
-	if (type >= 0)
-		g_builtins[j].f(ac, &av[assign], cmd->stdout);
-	else if (type == -1)
-		export(ac, av, 1);
-	else
-		launch(cmd, &av[assign]);
-}
-
-int		execute_pipe(char *t_node)
-{
-	int		pipefd[2];
-	pid_t	p[2];
-	char	**environ;
-	char	*path[2];
-
-	environ = env_to_arr(g_env);
-	if (pipe(pipefd) < 0)
-		return (bi_error("pipe", NULL, "failed", 0));
-	if (!(path[0] = get_path(a1[0], &p[0])))
-		bi_error(a1[0], NULL, NULL, p[0]);
-	else if ((p[0] = fork()) < 0)
-		return (bi_error("fork", NULL, "failed", 0));
-	if (path[0] && p[0] == 0)
-	{
-		close(pipefd[0]);
-		dup2(pipefd[1], 1);
-		close(pipefd[1]);
-		execute2(path, a1, environ);
-		bi_error(a1[0], NULL, strerror(errno), 0);
-		exit(errno);
-	}
-	if (!(path[1] = get_path(a2[0], &p[1])))
-		bi_error(a1[0], NULL, NULL, p[1]);
-	else if ((p[1] = fork()) < 0)
-		return (bi_error("fork", NULL, "failed", 0));
-	if (path[1] && p[1] == 0)
-	{
-		close(pipefd[1]);
-		dup2(pipefd[0], 0);
-		close(pipefd[0]);
-		execve(path, a2, environ);
-		bi_error(a2[0], NULL, strerror(errno), 0);
-		exit(errno);
-	}
-	wait();
-	wait();
-	mfree(environ);
-	mfree(path[0]);
-	mfree(path[1]);
-	return (WEXITSTATUS(p[1]));
+		if (!ft_strcmp(av[assign], g_builtins[j].name))
+			return (g_builtins[j].f(ac, &av[assign], cmd->stdout));
+	return (launch(cmd, &av[assign]));
 }

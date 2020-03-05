@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 14:39:16 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 11:28:21 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,7 @@ int		check_stat(char *path, int *err, int f)
 	ret = stat(path, &buf);
 	if (ret < 0)
 		*err = 127 + f;
-	// else if (!(buf.st_mode & S_IXUSR) || !(S_IEXEC & buf.st_mode) || !(S_ISREG(buf.st_mode)))
-	// 	*err = 126;
-	else if (!(buf.st_mode & S_IXUSR))
+	else if ((buf.st_mode & S_IXUSR) != S_IXUSR)
 		*err = 126;
 	else if (S_ISDIR(buf.st_mode))
 		*err = 125;
