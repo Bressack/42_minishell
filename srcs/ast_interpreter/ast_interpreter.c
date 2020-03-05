@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 18:08:02 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 18:21:26 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,8 @@ int		node__cmd_controller(t_node *cmd)
 {
 	if (redir_handle(cmd) == ERROR)
 		return (ERROR);
-	g_exit = execute(cmd);
+	g_exit = execute_fork(cmd);
+	// g_exit = execute(cmd);
 	return (g_exit);
 }
 
