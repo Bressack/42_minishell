@@ -6,22 +6,24 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 02:55:41 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 03:04:08 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
 /*
-** ALLOWED CHARACTERS TO FOLLOW A $. MIGHT BE BETTER CHANGING TO JUST
-** ALLOWED CHARACTERS IN VARIABLE + ? <---
+** F==0: ALLOWED CHARACTERS TO FOLLOW A $. F==1: ALLOWED CHARACTERS IN ENV + ?
 */
 
-int		ok_envchar(char c) //FUNCTION TO CHECK NAMES --- TO BE UPDATED ---
+int		ok_envchar(char c, int f)
 {
-	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
-			(c >= '0' && c <= '9') || c == '@' || c == '*' || c == '#' ||
-			c == '-' || c == '!' || c == '?' || c == '{' || c == '('); //
+	if (f == 1)
+		return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
+			(c >= '0' && c <= '9') || c == '?');
+	else
+		return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
+		c == '?');
 }
 
 int		tilde_exp(char *new)
@@ -39,26 +41,22 @@ int		tilde_exp(char *new)
 }
 
 /*
-** EXPANDING ENV VAR, SKIPPING CURLY BRACKETS IF ${NAME}
+** EXPANDING ENV VAR
 */
 
 int		expand_env(char **args, char *new)
 {
 	char	*val;
 	int		i;
-	int		curl;
 	char	name[LINE_MAX];
 
-	i = -1;
-	curl = 0;
-	while ((*args)[++i] && (ok_envchar((*args)[i]) || (*args)[i] == '}'))
-		if ((*args)[i] == '{' || (*args)[i] == '}')
-			curl = ((*args)[i] == '{') ? curl + 1 : curl - 1;
-	(**args == '{' && curl == 0) ? (*args)++ : 0;
 	i = 0;
-	while (**args && ok_envchar(**args)) // ADD SAFETY FOR NAME ?
+	while (**args && ok_envchar(**args, 1)) // ADD SAFETY FOR NAME ?
+	{
 		name[i++] = *((*args)++);
-	(**args == '}' && curl == 0) ? (*args)++ : 0;
+		if (name[i - 1] == '?')
+			break ;
+	}
 	name[i] = '\0';
 	val = ret_envval(name);
 	i = 0;
@@ -106,7 +104,7 @@ char	*expand_qt(char *args)
 		if (quote == 0 && *args == '\'')
 			while (args++ && *args && *args != '\'')
 				new[j++] = *args;
-		else if (*args == '$' && ok_envchar(*(args + 1)) && args++)
+		else if (*args == '$' && ok_envchar(*(args + 1), 0) && args++)
 			j += expand_env(&args, &new[j]);
 		else if (*args == '\"' && args++)
 			quote = (quote == 0) ? *args : 0;
@@ -119,7 +117,6 @@ char	*expand_qt(char *args)
 			new[j++] = *args++;
 	}
 	new[j] = '\0';
-	//mfree
 	return (j > 0) ? (ft_strdup(new)) : NULL;
 }
 
@@ -170,7 +167,7 @@ int		expand(t_token **args)
 	ac = 0;
 	while (*args)
 	{
-		if ((*args)->value[0] == '$' && ok_envchar((*args)->value[1]))
+		if ((*args)->value[0] == '$' && ok_envchar((*args)->value[1], 0))
 			expand_split_env(args, &ac);
 		else if (++ac != -1)
 		{

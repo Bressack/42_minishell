@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 02:44:13 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 03:03:52 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	**env_to_arr(t_env *trav)
 		return (NULL);
 	trav = g_env;
 	size = 0;
-	while (trav && size > -1)
+	while (trav)
 	{
 		if (trav->export && (env[size] =
 		(char *)mmalloc(ft_strlen(trav->name) + ft_strlen(trav->value) + 1)))
