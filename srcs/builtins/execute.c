@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute2.c                                         :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 18:20:13 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 19:08:14 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,9 @@ int		launch(t_node *cmd, char **av)
 	if (pid == 0) //child
 	{
 		dup2(cmd->stdout, STDOUT);
+		close(cmd->stdout);
 		dup2(cmd->stdin, STDIN);
+		close(cmd->stdin);
 		execve(path, av, environ);
 		mfree(path);
 		exit(errno); // errno ?
@@ -195,8 +197,16 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 			ret = export(ac, av, 1);
 		else
 		{
-			dup2(cmd->stdout, STDOUT);
-			dup2(cmd->stdin, STDIN);
+			if (cmd->stdout != STDOUT)
+			{
+				dup2(cmd->stdout, STDOUT);
+				close(cmd->stdout);
+			}
+			if (cmd->stdin != STDIN)
+			{
+				dup2(cmd->stdin, STDIN);
+				close(cmd->stdin);
+			}
 			if (!(path = get_path(av[0], &type)))
 				exit (bi_error(av[0], NULL, NULL, type));
 			environ = env_to_arr(g_env);
@@ -205,9 +215,9 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 			bi_error(av[0], NULL, strerror(errno), 0);
 			exit(errno);
 		}
-		exit (ret);
+		exit(ret);
 	}
-	waitpid(p, &type, WUNTRACED);
+	// waitpid(p, &type, WUNTRACED);
 	return (WEXITSTATUS(type));
 }
 

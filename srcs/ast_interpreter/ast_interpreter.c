@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 18:21:26 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 19:17:59 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,40 +27,6 @@ typedef struct			s_ppln_pid
 	struct s_ppln_pid	*prev;
 	int					pid;
 }						t_ppln_pid;
-
-/*
-** opt: ADD -> add param pid to the end of the list
-** opt: CLOSE -> wait all child
-*/
-
-int		node__waitnclose(int pid, int opt, int *sloc)
-{
-	static t_ppln_pid	*ppln_list = NULL;
-	t_ppln_pid			*new;
-	t_ppln_pid			*tmp;
-	int					first;
-
-	first = ppln_list == NULL ? 1 : 0;
-	if (opt == ADD)
-	{
-		new = try_malloc(sizeof(t_ppln_pid), _FL_);
-		new->pid = pid;
-		ft_add_node_end_np((t_pnp **)&ppln_list, (t_pnp *)new);
-	}
-	else if (opt == CLOSE)
-	{
-		tmp = ppln_list;
-		while (tmp)
-		{
-			new = tmp->next;
-			if (waitpid(tmp->pid, sloc, WUNTRACED) == -1)
-				asti_error("insert_cmd_name_here", ERR_PIPE);
-			try_free_((void **)&tmp, _FL_);
-		}
-		ppln_list = NULL;
-	}
-	return (first);
-}
 
 // [ ls | cat | head | wc ]
 //
@@ -93,16 +59,14 @@ int		node__pipe_handle(t_node *ppln)
 	ppln->right->stdout = ppln->stdout;
 	sloc = node__controller(ppln->left);
 	close(ppln->pipe_ltor[PIPE_WRITE]);
-	// first = node__waitnclose(ppln->left->pid, ADD, &sloc);
 	sloc = node__controller(ppln->right);
 	close(ppln->pipe_ltor[PIPE_READ]);
-	// if (printf(TEST), ppln->left->pid && waitpid(ppln->left->pid, &sloc, WUNTRACED) == -1)
-	// 	asti_error("insert_cmd_name_here", ERR_PIPE);
-	// if (printf(TEST), ppln->right->pid && waitpid(ppln->right->pid, &sloc, WUNTRACED) == -1)
-	// 	asti_error("insert_cmd_name_here", ERR_PIPE);
-	// node__waitnclose(ppln->right->pid, ADD, &sloc);
-	// if (first == 1)
-		// node__waitnclose(0, CLOSE, &sloc);
+	if (ppln->left->pid &&
+		waitpid(ppln->left->pid, &sloc, WUNTRACED) == -1)
+		asti_error("insert_cmd_name_here", ERR_PIPE);
+	if (ppln->right->pid &&
+		waitpid(ppln->right->pid, &sloc, WUNTRACED) == -1)
+		asti_error("insert_cmd_name_here", ERR_PIPE);
 	return (sloc);
 }
 
@@ -110,12 +74,15 @@ int		node__dbl_and_handle(t_node *cmd_sep)
 {
 	int	sloc;
 
+	sloc = 0;
 	node__controller(cmd_sep->left);
-	if (waitpid(cmd_sep->left->pid, &sloc, WUNTRACED) == -1)
+	if (cmd_sep->left->pid &&
+		waitpid(cmd_sep->left->pid, &sloc, WUNTRACED) == -1)
 		asti_error("insert_cmd_name_here", ERR_PIPE);
 	if (sloc == SUCCESS)
 		node__controller(cmd_sep->right);
-	if (waitpid(cmd_sep->right->pid, &sloc, WUNTRACED) == -1)
+	if (cmd_sep->right->pid &&
+		waitpid(cmd_sep->right->pid, &sloc, WUNTRACED) == -1)
 		asti_error("insert_cmd_name_here", ERR_PIPE);
 	return (sloc);
 }
@@ -124,12 +91,15 @@ int		node__dbl_or_handle(t_node *cmd_sep)
 {
 	int	sloc;
 
+	sloc = 0;
 	node__controller(cmd_sep->left);
-	if (waitpid(cmd_sep->left->pid, &sloc, WUNTRACED) == -1)
+	if (cmd_sep->left->pid &&
+		waitpid(cmd_sep->left->pid, &sloc, WUNTRACED) == -1)
 		asti_error("insert_cmd_name_here", ERR_PIPE);
 	if (sloc != SUCCESS)
 		node__controller(cmd_sep->right);
-	if (waitpid(cmd_sep->right->pid, &sloc, WUNTRACED) == -1)
+	if (cmd_sep->right->pid &&
+		waitpid(cmd_sep->right->pid, &sloc, WUNTRACED) == -1)
 		asti_error("insert_cmd_name_here", ERR_PIPE);
 	return (sloc);
 }
@@ -138,12 +108,15 @@ int		node__semicon_handle(t_node *cmd_sep)
 {
 	int	sloc;
 
+	sloc = 0;
 	node__controller(cmd_sep->left);
-	if (waitpid(cmd_sep->left->pid, &sloc, WUNTRACED) == -1)
+	if (cmd_sep->left->pid &&
+		waitpid(cmd_sep->left->pid, &sloc, WUNTRACED) == -1)
 		asti_error("insert_cmd_name_here", ERR_PIPE);
 	if (cmd_sep->right)
 		node__controller(cmd_sep->right);
-	if (waitpid(cmd_sep->right->pid, &sloc, WUNTRACED) == -1)
+	if (cmd_sep->right->pid &&
+		waitpid(cmd_sep->right->pid, &sloc, WUNTRACED) == -1)
 		asti_error("insert_cmd_name_here", ERR_PIPE);
 	return (sloc);
 }
