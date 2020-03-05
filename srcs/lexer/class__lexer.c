@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/04 21:07:17 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/04 22:00:08 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ t_lexer			*lexer__new(int sloc)
 	t_lexer		*lex;
 
 	lex = try_malloc(sizeof(t_lexer), _FL_);
-	lexer__refill_line(lex, sloc, PROMPT_CASUAL);
+	if (lexer__refill_line(lex, sloc, PROMPT_CASUAL) == ERROR)
+	{
+		lexer__del(&lex);
+		return (NULL);
+	}
 	return (lex);
 }
 
@@ -39,15 +43,18 @@ void			lexer__del(t_lexer **lex)
 int				lexer__error(int opt, t_lexer *lex)
 {
 	if (opt == ERR_UNEXPECTED_EOT)
-		printf("error: unexpected \'end of line\' after \'%c\'\n",
+		printf("minishell: unexpected \'end of line\' after \'%c\'\n",
 		lex->prev_char);
 	else if (opt == ERR_SGLAND_NOT_HANDLED)
-		printf("error: functionality not supported \'%c\'\n",
+		printf("minishell: functionality not supported \'%c\'\n",
 		lex->current_char);
 	else if (opt == ERR_GNL)
-		printf("error: unable to read on stdout");
+	{
+		printf("minishell: unable to read on stdout\n");
+		exit(0); // if i put that here, I do like bash
+	}
 	else
-		printf("error: invalid character \'%c\' (%#x)\n",
+		printf("minishell: invalid character \'%c\' (%#x)\n",
 			lex->current_char, lex->current_char);
 	return (ERROR);
 }
@@ -185,6 +192,8 @@ int				lexer__refill_line(t_lexer *lex, int sloc, int prompt)
 	print_prompt(sloc, prompt);
 	if (get_next_line(0, &lex->line) == -1 &&
 		lexer__error(ERR_GNL, lex) == ERROR)
+		return (ERROR);
+	if (!lex->line)
 		return (ERROR);
 	lex->pos = 0;
 	lex->start = 0;

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:31:13 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/04 17:47:20 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 01:06:17 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int		astb_error(t_astb *tool, int opt)
 	if (opt == UNEXPECTED_TOKEN)
 	{
 		if (tool->current_token->type == EOT)
-			ft_dprintf(2, "minishell: syntax error: unexpected end of file");
+			ft_dprintf(2, "minishell: syntax error: unexpected end of file\n");
 		else
 			ft_dprintf(2,
 				"minishell: syntax error near unexpected token \'%s\'\n",
@@ -265,7 +265,8 @@ int		process(t_astb *tool)
 int		init_tool(t_astb *tool, int sloc)
 {
 	ft_bzero(tool, sizeof(t_astb));
-	tool->lex = lexer__new(sloc);
+	if (!(tool->lex = lexer__new(sloc)))
+		return (ERROR);
 	if ((tool->current_token = lexer__get_next_token(tool->lex)) == NULL)
 		return (ERROR);
 	if (!tool->current_token || tool->current_token->type == EOT)
@@ -283,10 +284,11 @@ t_node	*ast_builder(int sloc)
 {
 	t_astb		tool;
 
-	if (init_tool(&tool, sloc) == ERROR)
-		return (NULL);
-	if (process(&tool) == ERROR)
-		return (NULL);
+	if (init_tool(&tool, sloc) != ERROR && process(&tool) != ERROR)
+	{
+		lexer__del(&tool.lex);
+		return (tool.ast);
+	}
 	lexer__del(&tool.lex);
-	return (tool.ast);
+	return (NULL);
 }

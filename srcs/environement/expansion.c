@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 20:28:00 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 02:55:41 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,6 @@ int		expand(t_token **args)
 	int	ac;
 
 	ac = 0;
-	printf(TEST);
 	while (*args)
 	{
 		if ((*args)->value[0] == '$' && ok_envchar((*args)->value[1]))

@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 21:07:20 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/05 02:44:13 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	sig_exec(int signo)
 int		launch(t_node *cmd, char **av)
 {
 	pid_t	pid;
-	pid_t	wpid;
 	int		sloc;
 	char	*path;
 	char	**environ;
@@ -84,16 +83,23 @@ int		launch(t_node *cmd, char **av)
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0) //child
 	{
-		dup2(cmd->stdout, STDOUT);
-		dup2(cmd->stdin, STDIN);
+		if (cmd->stdin != STDIN)
+		{
+			dup2(cmd->stdin, STDIN);
+			close(cmd->stdin);
+		}
+		if (cmd->stdout != STDOUT)
+		{
+			dup2(cmd->stdout, STDOUT);
+			close(cmd->stdout);
+		}
 		execve(path, av, environ);
 		bi_error(av[0], NULL, strerror(errno), 0);
 		exit(errno); // errno ?
 	}
 	else if (pid < 0) //error with fork
 		bi_error(av[0], NULL, strerror(errno), 0);
-	else //parent
-		wpid = waitpid(pid, &sloc, WUNTRACED);
+	cmd->pid = pid;
 	mfree(environ);
 	mfree(path);
 	return (WEXITSTATUS(sloc));
