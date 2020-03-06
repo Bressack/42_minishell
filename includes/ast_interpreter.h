@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 03:39:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 02:38:13 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 23:11:11 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,5 @@ typedef enum		e_waitnclose_opt
 }					t_waitnclose_opt;
 int					ast_interpreter(t_node *ast);
 int					node__controller(t_node *node);
+int					node__parent_ispipe(t_node *node);
 #endif

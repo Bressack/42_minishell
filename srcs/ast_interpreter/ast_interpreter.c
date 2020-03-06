@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 19:17:59 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/05 23:25:06 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,6 @@ int		asti_error(char *name, int opt)
 		ft_dprintf(2, "minishell: %s\n", strerror(errno));
 		return (ERROR);
 }
-
-typedef struct			s_ppln_pid
-{
-	struct s_ppln_pid	*next;
-	struct s_ppln_pid	*prev;
-	int					pid;
-}						t_ppln_pid;
-
-// [ ls | cat | head | wc ]
-//
-//               I[|]O
-//              /     \
-//           I[|]O --> I{wc}O
-//          /     \
-//       I[|]O --> I{head}O
-//      /     \
-// I{ls}O --> I{cat}O
-//
-// ;
 
 int		node__parent_ispipe(t_node *node)
 {

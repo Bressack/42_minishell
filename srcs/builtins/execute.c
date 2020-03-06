@@ -6,11 +6,22 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 19:08:14 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 01:03:40 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+typedef enum		e_biidx
+{
+	BI_ECHO,
+	BI_CD,
+	BI_PWD,
+	BI_EXIT,
+	BI_EXPORT,
+	BI_UNSET,
+	BI_ENV
+}					t_biidx;
 
 t_bi		g_builtins[BUILTINS] =
 {
@@ -83,10 +94,16 @@ int		launch(t_node *cmd, char **av)
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0) //child
 	{
-		dup2(cmd->stdout, STDOUT);
-		close(cmd->stdout);
-		dup2(cmd->stdin, STDIN);
-		close(cmd->stdin);
+		if (cmd->stdout != STDOUT)
+		{
+			dup2(cmd->stdout, STDOUT);
+			close(cmd->stdout);
+		}
+		if (cmd->stdin != STDIN)
+		{
+			dup2(cmd->stdin, STDIN);
+			close(cmd->stdin);
+		}
 		execve(path, av, environ);
 		mfree(path);
 		exit(errno); // errno ?
@@ -180,16 +197,16 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 	int		ac;
 	int		type;
 	char	*path;
-	int		p;
+	int		pid;
 	int		ret;
 	char	**environ;
 
-	if ((p = fork()) < 0)
+	if ((pid = fork()) < 0)
 		return (bi_error("fork", NULL, "failed", 0));
 	av = check_cmd(cmd, &ac, &type);
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
-	if (p == 0)
+	if (pid == 0)
 	{
 		if (type >= 0)
 			ret = g_builtins[type].f(ac, av, cmd->stdout);
@@ -217,7 +234,9 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 		}
 		exit(ret);
 	}
-	// waitpid(p, &type, WUNTRACED);
+	if (type == BI_EXIT && !node__parent_ispipe(cmd->parent))
+		exit(g_exit);
+	// waitpid(pid, &type, WUNTRACED);
 	return (WEXITSTATUS(type));
 }
 
