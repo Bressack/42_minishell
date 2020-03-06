@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/04 18:37:36 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/06 17:06:39 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -35,6 +35,8 @@ FLAGS					=	\
 							#-g3 -fsanitize=address \
 							# -g3 \
 							# -O3 \
+
+BONUS_FLAG				=	0
 
 # *** PROJECT HEADER ********************************************************* #
 
@@ -171,8 +173,12 @@ $(NAME): $(OBJS) $(SRCS)
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@ mkdir -p $(dir $@)
-	@ $(CC) $(FLAGS) $(HDIR) -c -o $@ $<
+	@ $(CC) $(FLAGS) $(HDIR) -D BONUS=$(BONUS_FLAG) -c -o $@ $<
 	@ printf "\033[31m Program \033[32m$(NAME) : \033[34mCompilation of \033[36m$(notdir $<)\033[0m                             \r"
+
+bonus:
+	@make fclean
+	@make -j BONUS_FLAG=1
 
 norm:
 	@ norminette $(SRCS_LIST) $(HEADER)

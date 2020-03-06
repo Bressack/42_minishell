@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/06 01:03:40 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 17:38:51 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 	{
 		if (type >= 0)
 			ret = g_builtins[type].f(ac, av, cmd->stdout);
-		else if (type == -1)
+		else if (type == 127)
 			ret = export(ac, av, 1);
 		else
 		{
@@ -232,8 +232,9 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 			bi_error(av[0], NULL, strerror(errno), 0);
 			exit(errno);
 		}
-		exit(ret);
+		exit(127);
 	}
+	cmd->pid = pid;
 	if (type == BI_EXIT && !node__parent_ispipe(cmd->parent))
 		exit(g_exit);
 	// waitpid(pid, &type, WUNTRACED);

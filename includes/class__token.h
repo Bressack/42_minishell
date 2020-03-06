@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:21:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 16:25:39 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 10:45:57 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,22 @@ typedef enum			e_token_type
 	I_ERR, // 0
 	I_EOT, // 1
 	I_SPACE, // 2
-	I_PASS,
-	I_WORD,
-	I_SQUOTE,
-	I_DQUOTE,
-	I_LPAREN,
-	I_RPAREN,
-	I_REDIREC_IN,
+	I_PASS, // 3
+	I_WORD, // 4
+	I_SQUOTE, // 5
+	I_DQUOTE, // 6
+	I_LPAREN, // 7
+	I_RPAREN, // 8
+	I_REDIREC_IN, // 9
 	I_REDIREC_OUT, // 10
-	I_DREDIREC_OUT,
-	I_DBL_AND,
-	I_DBL_OR,
-	I_PIPE,
-	I_SEMICON,
-	I_BSLASH,
-	I_DOLLAR,
-	I_NONE // 19
+	I_DREDIREC_OUT, // 11
+	I_DBL_AND, // 12
+	I_DBL_OR, // 13
+	I_PIPE, // 14
+	I_SEMICON, // 15
+	I_BSLASH, // 16
+	I_DOLLAR, // 17
+	I_NONE // 18
 }						t_token_type;
 typedef struct			s_token
 {

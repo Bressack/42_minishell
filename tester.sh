@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/06 02:06:22 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/06 12:55:03 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -85,9 +85,15 @@ ls >> test
 cat test | cat -e | cat -e && echo KO | cat -e"
 test "echo SALUT > test ; rm test ; cat test"
 test "echo \"coucou les \'amis\' je suis la\""
-test "echo gotta sleep, se ya tommorow; echo '\Hello future theo ;)'\'"
+test "echo gotta sleep, se ya tommorow; echo 'Hello future theo ;)'"
 test "cat /dev/null"
 test "man bash | head -c 1000 | cat -e | tail"
+test "< test"
+test "rm test
+> test
+ls test
+rm test"
+test "export HEJ=da;echo \$HEJ"
 # **************************************************************************** #
 # **************************************************************************** #
 # **************************************************************************** #

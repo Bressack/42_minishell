@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 10:35:31 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 14:50:29 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_lexer			*lexer__new(int sloc)
 	t_lexer		*lex;
 
 	lex = try_malloc(sizeof(t_lexer), _FL_);
-	if (lexer__refill_line(lex, sloc, PROMPT_CASUAL) == ERROR)
+	if (lexer__refill_line(lex, sloc) == ERROR)
 	{
 		lexer__del(&lex);
 		return (NULL);
@@ -45,9 +45,15 @@ int				lexer__error(int opt, t_lexer *lex)
 	if (opt == ERR_UNEXPECTED_EOT)
 		ft_dprintf(2, "minishell: unexpected \'end of line\' after \'%c\'\n",
 		lex->prev_char);
-	else if (opt == ERR_SGLAND_NOT_HANDLED)
+	else if (opt == ERR_UNSUPPORTED_FEATURE)
 		ft_dprintf(2, "minishell: functionality not supported \'%c\'\n",
 		lex->current_char);
+	else if (opt == ERR_UNSUPPORTED_FEATURE_DBL_AND)
+		ft_dprintf(2, "minishell: functionality not supported \'&&\'\n");
+	else if (opt == ERR_UNSUPPORTED_FEATURE_DBL_OR)
+		ft_dprintf(2, "minishell: functionality not supported \'||\'\n");
+	else if (opt == ERR_UNSUPPORTED_FEATURE_SUBSHELL)
+		ft_dprintf(2, "minishell: subshells are not supported\n");
 	else if (opt == ERR_GNL)
 	{
 		ft_dprintf(2, "minishell: unable to read on stdout\n");
@@ -186,10 +192,10 @@ void			lexer__set_start_pos(t_lexer *lex, int new_pos)
 ** **************************************************************************
 */
 
-int				lexer__refill_line(t_lexer *lex, int sloc, int prompt)
+int				lexer__refill_line(t_lexer *lex, int sloc)
 {
 	try_free_((void **)&lex->line, _FL_);
-	print_prompt(sloc, prompt);
+	print_prompt(sloc);
 	if (get_next_line(0, &lex->line) == -1 &&
 		lexer__error(ERR_GNL, lex) == ERROR)
 		return (ERROR);
@@ -259,7 +265,7 @@ t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
 	if (lexer__istype(lex, CHR_EOT))
 		return (token__copy(&g_defined_tokens[I_EOT]));
 	if ((rtype = lexer__isdefined_token(lex, ADVANCE)) != I_NONE)
-		return (token__copy(&g_defined_tokens[rtype]));
+		return (rtype == I_ERR ? NULL : token__copy(&g_defined_tokens[rtype]));
 	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR))
 	{
 		if (lexer__istype(lex, CHR_BSLASH))
@@ -268,10 +274,11 @@ t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
 			if (lexer__istype(lex, CHR_EOT) &&
 				lexer__error(ERR_UNEXPECTED_EOT, lex) == ERROR)
 				return (NULL);
-
 			lexer__advance(lex, 1);
 		}
-		if (lexer__isdefined_token(lex, NOADVANCE) != I_NONE)
+		if ((rtype = lexer__isdefined_token(lex, NOADVANCE)) == I_ERR)
+			return (NULL);
+		if (rtype != I_NONE)
 			break ;
 		if ((rtype = lexer__isquote(lex)))
 			lexer__pass_quotes(lex, rtype);

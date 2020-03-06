@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:31:13 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 10:39:33 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 15:29:07 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,9 @@ int		process(t_astb *tool)
 	t_node		*cmd;
 	t_node		*sep;
 
+	if (tool->prev_token && (token__istype(tool->prev_token, SEMICON) &&
+		token__iseot(tool->current_token)))
+		return (SUCCESS);
 	if (token__issep(tool->current_token) || token__iseot(tool->current_token))
 		return (astb_error(tool, UNEXPECTED_TOKEN));
 	cmd = new_node(CMD);

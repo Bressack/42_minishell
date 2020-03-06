@@ -6,18 +6,13 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/04 17:55:24 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 15:04:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLASS__LEXER_H
 # define CLASS__LEXER_H
 # include <minishell.h>
-
-# define PROMPT_CASUAL_STR "minishell"
-# define PROMPT_SQUOTE_STR "quote"
-# define PROMPT_DQUOTE_STR "dquote"
-# define PROMPT_BSLASH_STR ""
 
 typedef enum		e_foreach_opt
 {
@@ -29,7 +24,10 @@ typedef enum		e_foreach_opt
 typedef enum		e_error_id
 {
 	ERR_UNEXPECTED_EOT,
-	ERR_SGLAND_NOT_HANDLED,
+	ERR_UNSUPPORTED_FEATURE,
+	ERR_UNSUPPORTED_FEATURE_DBL_AND,
+	ERR_UNSUPPORTED_FEATURE_DBL_OR,
+	ERR_UNSUPPORTED_FEATURE_SUBSHELL,
 	ERR_GNL
 }					t_error_id;
 typedef enum		e_debug
@@ -40,14 +38,6 @@ typedef enum		e_debug
 	START,
 	POS
 }					t_debug;
-
-typedef enum		e_prompt
-{
-	PROMPT_CASUAL,
-	PROMPT_SQUOTE,
-	PROMPT_DQUOTE,
-	PROMPT_BSLASH
-}					t_prompt;
 
 typedef struct		s_lexer
 {
@@ -81,7 +71,7 @@ typedef enum		e_char_type
 }					t_char_type;
 extern t_char_type	g_token_ascii_table[255];
 
-void				print_prompt(int sloc, int prompt_lever);
+void				print_prompt(int sloc);
 /*
 ** **************************************************************************
 ** **** lexer object handle *************************************************
@@ -106,7 +96,7 @@ int					lexer__isquote(t_lexer *lex);
 ** **************************************************************************
 */
 int					lexer__advance(t_lexer *lex, int n);
-int					lexer__refill_line(t_lexer *lex, int sloc, int prompt);
+int					lexer__refill_line(t_lexer *lex, int sloc);
 int					lexer__isdefined_token(t_lexer *lex, int adv);
 t_token				*lexer__get_next_token(t_lexer *lex);
 #endif
