@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/06 17:19:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 22:56:08 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int		node__dbl_or_handle(t_node *cmd_sep)
 	sloc = 0;
 	node__controller(cmd_sep->left);
 	waitpid(cmd_sep->left->pid, &sloc, WUNTRACED);
-	printf("sloc: %d\n", sloc);
 	if (sloc != 0)
 	{
 		node__controller(cmd_sep->right);
@@ -119,21 +118,21 @@ int		redir_handle(t_node *cmd)
 	while (tmp_redir && tmp_file)
 	{
 		if (tmp_redir->type == REDIR_IN)
-		{printf(TEST);
+		{
 			(cmd->stdin != STDIN) ? close(cmd->stdin) : 0;
 			if ((cmd->stdin = open(tmp_file->value,
 				O_RDWR, 0644)) == -1)
 				return (asti_error(tmp_file->value, ERR_OPEN));
 		}
 		else if (tmp_redir->type == REDIR_OUT)
-		{printf(TEST);
+		{
 			(cmd->stdout != STDOUT) ? close(cmd->stdout) : 0;
 			if ((cmd->stdout = open(tmp_file->value,
 				O_TRUNC | O_CREAT | O_RDWR, 0644)) == -1)
 				return (asti_error(tmp_file->value, ERR_OPEN));
 		}
 		else if (tmp_redir->type == DREDIR_OUT)
-		{printf(TEST);
+		{
 			(cmd->stdout != STDOUT) ? close(cmd->stdout) : 0;
 			if ((cmd->stdout = open(tmp_file->value,
 				O_APPEND | O_CREAT | O_RDWR, 0644)) == -1)

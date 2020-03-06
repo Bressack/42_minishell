@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/06 17:38:51 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 22:33:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,12 +232,11 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 			bi_error(av[0], NULL, strerror(errno), 0);
 			exit(errno);
 		}
-		exit(127);
+		exit(ret);
 	}
 	cmd->pid = pid;
 	if (type == BI_EXIT && !node__parent_ispipe(cmd->parent))
-		exit(g_exit);
-	// waitpid(pid, &type, WUNTRACED);
+		exit(g_exit); // exit with simple exit cmd (not for an exit in a pipe)
 	return (WEXITSTATUS(type));
 }
 

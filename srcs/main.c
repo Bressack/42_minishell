@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/06 17:05:28 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/06 22:35:15 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int		main(int ac, char **av, char **env)
 	int			sloc;
 	t_node		*ast;
 
-	printf("bonus: %d\n", BONUS);
 	get_env(ac, av, env);
 	sloc = 0;
 	g_exit = 0;
