@@ -21,7 +21,7 @@ void		ft_del_list_np(t_pnp **begin_list)
 	while (tmp)
 	{
 		tmp2 = tmp->next;
-		try_free_((void **)&tmp, _FL_);
+		mfree((void **)&tmp);
 		tmp = tmp2;
 	}
 }

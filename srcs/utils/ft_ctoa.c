@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 20:35:31 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/03 22:10:28 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:08:51 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_ctoa(unsigned int n)
 	int		i;
 	int		div;
 
-	num = (char *)mmalloc(5);
+	num = (char *)mmalloc(sizeof(char) * 5);
 	i = 0;
 	div = 1000;
 	while (n / div == 0 && div > 1)

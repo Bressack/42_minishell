@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 18:27:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/04 22:40:20 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:14:10 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ int		unset(int ac, char **args, int out)
 		{
 			f = *indir;
 			*indir = f->next;
-			mfree(f->name);
-			mfree(f->value);
-			mfree(f);
+			mfree((void **)&f->name);
+			mfree((void **)&f->value);
+			mfree((void **)&f);
 		}
 	}
 	return (0);

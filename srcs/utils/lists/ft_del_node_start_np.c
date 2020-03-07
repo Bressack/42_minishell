@@ -21,5 +21,5 @@ void		ft_del_node_start_np(t_pnp **begin_list, void (*f)(t_pnp *curr))
 	(*begin_list)->next->prev = NULL;
 	if (f)
 		f(tmp);
-	try_free_((void **)&tmp, _FL_);
+	mfree((void **)&tmp);
 }

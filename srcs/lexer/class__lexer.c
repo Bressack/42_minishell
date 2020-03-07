@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/06 14:50:29 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 08:54:05 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_lexer			*lexer__new(int sloc)
 {
 	t_lexer		*lex;
 
-	lex = try_malloc(sizeof(t_lexer), _FL_);
+	lex = mmalloc(sizeof(t_lexer));
 	if (lexer__refill_line(lex, sloc) == ERROR)
 	{
 		lexer__del(&lex);
@@ -35,8 +35,8 @@ void			lexer__del(t_lexer **lex)
 {
 	if (*lex)
 	{
-		try_free_((void **)&(*lex)->line, _FL_);
-		try_free_((void **)lex, _FL_);
+		mfree((void **)&(*lex)->line);
+		mfree((void **)lex);
 	}
 }
 
@@ -56,7 +56,7 @@ int				lexer__error(int opt, t_lexer *lex)
 		ft_dprintf(2, "minishell: subshells are not supported\n");
 	else if (opt == ERR_GNL)
 	{
-		ft_dprintf(2, "minishell: unable to read on stdout\n");
+		// ft_dprintf(2, "minishell: unable to read on stdout\n");
 		exit(0); // if i put that here, I do like bash
 	}
 	else
@@ -194,13 +194,10 @@ void			lexer__set_start_pos(t_lexer *lex, int new_pos)
 
 int				lexer__refill_line(t_lexer *lex, int sloc)
 {
-	try_free_((void **)&lex->line, _FL_);
+	mfree((void **)&lex->line);
 	print_prompt(sloc);
-	if (get_next_line(0, &lex->line) == -1 &&
-		lexer__error(ERR_GNL, lex) == ERROR)
-		return (ERROR);
-	if (!lex->line)
-		return (ERROR);
+	if (get_next_line(STDIN, &lex->line) == -1 || !lex->line)
+		return (lexer__error(ERR_GNL, lex));
 	lex->pos = 0;
 	lex->start = 0;
 	lex->len_line = ft_strlen(lex->line);

@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 18:34:17 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 14:37:11 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:07:22 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ void	*mmalloc(unsigned int size)
 	{
 		free_all_malloc();
 		ft_dprintf(2, "allocation error");
-		exit (1);
+		exit(1);
 	}
 	if (!(list = (t_list *)malloc(sizeof(t_list))))
 	{
 		free_all_malloc();
 		ft_dprintf(2, "allocation error");
-		exit (1);
+		exit(1);
 	}
 	ft_bzero(new, size);
 	list->data = new;
@@ -47,17 +47,17 @@ void	*mrealloc(void *ptr, size_t size) // REVIEW THIS ONE
 		list = list->next;
 	if (ptr && list)
 	{
-		ptr = realloc(ptr, size + 1); // hein ???? mdrrr
+		ptr = realloc(ptr, size + 1); // TODO add a ft_realloc
 		list->data = ptr;
 	}
 	else if (ptr)
 	{
-		ptr = realloc(ptr, size);
+		ptr = realloc(ptr, size); // TODO add a ft_realloc
 		if (!(list = (t_list *)malloc(sizeof(t_list))))
 		{
 			free_all_malloc();
 			ft_dprintf(2, "allocation error");
-			exit (1);
+			exit(1);
 		}
 		list->data = ptr;
 		list->next = g_all_malloc;
@@ -82,15 +82,15 @@ int		free_all_malloc(void)
 	return (0);
 }
 
-void	mfree(void *to_free)
+void	mfree(void **to_free)
 {
 	t_list **indir;
 	t_list *f;
 
-	if (!to_free)
+	if (!*to_free)
 		return ;
 	indir = &g_all_malloc;
-	while (*indir && (*indir)->data != to_free)
+	while (*indir && (*indir)->data != *to_free)
 		indir = &((*indir)->next);
 	f = *indir;
 	if (f)
@@ -99,4 +99,5 @@ void	mfree(void *to_free)
 		free(f->data);
 	}
 	free(f);
+	*to_free = NULL;
 }

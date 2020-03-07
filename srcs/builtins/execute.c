@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/06 22:33:27 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 08:13:05 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	sig_exec(int signo)
 	if (signo == SIGQUIT)
 	{
 		ft_dprintf(2, "Quit: 3\n");
-		// exit (3);
+		// exit(3);
 	}
 }
 
@@ -85,7 +85,7 @@ int		launch(t_node *cmd, char **av)
 	environ = env_to_arr(g_env);
 	if (!(path = get_path(av[0], &sloc)))
 	{
-		mfree(environ);
+		mfree((void **)&environ);
 		return (bi_error(av[0], NULL, NULL, sloc));
 	}
 	if ((pid = fork()) < 0)
@@ -105,12 +105,12 @@ int		launch(t_node *cmd, char **av)
 			close(cmd->stdin);
 		}
 		execve(path, av, environ);
-		mfree(path);
+		mfree((void **)&path);
 		exit(errno); // errno ?
 	}
 	wpid = waitpid(pid, &sloc, WUNTRACED);
-	mfree(environ);
-	mfree(path);
+	mfree((void **)&environ);
+	mfree((void **)&path);
 	return (WEXITSTATUS(sloc));
 }
 
@@ -225,10 +225,10 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 				close(cmd->stdin);
 			}
 			if (!(path = get_path(av[0], &type)))
-				exit (bi_error(av[0], NULL, NULL, type));
+				exit(bi_error(av[0], NULL, NULL, type));
 			environ = env_to_arr(g_env);
 			execve(path, av, environ);
-			mfree(environ);
+			mfree((void **)&environ);
 			bi_error(av[0], NULL, strerror(errno), 0);
 			exit(errno);
 		}
@@ -262,7 +262,7 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 ** 		dup2(pipefd[1], 1);
 ** 		close(pipefd[1]);
 ** 		ret = execute_next_node(node->left);
-** 		exit (ret);
+** 		exit(ret);
 ** 	}
 ** 	if ((p[1] = fork()) < 0)
 ** 		return (bi_error("fork", NULL, "failed", 0));
@@ -272,13 +272,13 @@ int		execute_fork(t_node *cmd) //USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCT
 ** 		dup2(pipefd[0], 0);
 ** 		close(pipefd[0]);
 ** 		ret = execute_nofork(node->right);
-** 		exit (ret);
+** 		exit(ret);
 ** 	}
 ** 	wait();
 ** 	wait();
-** 	mfree(environ);
-** 	mfree(path[0]);
-** 	mfree(path[1]);
+** 	mfree((void **)&environ);
+** 	mfree((void **)&path[0]);
+** 	mfree((void **)&path[1]);
 ** 	return (WEXITSTATUS(p[1]));
 ** }
 */

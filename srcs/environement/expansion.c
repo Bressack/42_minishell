@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/05 03:04:08 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 08:13:55 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int		expand_env(char **args, char *new)
 		i++;
 	}
 	new[i] = '\0';
-	!ft_strcmp(name, "?") ? mfree(val) : 0;
+	!ft_strcmp(name, "?") ? mfree((void **)&val) : 0;
 	return (i);
 }
 

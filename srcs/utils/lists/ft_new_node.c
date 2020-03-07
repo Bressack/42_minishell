@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/28 13:06:52 by tharchen          #+#    #+#             */
-/*   Updated: 2019/11/27 16:36:23 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 08:10:06 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ void		*ft_new_node(
 	va_list	ap;
 	void	*new;
 
-	if (!(new = try_malloc(size, NULL, 0)))
-		return (NULL);
+	new = mmalloc(size);
 	va_start(ap, nb_arg);
 	f(new, nb_arg, ap);
 	va_end(ap);

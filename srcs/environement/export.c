@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/04 18:31:57 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:14:00 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void		set_var(char *name, int op, char *val, int export)
 		(op == '+') ? set->value = cat_value(set->value, val) : 0;
 		if (op == '=')
 		{
-			mfree(set->value);
+			mfree((void **)&set->value);
 			set->value = ft_strdup(val);
 		}
 		if (export == 1)

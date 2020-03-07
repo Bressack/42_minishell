@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 09:54:38 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/04 19:06:54 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:07:15 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,14 @@ static char	*ft_strcat(char *file, char *buf)
 	char	*new;
 	int		i;
 
-	if (!(new = (char *)try_malloc(ft_fullen(file, 0) + ft_fullen(
-		buf, 0) + 1, _FL_)))
-		return (NULL);
+	new = (char *)mmalloc(ft_fullen(file, 0) + ft_fullen(buf, 0) + 1);
 	i = 0;
 	while (file != NULL && file[i])
 	{
 		new[i] = file[i];
 		i++;
 	}
-	try_free_((void **)&file, _FL_);
+	mfree((void **)&file);
 	file = NULL;
 	while (buf != NULL && *buf != '\0')
 		new[i++] = *buf++;
@@ -60,22 +58,20 @@ static char	*ft_cpyline(char **file, int i)
 
 	while (*file && (*file)[i] != '\n' && (*file)[i] != '\0')
 		i++;
-	if (!(line = (char *)try_malloc(i + 1, _FL_)))
-		return (NULL);
+	line = (char *)mmalloc(i + 1);
 	i = -1;
 	while (*file && (*file)[++i] != '\n' && (*file)[i] != '\0')
 		line[i] = (*file)[i];
 	line[i] = '\0';
 	if ((temp = NULL) == NULL && *file && (*file)[i++] != '\0')
 	{
-		if (!(temp = (char *)try_malloc(ft_fullen(&(*file)[i], 0) + 1, _FL_)))
-			return (NULL);
+		temp = (char *)mmalloc(ft_fullen(&(*file)[i], 0) + 1);
 		j = 0;
 		while ((*file)[i] != '\0')
 			temp[j++] = (*file)[i++];
 		temp[j] = '\0';
 	}
-	try_free_((void **)file, _FL_);
+	mfree((void **)file);
 	*file = temp;
 	return (line);
 }
@@ -99,7 +95,7 @@ int			get_next_line(int fd, char **line)
 		{
 			ft_dprintf(1, "exit\n");
 			free_all_malloc();
-			exit (0);
+			exit(0);
 		}
 		if (ret == 0)
 			ft_dprintf(1, "  \b\b");

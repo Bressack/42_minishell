@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/06 22:58:22 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 08:57:40 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,6 @@ int		xcd(int ac, char **args, int out)
 		getcwd(dir, LINE_MAX);
 		change->value = ft_strdup(dir);
 	}
-	mfree(tmp);
+	mfree((void **)&tmp);
 	return (0);
 }

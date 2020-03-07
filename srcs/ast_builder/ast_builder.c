@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:31:13 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/06 15:29:07 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 08:06:14 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_node	*new_node(t_nodetype type)
 {
 	t_node		*new;
 
-	new = try_malloc(sizeof(t_node), _FL_);
+	new = mmalloc(sizeof(t_node));
 	new->type = type;
 	return (new);
 }
@@ -45,7 +45,7 @@ void	del_node(t_node **node, int opt)
 		(*node)->left ? del_node(&(*node)->left, opt) : 0;
 		(*node)->right ? del_node(&(*node)->right, opt) : 0;
 	}
-	try_free_((void **)node, _FL_);
+	mfree((void **)node);
 }
 
 /*

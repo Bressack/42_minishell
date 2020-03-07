@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/01 16:25:20 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 08:06:14 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_token			*token__new(t_token_type_m type, char *value, int pos)
 {
 	t_token		*new;
 
-	new = try_malloc(sizeof(t_token), _FL_);
+	new = mmalloc(sizeof(t_token));
 	new->type = type;
 	new->pos_in_line = pos;
 	new->value = value; // value can come from a strdup, strsub, etc.
@@ -30,7 +30,7 @@ t_token			*token__copy(t_token *token) // use this function on defined token. e.
 {
 	t_token		*new;
 
-	new = try_malloc(sizeof(t_token), _FL_);
+	new = mmalloc(sizeof(t_token));
 	new->type = token->type;
 	new->pos_in_line = token->pos_in_line;
 	new->value = ft_strdup(token->value);
@@ -42,8 +42,8 @@ void			token__del(t_token **token)
 {
 	if (*token)
 	{
-		try_free_((void **)&(*token)->value, _FL_); // free the memory of value
-		try_free_((void **)token, _FL_); // free the token
+		mfree((void **)&(*token)->value); // free the memory of value
+		mfree((void **)token); // free the token
 	}
 }
 

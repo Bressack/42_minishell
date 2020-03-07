@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 19:15:17 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:13:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	*get_path(char *command, int *err)
 	{
 		if (check_stat(path, err))
 			return (path);
-		mfree(path);
+		mfree((void **)&path);
 	}
 	return (NULL);
 }

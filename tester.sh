@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/06 22:59:26 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/07 08:18:27 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,8 @@ init_tester()
 			make re
 		elif [[ $3 == "clean" ]]; then
 			make clean
+		elif [[ $3 == "bonus" ]]; then
+			make bonus
 		elif [[ $3 == "-j" ]]; then
 			make -j
 		else

@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 15:06:47 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 22:44:12 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:13:43 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,6 @@ void	get_env(int ac, char **av, char **env)
 			prev = new;
 		}
 		else
-			mfree(new);
+			mfree((void **)&new);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/22 01:31:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/21 16:55:28 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 08:06:14 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ static void	*join(char **ret, char *arg, int *retsize)
 	int		size;
 
 	size = ft_strlen(arg);
-	if (!(tmp = try_malloc(sizeof(char) * (*retsize + size + 1), _FL_)))
-		return (NULL);
+	tmp = mmalloc(sizeof(char) * (*retsize + size + 1));
 	ft_memcpy(tmp, *ret, *retsize);
 	ft_memcpy(tmp + *retsize, arg, size);
 	*retsize += size;
 	tmp[*retsize] = '\0';
-	try_free_((void **)ret, _FL_);
+	mfree((void **)ret);
 	*ret = tmp;
 	return (tmp);
 }

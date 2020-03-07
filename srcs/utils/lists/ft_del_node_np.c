@@ -35,5 +35,5 @@ void		ft_del_node_np(t_pnp **begin_list, t_pnp *del,
 	}
 	if (f)
 		f(del);
-	try_free_((void **)&del, _FL_);
+	mfree((void **)&del);
 }
