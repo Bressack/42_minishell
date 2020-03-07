@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 13:36:27 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/04 18:36:25 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 18:48:47 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_strjoin(int nb_str, ...);
 void	*ft_memcpy(void *s1, const void *s2, size_t n);
 char	*ft_strcpy(char *s1, const char *s2);
 int		ft_strcmp(char *s1, char *s2);
-char	*cat_value(char *s1, char *s2);
+char	*cat_value(char *s1, char c, char *s2);
 int		ft_strisnum(char *str);
 char	*ft_strdup(char *src);
 int		ft_atoi(const char *str);
