@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_interpreter.c                                  :+:      :+:    :+:   */
+/*   ast_interpreter2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 18:43:51 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 19:21:08 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int		node__pipe_handle(t_node *ppln)
 {
 	int	sloc;
 
+	sloc = 0;
 	if (pipe(ppln->pipe_ltor) == -1)
 		return (asti_error(NULL, ERR_PIPE));
 	ppln->left->stdout != STDOUT ? close(ppln->left->stdout) : 0;
@@ -70,8 +71,8 @@ int		node__pipe_handle(t_node *ppln)
 	close(ppln->pipe_ltor[PIPE_WRITE]);
 	node__controller(ppln->right);
 	close(ppln->pipe_ltor[PIPE_READ]);
-	waitpid(ppln->left->pid, &sloc, WUNTRACED);
-	waitpid(ppln->right->pid, &sloc, WUNTRACED);
+	// waitpid(ppln->left->pid, &sloc, WUNTRACED);
+	// waitpid(ppln->right->pid, &sloc, WUNTRACED);
 	return (sloc);
 }
 
@@ -94,7 +95,7 @@ int		node__dbl_and_handle(t_node *cmd_sep)
 		node__controller(cmd_sep->right);
 		waitpid(cmd_sep->right->pid, &sloc, WUNTRACED);
 	}
-	return (sloc);
+	return (WEXITSTATUS(sloc));
 }
 
 /*
@@ -116,7 +117,7 @@ int		node__dbl_or_handle(t_node *cmd_sep)
 		node__controller(cmd_sep->right);
 		waitpid(cmd_sep->right->pid, &sloc, WUNTRACED);
 	}
-	return (sloc);
+	return (WEXITSTATUS(sloc));
 }
 
 /*
@@ -137,7 +138,7 @@ int		node__semicon_handle(t_node *cmd_sep)
 		node__controller(cmd_sep->right);
 		waitpid(cmd_sep->right->pid, &sloc, WUNTRACED);
 	}
-	return (sloc);
+	return (WEXITSTATUS(sloc));
 }
 
 /*
@@ -217,9 +218,10 @@ int		node__cmd_controller(t_node *cmd)
 {
 	if (redir_handle(cmd) == ERROR)
 		return (ERROR);
-	g_exit = execute_fork(cmd);
-	if (!node__parent_ispipe(cmd))
-		waitpid(cmd->pid, (int *)&g_exit, WUNTRACED);
+	if (node__parent_ispipe(cmd))
+		g_exit = execute_fork(cmd);
+	else
+		g_exit = execute_simple(cmd);
 	return (g_exit);
 }
 

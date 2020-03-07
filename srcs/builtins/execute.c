@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 18:49:47 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 19:09:31 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	sig_exec(int signo)
 int		launch(t_node *cmd, char **av)
 {
 	pid_t	pid;
-	pid_t	wpid;
+	// pid_t	wpid;
 	int		sloc;
 	char	*path;
 	char	**environ;
@@ -89,10 +89,9 @@ int		launch(t_node *cmd, char **av)
 	if (!(path = get_path(av[0], &sloc)))
 		return (bi_error(av[0], NULL, NULL, sloc));
 	if ((pid = fork()) < 0)
-		bi_error(av[0], NULL, strerror(errno), 0); // return ?
+		return (bi_error(av[0], NULL, strerror(errno), 0)); // return ?
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
-	printf(TEST);
 	if (pid == 0)
 	{
 		environ = env_to_arr(g_env);
@@ -111,9 +110,9 @@ int		launch(t_node *cmd, char **av)
 		mfree((void **)&environ);
 		exit(errno); // errno ?
 	}
-	wpid = waitpid(pid, &sloc, WUNTRACED);
+	// wpid = waitpid(pid, &sloc, WUNTRACED);
 	mfree((void **)&path);
-	return (WEXITSTATUS(sloc));
+	return (0);
 }
 
 /*
@@ -261,11 +260,11 @@ int		execute_fork(t_node *cmd)
 		}
 		exit(ret);
 	}
-	waitpid(pid, &type, WUNTRACED);
+	// waitpid(pid, &type, WUNTRACED);
 	// mfree((void **)&environ);
 	// mfree((void **)&path);
 	cmd->pid = pid;
-	return (WEXITSTATUS(type));
+	return (0);
 }
 
 /*
