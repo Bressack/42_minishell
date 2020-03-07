@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 19:26:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 18:43:51 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 19:10:41 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 ** ERR_OPEN : ERROR FROM open() (strerror() RETURN THE MESSAGE)
 ** ERR_PIPE : ERROR FROM pipe() (strerror() RETURN THE MESSAGE)
 */
-
 int		asti_error(char *name, int opt)
 {
 	if (opt == ERR_OPEN)
@@ -32,13 +31,11 @@ int		asti_error(char *name, int opt)
 ** THIS FUNCTION RETURN 1 IF THE PARENT OF THE NODE IS A PIPE
 ** ELSE IT RETURN 0
 */
-
 int		node__parent_ispipe(t_node *node)
 {
 	return (node && node->parent && node->parent->type == SEP &&
 		node->parent->sep->type == PIPE);
 }
-
 
 /*
 ** THIS FUNCTION OPEN A NEW PIPE AND ASSIGN THE WRITE SIDE TO THE LEFT CHILD
@@ -53,8 +50,6 @@ int		node__parent_ispipe(t_node *node)
 ** RUN THE RIGHT CHILD THEN CLOSE THE READ SIDE OF THE PIPE CAUSE THE RIGHT
 ** CHILD HAS FINISHED TO USE IT
 */
-
-
 int		node__pipe_handle(t_node *ppln)
 {
 	int	sloc;
@@ -72,7 +67,7 @@ int		node__pipe_handle(t_node *ppln)
 	close(ppln->pipe_ltor[PIPE_READ]);
 	waitpid(ppln->left->pid, &sloc, WUNTRACED);
 	waitpid(ppln->right->pid, &sloc, WUNTRACED);
-	return (sloc);
+	return (WEXITSTATUS(sloc));
 }
 
 /*
@@ -81,7 +76,6 @@ int		node__pipe_handle(t_node *ppln)
 ** RETURN THE RETURN VALUE OF THE LEFT CHILD IF IT HAS FAILED ELSE IT RETURN
 ** THE RETURN OF THE RIGHT CHILD ELSE
 */
-
 int		node__dbl_and_handle(t_node *cmd_sep)
 {
 	int	sloc;
@@ -103,7 +97,6 @@ int		node__dbl_and_handle(t_node *cmd_sep)
 ** RETURN THE RETURN VALUE OF THE LEFT CHILD IF IT HAS SUCCEEDED ELSE IT RETURN
 ** THE RETURN OF THE RIGHT CHILD ELSE
 */
-
 int		node__dbl_or_handle(t_node *cmd_sep)
 {
 	int	sloc;
@@ -124,7 +117,6 @@ int		node__dbl_or_handle(t_node *cmd_sep)
 ** IF THE RIGHT CHILD EXIST (NOT NULL) THEN RUN IT AND WAIT FOR ITS END
 ** RETURN THE LAST RETURN LEFT OR RIGHT
 */
-
 int		node__semicon_handle(t_node *cmd_sep)
 {
 	int	sloc;
@@ -148,7 +140,6 @@ int		node__semicon_handle(t_node *cmd_sep)
 ** node__semicon_handle FOR SEMICON SEPARATOR
 ** RETURN ERROR IF THE NODE IS NOT A GOOD SEP
 */
-
 int		node__sep_controller(t_node *sep)
 {
 	if (token__istype(sep->sep, PIPE))
@@ -169,7 +160,6 @@ int		node__sep_controller(t_node *sep)
 ** THE FD JUST OPENED. BEFORE THE ASSIGNMENT, IT CLOSE THE FD PRESENT IN
 ** cmd->stdout OR cmd->stdin IF THEY ARE DIFFERENT OF STDOUT OR STDIN
 */
-
 int		redir_handle(t_node *cmd)
 {
 	t_token	*tmp_redir;
@@ -212,14 +202,14 @@ int		redir_handle(t_node *cmd)
 ** PIPES WHO COULD BE OPENED BEFORE) AND THEN RUN THE GOOD FUNCTION TO RUN A
 ** COMMAND
 */
-
 int		node__cmd_controller(t_node *cmd)
 {
 	if (redir_handle(cmd) == ERROR)
 		return (ERROR);
-	g_exit = execute_fork(cmd);
 	if (!node__parent_ispipe(cmd))
-		waitpid(cmd->pid, (int *)&g_exit, WUNTRACED);
+		g_exit = execute_simple(cmd);
+	else
+		g_exit = execute_fork(cmd);
 	return (g_exit);
 }
 
@@ -229,7 +219,6 @@ int		node__cmd_controller(t_node *cmd)
 ** ELSE IF CMD -> RUN node__cmd_controller
 ** ELSE JUST RETURN SUCCESS (EMPTY EXPRESSION)
 */
-
 int		node__controller(t_node *node)
 {
 	if (node->type == SEP)

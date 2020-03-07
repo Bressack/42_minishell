@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 17:45:57 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 19:01:42 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,7 +259,7 @@ int		execute_fork(t_node *cmd)
 		}
 		exit(ret);
 	}
-	waitpid(pid, &type, WUNTRACED);
+	// waitpid(pid, &type, WUNTRACED);
 	mfree((void **)&environ);
 	mfree((void **)&path);
 	cmd->pid = pid;
