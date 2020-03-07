@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 19:01:42 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 19:14:11 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,7 @@ char	**env_to_arr(t_env *trav)
 	{
 		if (trav->export && (env[size] =
 		(char *)mmalloc(ft_strlen(trav->name) + ft_strlen(trav->value) + 1)))
-			env[size++] =
-			cat_value(cat_value(ft_strdup(trav->name), "="), trav->value);
+			env[size++] = cat_value(trav->name, '=', trav->value);
 		trav = trav->next;
 	}
 	env[size] = NULL;
@@ -87,18 +86,16 @@ int		launch(t_node *cmd, char **av)
 	char	*path;
 	char	**environ;
 
-	environ = env_to_arr(g_env);
 	if (!(path = get_path(av[0], &sloc)))
-	{
-		mfree((void **)&environ);
 		return (bi_error(av[0], NULL, NULL, sloc));
-	}
 	if ((pid = fork()) < 0)
 		bi_error(av[0], NULL, strerror(errno), 0); // return ?
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
+	printf(TEST);
 	if (pid == 0)
 	{
+		environ = env_to_arr(g_env);
 		if (cmd->stdout != STDOUT) // THIS REALLY NECESSARY IF-STATEMENT?
 		{
 			dup2(cmd->stdout, STDOUT);
@@ -110,11 +107,11 @@ int		launch(t_node *cmd, char **av)
 			close(cmd->stdin);
 		}
 		execve(path, av, environ);
-		mfree((void **)&path);
+		mfree((void **)&path); // NOT REALLY NECESSARY TO FREE BC WILL HAPPEN W EXIT ANYWAYS?
+		mfree((void **)&environ);
 		exit(errno); // errno ?
 	}
 	wpid = waitpid(pid, &sloc, WUNTRACED);
-	mfree((void **)&environ);
 	mfree((void **)&path);
 	return (WEXITSTATUS(sloc));
 }
@@ -149,7 +146,7 @@ char	**check_cmd(t_node *cmd, int *ac, int *type)
 		return (av);
 	j = -1;
 	while (++j < assign)
-		free(av[j]);
+		mfree((void **)&av[j]);
 	ac -= assign;
 	j = -1;
 	while (++j < BUILTINS)
@@ -173,10 +170,15 @@ int		execute_simple(t_node *cmd)
 
 	av = check_cmd(cmd, &ac, &type);
 	if (type >= 0)
-		return (g_builtins[type].f(ac, av, cmd->stdout));
+		type = g_builtins[type].f(ac, av, cmd->stdout);
 	else if (type == -1)
-		return (export(ac, av, 1));
-	return (launch(cmd, av));
+		type = export(ac, av, 1);
+	else
+		type = launch(cmd, av);
+	while (av && *av) // FREEING NECESSARY BC NOT IN CHILD PROCESS. NOT SURE IF GOOD THO
+		mfree((void **)av++);
+	mfree((void **)&av);
+	return (type);
 }
 
 /*
@@ -196,9 +198,9 @@ int		execute_nofork(t_node *cmd)
 	av = check_cmd(cmd, &ac, &type);
 	environ = env_to_arr(g_env);
 	if (type >= 0)
-		return (g_builtins[type].f(ac, av, cmd->stdout));
+		exit (g_builtins[type].f(ac, av, cmd->stdout));
 	else if (type == -1)
-		return (export(ac, av, 1));
+		exit (export(ac, av, 1));
 	else
 	{
 		if (!(path = get_path(av[0], &sig)))
@@ -226,13 +228,13 @@ int		execute_fork(t_node *cmd)
 
 	if ((pid = fork()) < 0)
 		return (bi_error("fork", NULL, "failed", 0));
-	av = check_cmd(cmd, &ac, &type);
-	if (!av || !*av)
-		return (0);
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0)
 	{
+		av = check_cmd(cmd, &ac, &type);
+		if (!av || !*av)
+			exit (0);
 		if (type >= 0)
 			ret = g_builtins[type].f(ac, av, cmd->stdout);
 		else if (type == 127)
@@ -253,7 +255,7 @@ int		execute_fork(t_node *cmd)
 				exit(bi_error(av[0], NULL, NULL, type));
 			environ = env_to_arr(g_env);
 			execve(path, av, environ);
-			mfree((void **)&environ);
+			// mfree((void **)&environ);
 			bi_error(av[0], NULL, strerror(errno), 0);
 			exit(errno);
 		}
@@ -263,10 +265,6 @@ int		execute_fork(t_node *cmd)
 	mfree((void **)&environ);
 	mfree((void **)&path);
 	cmd->pid = pid;
-/*
-** 	if (type == BI_EXIT && !node__parent_ispipe(cmd->parent)) // SORRY BRO BUT NOT REALLY A GOOD SOLUTION...
-** 		exit(g_exit); // exit with simple exit cmd (not for an exit in a pipe)
-*/
 	return (WEXITSTATUS(type));
 }
 

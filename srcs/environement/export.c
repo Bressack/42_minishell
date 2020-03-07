@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/07 16:04:34 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 18:47:42 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void		set_var(char *name, int op, char *val, int export)
 
 	if ((set = ret_env(name)))
 	{
-		(op == '+') ? set->value = cat_value(set->value, val) : 0;
+		(op == '+') ? set->value = cat_value(set->value, 0, val) : 0;
 		if (op == '=')
 		{
 			mfree((void **)&set->value);
