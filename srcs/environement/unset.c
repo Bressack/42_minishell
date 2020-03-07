@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 18:27:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/07 08:14:10 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 16:06:00 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,8 @@ int		unset(int ac, char **args, int out)
 		}
 		while (*indir && ft_strcmp(args[i], (*indir)->name))
 			indir = &(*indir)->next;
-		if (*indir != NULL)
+		if (*indir != NULL && (f = *indir))
 		{
-			f = *indir;
 			*indir = f->next;
 			mfree((void **)&f->name);
 			mfree((void **)&f->value);

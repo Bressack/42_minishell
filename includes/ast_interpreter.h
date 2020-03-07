@@ -6,12 +6,12 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 03:39:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 23:11:11 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 16:23:11 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AST_INTERPRETER
-# define AST_INTERPRETER
+#ifndef AST_INTERPRETER_H
+# define AST_INTERPRETER_H
 # include <minishell.h>
 # define PIPE_READ			0 // the side of the pipe where the cmd will read
 # define PIPE_WRITE			1 // the side of the pipe where the cmd will write

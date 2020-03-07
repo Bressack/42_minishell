@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/03 12:05:29 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 12:25:03 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 16:21:53 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ int					to_nbr(char *buf, int *dir, va_list ap)
 	else
 		ft_itoa_b(n, (unsigned long long)get_nbr(dir, ap), dir);
 	dir[PF_PREC] != -1 ? dir[PF_ZERO] = -1 : 0;
-	dir[PF_PREC] = dir[PF_PREC] < ft_strnlen(n, -1) ? ft_strnlen(n, -1) : dir[PF_PREC];
+	dir[PF_PREC] = dir[PF_PREC] < ft_strnlen(n, -1) ?
+	ft_strnlen(n, -1) : dir[PF_PREC];
 	dir[PF_WIDTH] = dir[PF_WIDTH] - dir[PF_PREC];
 	n[0] == '\0' || n[0] == '0' ? dir[PF_S] = -1 : 0;
 	(dir[PF_SPEC] == 2 || dir[PF_S] == 1) ? dir[PF_WIDTH] -= 2 : 0;

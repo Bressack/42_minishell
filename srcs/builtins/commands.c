@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 08:57:40 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 15:55:12 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int		xexit(int ac, char **args, int out)
 	int code;
 
 	ft_dprintf(out, "exit\n");
-	code = g_exit; // set as LAST
+	code = g_exit;
 	if (ac > 1 && !ft_strisnum(args[1]) && (code = 2))
 		bi_error(args[0], args[1], "numeric argument required", 0);
 	else if (ac > 2 && bi_error(args[0], NULL, "too many arguments", 0))
@@ -77,7 +77,7 @@ int		xcd(int ac, char **args, int out)
 		return (2);
 	if (ac == 1 && (tmp2 = ret_envval("HOME")))
 		chdir(tmp2);
-	else if (args[1][0] == '-' && tmp) // ADD ERR MESS
+	else if (args[1][0] == '-' && tmp) // ADD ERR MESS ?
 		chdir(tmp);
 	else if (chdir(args[1]) != 0)
 		return (bi_error(args[0], args[1], strerror(errno), 0));

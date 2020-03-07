@@ -6,13 +6,13 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 10:37:08 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 12:57:51 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 16:15:12 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_printf.h>
 
-static void	ft_specifier(int *dir, const char **format, int i, va_list ap) //DID A CHANGE TO MERGE FUNCTIONS SO HOPE IT STILL WORKS HAHA
+static void	ft_specifier(int *dir, const char **format, int i, va_list ap)
 {
 	int		c;
 

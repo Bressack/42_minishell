@@ -6,15 +6,15 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 11:38:29 by frlindh           #+#    #+#             */
-/*   Updated: 2020/02/28 19:29:49 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/07 16:22:14 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static int		in_charset(char *str, char *charset, int i)
+static int	in_charset(char *str, char *charset, int i)
 {
-	int j;
+	int		j;
 
 	j = 0;
 	while (charset[j])
@@ -41,9 +41,9 @@ static char	*malloc_word(char *str, char *charset, int i)
 
 static char	**split_cpy(char *str, char *charset, char **split)
 {
-	int i;
-	int j;
-	int c;
+	int		i;
+	int		j;
+	int		c;
 
 	i = 0;
 	c = 0;
@@ -68,7 +68,7 @@ static char	**split_cpy(char *str, char *charset, char **split)
 	return (split);
 }
 
-char	**ft_split(char *str, char *charset)
+char		**ft_split(char *str, char *charset)
 {
 	char	**split;
 	int		i;

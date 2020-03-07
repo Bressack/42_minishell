@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 08:13:27 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 16:59:49 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,17 @@ char	*get_no_path(char *com)
 	return (path);
 }
 
-int		check_stat(char *path, int *err)
+int		check_stat(char *path, int *err, int f)
 {
 	int			ret;
 	struct stat	buf;
 
 	ret = stat(path, &buf);
 	if (ret < 0)
-		*err = 127;
-	else if ((buf.st_mode & S_IXUSR) != S_IXUSR)
+		*err = 127 + f;
+	// else if (!(buf.st_mode & S_IXUSR) || !(S_IEXEC & buf.st_mode) || !(S_ISREG(buf.st_mode)))
+	// 	*err = 126;
+	else if (!(buf.st_mode & S_IXUSR))
 		*err = 126;
 	else if (S_ISDIR(buf.st_mode))
 		*err = 125;
@@ -91,10 +93,10 @@ char	*get_path(char *command, int *err)
 	else
 		env = ret_envval("PATH");
 	if (path)
-		return (check_stat(path, err)) ? (path) : (NULL);
+		return (check_stat(path, err, 0)) ? (path) : (NULL);
 	while (env && *env && (path = get_next_path(&env, command)))
 	{
-		if (check_stat(path, err))
+		if (check_stat(path, err, 1))
 			return (path);
 		mfree((void **)&path);
 	}

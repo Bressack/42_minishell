@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 18:34:17 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 08:07:22 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 17:42:34 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,8 @@ void	*mrealloc(void *ptr, size_t size) // REVIEW THIS ONE
 	else if (ptr)
 	{
 		ptr = realloc(ptr, size); // TODO add a ft_realloc
-		if (!(list = (t_list *)malloc(sizeof(t_list))))
+		if (!(list = (t_list *)malloc(sizeof(t_list))) && !free_all_malloc())
 		{
-			free_all_malloc();
 			ft_dprintf(2, "allocation error");
 			exit(1);
 		}

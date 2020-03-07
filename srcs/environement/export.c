@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/07 08:14:00 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 16:04:34 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ static int	print_exp(int out)
 }
 
 /*
-** [IF] THE ENV VAR ALREADY EXISTS -> replace if def value || make sure export == 1 || nothing
+** [IF] THE ENV VAR ALREADY EXISTS ->
+** replace if def value || make sure export == 1 || nothing
 ** [ELSE] IF THE ENV DOESN'T EXIST: ADD BACK -- with value if = otherwise NULL
 */
 

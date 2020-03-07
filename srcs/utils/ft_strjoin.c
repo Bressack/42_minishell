@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/22 01:31:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 08:06:14 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 16:19:04 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,8 @@ char		*ft_strjoin(int nb_str, ...)
 				return (NULL);
 			size = ft_strlen(ret);
 		}
-		else
-			if (join(&ret, arg, &size) == NULL)
-				return (NULL);
+		else if (join(&ret, arg, &size) == NULL)
+			return (NULL);
 	}
 	va_end(ap);
 	return (ret);

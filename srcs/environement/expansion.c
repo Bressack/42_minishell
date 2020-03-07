@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 08:13:55 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 16:04:15 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,12 @@ int		expand_env(char **args, char *new)
 	char	name[LINE_MAX];
 
 	i = 0;
-	while (**args && ok_envchar(**args, 1)) // ADD SAFETY FOR NAME ?
+	while (**args && ok_envchar(**args, 1))
 	{
-		name[i++] = *((*args)++);
+		if (i < LINE_MAX)
+			name[i++] = *((*args)++);
+		else
+			(*args)++;
 		if (name[i - 1] == '?')
 			break ;
 	}
@@ -91,6 +94,7 @@ int		spec_char(char c)
 ** '$HOME \\' ---> [$HOME \\]
 ** echo \t \\ \$HOME "~ \t \\ \$HOME" ---> [t \ $HOME Users/frlindh \t \ $HOME]
 */
+
 char	*expand_qt(char *args)
 {
 	int		quote;
@@ -160,6 +164,7 @@ void	expand_split_env(t_token **args, int *ac)
 ** ELSE it will call only expand. Meaning if LS="     ls     -l"
 ** $LS ---> [ls] [-l] && "$LS" ---> [     ls     -l]
 */
+
 int		expand(t_token **args)
 {
 	int	ac;

@@ -6,12 +6,12 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:37:21 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/05 18:16:15 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 16:23:04 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AST_BUILDER
-# define AST_BUILDER
+#ifndef AST_BUILDER_H
+# define AST_BUILDER_H
 # include <minishell.h>
 
 /*

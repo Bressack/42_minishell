@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 15:06:47 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 08:13:43 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 16:02:51 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ t_env	*g_env = NULL;
 /*
 ** ENV BUILTIN
 */
+
 int		print_env(int ac, char **args, int out)
 {
 	t_env	*trav;
@@ -40,6 +41,7 @@ int		print_env(int ac, char **args, int out)
 ** FUNCTIONS THAT RETURN AN ENV VARIABLE.
 ** 1. Returns full structure 2. Returns just the value
 */
+
 t_env	*ret_env(char *name)
 {
 	t_env	*trav;
@@ -118,7 +120,7 @@ void	get_env(int ac, char **av, char **env)
 			break ;
 		if ((set_env(new, env[i])))
 		{
-				if (g_env == NULL && (new->next = NULL) == NULL)
+			if (g_env == NULL && (new->next = NULL) == NULL)
 				g_env = new;
 			else
 				prev->next = new;
