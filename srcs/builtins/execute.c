@@ -6,24 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/08 01:45:23 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:12:27 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-/*
-** typedef enum		e_biidx
-** {
-** 	BI_ECHO,
-** 	BI_CD,
-** 	BI_PWD,
-** 	BI_EXIT,
-** 	BI_EXPORT,
-** 	BI_UNSET,
-** 	BI_ENV
-** }					t_biidx;
-*/
 
 t_bi		g_builtins[BUILTINS] =
 {
@@ -81,38 +68,30 @@ void	sig_exec(int signo)
 int		launch(t_node *cmd, char **av)
 {
 	pid_t	pid;
-	// pid_t	wpid;
 	int		sloc;
 	char	*path;
 	char	**environ;
 
 	if (!(path = get_path(av[0], &sloc)))
 		return (bi_error(av[0], NULL, NULL, sloc));
-	if ((pid = fork()) < 0)
-		return (bi_error(av[0], NULL, strerror(errno), 0)); // return ?
+	if ((pid = fork()) < 0 && mfree((void **)&path))
+		return (bi_error(av[0], NULL, strerror(errno), 0));
 	signal(SIGINT, sig_exec);
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0)
 	{
 		environ = env_to_arr(g_env);
-		if (cmd->stdout != STDOUT) // THIS REALLY NECESSARY IF-STATEMENT?
-		{
-			dup2(cmd->stdout, STDOUT);
+		if (cmd->stdout != STDOUT && dup2(cmd->stdout, STDOUT) != -1)
 			close(cmd->stdout);
-		}
-		if (cmd->stdin != STDIN)
-		{
-			dup2(cmd->stdin, STDIN);
+		if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
 			close(cmd->stdin);
-		}
 		execve(path, av, environ);
-		mfree((void **)&path); // NOT REALLY NECESSARY TO FREE BC WILL HAPPEN W EXIT ANYWAYS? // YES BECAUSE EXIT DOES NOT FREE / theo
-		mfree((void **)&environ);
+		free_all_malloc();
 		exit(errno); // errno ?
 	}
-	pid = waitpid(pid, &sloc, WUNTRACED);
 	mfree((void **)&path);
-	return (0);
+	waitpid(pid, &sloc, WUNTRACED);
+	return (WEXITSTATUS(sloc));
 }
 
 /*
@@ -143,16 +122,13 @@ char	**check_cmd(t_node *cmd, int *ac, int *type)
 	}
 	if (assign == *ac && (*type = -1))
 		return (av);
-	j = -1;
-	while (++j < assign)
-		mfree((void **)&av[j]);
-	ac -= assign;
-	j = -1;
-	while (++j < BUILTINS)
-		if (!ft_strcmp(av[assign], g_builtins[j].name) && (*type = j) > -1)
-			return (&av[assign]);
-	*type = -2;
-	return (&av[assign]);
+	*ac -= assign;
+	while ((j = -1) < 0 && assign-- > 0)
+		mfree((void **)av++); //not sure about these
+	while (++j < BUILTINS && (*type = -2) < 0)
+		if (!ft_strcmp(av[0], g_builtins[j].name) && (*type = j) > -1)
+			return (av);
+	return (av);
 }
 
 /*
@@ -174,8 +150,8 @@ int		execute_simple(t_node *cmd)
 		type = export(ac, av, 1);
 	else
 		type = launch(cmd, av);
-	while (av && *av) // FREEING NECESSARY BC NOT IN CHILD PROCESS. NOT SURE IF GOOD THO
-		mfree((void **)av++);
+	while (av && *av)
+		mfree((void **)av++); //not sure about these
 	mfree((void **)&av);
 	return (type);
 }
@@ -185,45 +161,71 @@ int		execute_simple(t_node *cmd)
 ** ASSIGNMENTS OR COMMANDS IN SPECIFIC PATH OR WILL PATH ENVIRONMENT VAR
 */
 
-int		execute_nofork(t_node *cmd)
-{
-	char	**av;
-	int		ac;
-	int		type;
-	char	*path;
-	int		sig;
-	char	**environ;
-
-	av = check_cmd(cmd, &ac, &type);
-	environ = env_to_arr(g_env);
-	if (type >= 0)
-		exit (g_builtins[type].f(ac, av, cmd->stdout));
-	else if (type == -1)
-		exit (export(ac, av, 1));
-	else
-	{
-		if (!(path = get_path(av[0], &sig)))
-			return (bi_error(av[0], NULL, NULL, sig));
-		execve(path, av, environ);
-		bi_error(av[0], NULL, strerror(errno), 0);
-		exit(errno);
-	}
-}
+/*
+** int		execute_nofork(t_node *cmd)
+** {
+** 	char	**av;
+** 	int		ac;
+** 	int		type;
+** 	char	*path;
+** 	int		sig;
+** 	char	**environ;
+**
+** 	av = check_cmd(cmd, &ac, &type);
+** 	environ = env_to_arr(g_env);
+** 	if (type == 3)
+** 		exit (g_builtins[type].f(ac, av, -1));
+** 	else if (type >= 0)
+** 		exit (g_builtins[type].f(ac, av, cmd->stdout));
+** 	else if (type == -1)
+** 		exit (export(ac, av, 1));
+** 	else
+** 	{
+** 		if (!(path = get_path(av[0], &sig)))
+** 			return (bi_error(av[0], NULL, NULL, sig));
+** 		execve(path, av, environ);
+** 		bi_error(av[0], NULL, strerror(errno), 0);
+** 		exit(errno);
+** 	}
+** }
+*/
 
 /*
 ** USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCTION. MEANING IT FORKS IN
 **< HEREEE
 */
 
-int		execute_fork(t_node *cmd)
+int		execute_in_child(t_node *cmd)
 {
 	char	**av;
 	int		ac;
 	int		type;
 	char	*path;
+	char	**environ;
+
+	av = check_cmd(cmd, &ac, &type);
+	if (!av || !*av || type == 3)
+		return (0);
+	else if (type >= 0)
+		return (g_builtins[type].f(ac, av, cmd->stdout));
+	else if (type == -1)
+		return (export(ac, av, 1));
+	if (cmd->stdout != STDOUT && dup2(cmd->stdout, STDOUT) != -1)
+		close(cmd->stdout);
+	if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
+		close(cmd->stdin);
+	if (!(path = get_path(av[0], &type)))
+		return (bi_error(av[0], NULL, NULL, type));
+	environ = env_to_arr(g_env);
+	execve(path, av, environ);
+	bi_error(av[0], NULL, strerror(errno), 0);
+	return (errno);
+}
+
+int		execute_fork(t_node *cmd)
+{
 	int		pid;
 	int		ret;
-	char	**environ;
 
 	if ((pid = fork()) < 0)
 		return (bi_error("fork", NULL, "failed", 0));
@@ -231,41 +233,68 @@ int		execute_fork(t_node *cmd)
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0)
 	{
-		av = check_cmd(cmd, &ac, &type);
-		if (!av || !*av)
-			exit (0);
-		if (type >= 0)
-			ret = g_builtins[type].f(ac, av, cmd->stdout);
-		else if (type == 127)
-			ret = export(ac, av, 1);
-		else
-		{
-			if (cmd->stdout != STDOUT)
-			{
-				dup2(cmd->stdout, STDOUT);
-				close(cmd->stdout);
-			}
-			if (cmd->stdin != STDIN)
-			{
-				dup2(cmd->stdin, STDIN);
-				close(cmd->stdin);
-			}
-			if (!(path = get_path(av[0], &type)))
-				exit(bi_error(av[0], NULL, NULL, type));
-			environ = env_to_arr(g_env);
-			execve(path, av, environ);
-			mfree((void **)&environ);
-			bi_error(av[0], NULL, strerror(errno), 0);
-			exit(errno);
-		}
+		ret = execute_in_child(cmd);
+		free_all_malloc();
 		exit(ret);
 	}
-	mfree((void **)&environ);
-	mfree((void **)&path);
 	cmd->pid = pid;
 	waitallpipes(pid, ADD);
 	return (0);
 }
+/*
+** int		execute_fork(t_node *cmd)
+** {
+** 	char	**av;
+** 	int		ac;
+** 	int		type;
+** 	char	*path;
+** 	int		pid;
+** 	int		ret;
+** 	char	**environ;
+**
+** 	if ((pid = fork()) < 0)
+** 		return (bi_error("fork", NULL, "failed", 0));
+** 	signal(SIGINT, sig_exec);
+** 	signal(SIGQUIT, sig_exec);
+** 	if (pid == 0)
+** 	{
+** 		av = check_cmd(cmd, &ac, &type);
+** 		if (!av || !*av || type == 3)
+** 			ret = 0;
+** 		else if (type >= 0)
+** 			ret = g_builtins[type].f(ac, av, cmd->stdout);
+** 		else if (type == -1)
+** 			ret = export(ac, av, 1);
+** 		else
+** 		{
+** 			if (cmd->stdout != STDOUT)
+** 			{
+** 				dup2(cmd->stdout, STDOUT);
+** 				close(cmd->stdout);
+** 			}
+** 			if (cmd->stdin != STDIN)
+** 			{
+** 				dup2(cmd->stdin, STDIN);
+** 				close(cmd->stdin);
+** 			}
+** 			if (!(path = get_path(av[0], &type)))
+** 				ret = bi_error(av[0], NULL, NULL, type);
+** 			else
+** 			{
+** 				environ = env_to_arr(g_env);
+** 				execve(path, av, environ);
+** 				bi_error(av[0], NULL, strerror(errno), 0);
+** 				ret = errno;
+** 			}
+** 		}
+** 		free_all_malloc();
+** 		exit(ret);
+** 	}
+** 	cmd->pid = pid;
+** 	waitallpipes(pid, ADD);
+** 	return (0);
+** }
+*/
 
 /*
 ** int		execute_pipe(t_node *node) //EXAMPLE PSUEDO FOR PIPE FUNCTION W FORK

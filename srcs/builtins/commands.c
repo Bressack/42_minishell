@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 15:55:12 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/08 13:28:29 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,29 +65,29 @@ int		xexit(int ac, char **args, int out)
 
 int		xcd(int ac, char **args, int out)
 {
-	t_env	*change;
+	t_env	*slct;
 	char	*tmp;
 	char	*tmp2;
 	char	dir[LINE_MAX];
 
-	(void)out;
-	change = ret_env("OLDPWD");
-	tmp = (change) ? change->value : NULL;
-	if (ac > 2 && bi_error(args[0], NULL, "too many arguments", 0))
-		return (2);
+	slct = ret_env("OLDPWD");
+	tmp = (slct) ? slct->value : NULL;
+	getcwd(dir, LINE_MAX);
+	if (ac > 2)
+		return (bi_error(args[0], NULL, "too many arguments", 0));
 	if (ac == 1 && (tmp2 = ret_envval("HOME")))
 		chdir(tmp2);
-	else if (args[1][0] == '-' && tmp) // ADD ERR MESS ?
+	else if (ac == 1 || (args[1][0] == '-' && !tmp))
+		return (ac != 1) ? (bi_error(args[0], NULL, "OLDPWD not set", 0)) :
+			(bi_error(args[0], NULL, "HOME not set", 0));
+	else if (args[1][0] == '-' && tmp && ft_dprintf(out, "%s\n", tmp))
 		chdir(tmp);
 	else if (chdir(args[1]) != 0)
 		return (bi_error(args[0], args[1], strerror(errno), 0));
-	if (change)
-		change->value = ret_envval("PWD"); // IF NOT SET MALLOC NEW
-	if ((change = ret_env("PWD")))
-	{
-		getcwd(dir, LINE_MAX);
-		change->value = ft_strdup(dir);
-	}
+	if (slct)
+		slct->value = (ret_envval("PWD")) ? ret_envval("PWD") : ft_strdup(dir);
+	if ((slct = ret_env("PWD")))
+		slct->value = ft_strdup(getcwd(dir, LINE_MAX));
 	mfree((void **)&tmp);
 	return (0);
 }
