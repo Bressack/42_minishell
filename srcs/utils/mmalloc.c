@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 18:34:17 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 18:29:15 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/08 12:16:59 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ int		free_all_malloc(void)
 	return (0);
 }
 
-void	mfree(void **to_free)
+int		mfree(void **to_free)
 {
 	t_list **indir;
 	t_list *f;
 
 	if (!*to_free)
-		return ;
+		return (0);
 	indir = &g_all_malloc;
 	while (*indir && (*indir)->data != *to_free)
 		indir = &((*indir)->next);
@@ -70,4 +70,5 @@ void	mfree(void **to_free)
 	}
 	free(f);
 	*to_free = NULL;
+	return (0);
 }
