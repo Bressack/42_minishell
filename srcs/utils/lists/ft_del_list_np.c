@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/23 16:36:42 by tharchen          #+#    #+#             */
-/*   Updated: 2020/02/27 17:12:39 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/08 01:20:10 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,5 @@ void		ft_del_list_np(t_pnp **begin_list)
 		mfree((void **)&tmp);
 		tmp = tmp2;
 	}
+	*begin_list = NULL;
 }

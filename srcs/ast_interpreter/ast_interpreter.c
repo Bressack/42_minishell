@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 22:32:02 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 22:53:55 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/08 01:46:33 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,33 @@ int		node__parent_ispipe(t_node *node)
 		node->parent->sep->type == PIPE);
 }
 
+int		waitallpipes(pid_t pid, int opt)
+{
+	static t_pid_save	*pids = NULL;
+	t_pid_save			*new;
+	int					sloc;
+
+	sloc = 0;
+	if (opt == ADD)
+	{
+		new = mmalloc(sizeof(t_pid_save));
+		new->pid = pid;
+		ft_add_node_end_np((t_pnp **)&pids, (t_pnp *)new);
+	}
+	else if (opt == WAIT)
+	{
+		new = pids;
+		while (new->next)
+			new = new->next;
+		while (new)
+		{
+			waitpid(new->pid, &sloc, new->next ? WNOHANG : WUNTRACED);
+			new = new->prev;
+		}
+		ft_del_list_np((t_pnp **)&pids);
+	}
+	return (sloc);
+}
 
 /*
 ** THIS FUNCTION OPEN A NEW PIPE AND ASSIGN THE WRITE SIDE TO THE LEFT CHILD
@@ -54,12 +81,15 @@ int		node__parent_ispipe(t_node *node)
 ** CHILD HAS FINISHED TO USE IT
 */
 
-
 int		node__pipe_handle(t_node *ppln)
 {
 	int	sloc;
+	int	head;
 
+	head = 0;
 	sloc = 0;
+	if (!node__parent_ispipe(ppln))
+		head = 1;
 	if (pipe(ppln->pipe_ltor) == -1)
 		return (asti_error(NULL, ERR_PIPE));
 	ppln->left->stdout != STDOUT ? close(ppln->left->stdout) : 0;
@@ -71,9 +101,9 @@ int		node__pipe_handle(t_node *ppln)
 	close(ppln->pipe_ltor[PIPE_WRITE]);
 	node__controller(ppln->right);
 	close(ppln->pipe_ltor[PIPE_READ]);
-	// waitpid(ppln->left->pid, &sloc, WUNTRACED);
-	// waitpid(ppln->right->pid, &sloc, WUNTRACED);
-	return (sloc);
+	if (head == 1)
+		sloc = waitallpipes(0, WAIT);
+	return (WEXITSTATUS(sloc));
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 09:54:38 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/07 08:07:15 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 23:11:49 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,12 @@ int			get_next_line(int fd, char **line)
 		file = ft_strcat(file, buf);
 		if (file[0] == 0 && (file[0] = -1) < 0)
 		{
-			ft_dprintf(1, "exit\n");
+			ft_dprintf(STDOUT, "exit\n");
 			free_all_malloc();
 			exit(0);
 		}
 		if (ret == 0)
-			ft_dprintf(1, "  \b\b");
+			ft_dprintf(STDOUT, "  \b\b");
 	}
 	*line = ft_cpyline(&file, 0);
 	return (ret == 0 ? 0 : 1);

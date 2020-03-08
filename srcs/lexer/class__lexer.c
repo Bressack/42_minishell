@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 08:54:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/07 23:12:25 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ next '''.
 */
 int			lexer__pass_quotes(t_lexer *lex, t_char_type type)
 {
-	int			found;
+	int		found;
 
 	found = 0;
 	lexer__advance(lex, 1);

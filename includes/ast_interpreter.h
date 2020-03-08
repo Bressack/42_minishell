@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 03:39:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 16:23:11 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/08 01:26:40 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,29 @@
 ** yes it's weird for the parent side,
 ** but more easy for the child process.
 */
-typedef enum		e_ast_interpreter_opt
+typedef struct			s_pid_save
+{
+	struct s_pid_save	*next;
+	struct s_pid_save	*prev;
+	pid_t				pid;
+}						t_pid_save;
+typedef enum			e_ast_interpreter_opt
 {
 	ASTI_SUCCESS,
 	ASTI_FAILURE
-}					t_ast_interpreter_opt;
-typedef enum		e_asti_error_opt
+}						t_ast_interpreter_opt;
+typedef enum			e_asti_error_opt
 {
 	ERR_OPEN,
 	ERR_PIPE
-}					t_asti_error_opt;
-typedef enum		e_waitnclose_opt
+}						t_asti_error_opt;
+typedef enum			e_waitnclose_opt
 {
 	ADD,
-	CLOSE
-}					t_waitnclose_opt;
-int					ast_interpreter(t_node *ast);
-int					node__controller(t_node *node);
-int					node__parent_ispipe(t_node *node);
+	WAIT
+}						t_waitnclose_opt;
+int						ast_interpreter(t_node *ast);
+int						node__controller(t_node *node);
+int						node__parent_ispipe(t_node *node);
+int						waitallpipes(pid_t pid, int opt);
 #endif

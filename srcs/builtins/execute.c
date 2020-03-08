@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 19:22:19 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/08 01:45:23 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,11 @@ int		launch(t_node *cmd, char **av)
 			close(cmd->stdin);
 		}
 		execve(path, av, environ);
-		mfree((void **)&path); // NOT REALLY NECESSARY TO FREE BC WILL HAPPEN W EXIT ANYWAYS?
+		mfree((void **)&path); // NOT REALLY NECESSARY TO FREE BC WILL HAPPEN W EXIT ANYWAYS? // YES BECAUSE EXIT DOES NOT FREE / theo
 		mfree((void **)&environ);
 		exit(errno); // errno ?
 	}
-	// wpid = waitpid(pid, &sloc, WUNTRACED);
+	pid = waitpid(pid, &sloc, WUNTRACED);
 	mfree((void **)&path);
 	return (0);
 }
@@ -250,20 +250,20 @@ int		execute_fork(t_node *cmd)
 				dup2(cmd->stdin, STDIN);
 				close(cmd->stdin);
 			}
-			if (!(path = get_path(av[0], &type)) && printf(TEST))
+			if (!(path = get_path(av[0], &type)))
 				exit(bi_error(av[0], NULL, NULL, type));
 			environ = env_to_arr(g_env);
 			execve(path, av, environ);
-			// mfree((void **)&environ);
+			mfree((void **)&environ);
 			bi_error(av[0], NULL, strerror(errno), 0);
 			exit(errno);
 		}
 		exit(ret);
 	}
-	// waitpid(pid, &type, WUNTRACED);
 	mfree((void **)&environ);
 	mfree((void **)&path);
 	cmd->pid = pid;
+	waitallpipes(pid, ADD);
 	return (0);
 }
 
