@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/09 20:41:45 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 21:55:11 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ char	**env_to_arr(t_env *trav)
 
 void	sig_exec(int signo)
 {
-	if (signo == SIGINT) // return 130 !
+	if (signo == SIGINT)
 	{
 		write(1, "\n", 1);
 		g_exit = 130;
 	}
 	if (signo == SIGQUIT)
 	{
-		ft_dprintf(2, "Quit: 3\n"); // return 131 !
+		ft_dprintf(2, "Quit: 3\n");
 		g_exit = 131;
 		// exit(3);
 	}
@@ -91,7 +91,7 @@ int		launch(t_node *cmd, char **av)
 	}
 	mfree((void **)&path);
 	waitpid(pid, &sloc, WUNTRACED);
-	return (WEXITSTATUS(sloc));
+	return (g_exit >= 130) ? (g_exit) : (WEXITSTATUS(sloc));
 }
 
 /*
@@ -148,7 +148,7 @@ int		execute_simple(t_node *cmd)
 		type = g_builtins[type].f(ac, av, cmd->stdout);
 	else if (type == -1)
 		type = export(ac, av, 1);
-	else
+	else if (!(g_exit = 0))
 		type = launch(cmd, av);
 	while (av && *av)
 		mfree((void **)av++); //not sure about these
@@ -240,98 +240,3 @@ int		execute_fork(t_node *cmd)
 	}
 	return (0);
 }
-/*
-** int		execute_fork(t_node *cmd)
-** {
-** 	char	**av;
-** 	int		ac;
-** 	int		type;
-** 	char	*path;
-** 	int		pid;
-** 	int		ret;
-** 	char	**environ;
-**
-** 	if ((pid = fork()) < 0)
-** 		return (bi_error("fork", NULL, "failed", 0));
-** 	signal(SIGINT, sig_exec);
-** 	signal(SIGQUIT, sig_exec);
-** 	if (pid == 0)
-** 	{
-** 		av = check_cmd(cmd, &ac, &type);
-** 		if (!av || !*av || type == 3)
-** 			ret = 0;
-** 		else if (type >= 0)
-** 			ret = g_builtins[type].f(ac, av, cmd->stdout);
-** 		else if (type == -1)
-** 			ret = export(ac, av, 1);
-** 		else
-** 		{
-** 			if (cmd->stdout != STDOUT)
-** 			{
-** 				dup2(cmd->stdout, STDOUT);
-** 				close(cmd->stdout);
-** 			}
-** 			if (cmd->stdin != STDIN)
-** 			{
-** 				dup2(cmd->stdin, STDIN);
-** 				close(cmd->stdin);
-** 			}
-** 			if (!(path = get_path(av[0], &type)))
-** 				ret = bi_error(av[0], NULL, NULL, type);
-** 			else
-** 			{
-** 				environ = env_to_arr(g_env);
-** 				execve(path, av, environ);
-** 				bi_error(av[0], NULL, strerror(errno), 0);
-** 				ret = errno;
-** 			}
-** 		}
-** 		free_all_malloc();
-** 		exit(ret);
-** 	}
-** 	return (0);
-** }
-*/
-
-/*
-** int		execute_pipe(t_node *node) //EXAMPLE PSUEDO FOR PIPE FUNCTION W FORK
-** {
-** 	int		pipefd[2];
-** 	pid_t	p[2];
-** 	// char	**environ;
-** 	char	*path[2];
-** 	int		ret;
-**
-** 	signal(SIGINT, sig_exec);
-** 	signal(SIGQUIT, sig_exec);
-** 	// environ = env_to_arr(g_env);
-** 	if (pipe(pipefd) < 0)
-** 		return (bi_error("pipe", NULL, "failed", 0));
-** 	if ((p[0] = fork()) < 0)
-** 		return (bi_error("fork", NULL, "failed", 0));
-** 	if (path[0] && p[0] == 0)
-** 	{
-** 		close(pipefd[0]);
-** 		dup2(pipefd[1], 1);
-** 		close(pipefd[1]);
-** 		ret = execute_next_node(node->left);
-** 		exit(ret);
-** 	}
-** 	if ((p[1] = fork()) < 0)
-** 		return (bi_error("fork", NULL, "failed", 0));
-** 	if (path[1] && p[1] == 0)
-** 	{
-** 		close(pipefd[1]);
-** 		dup2(pipefd[0], 0);
-** 		close(pipefd[0]);
-** 		ret = execute_nofork(node->right);
-** 		exit(ret);
-** 	}
-** 	wait();
-** 	wait();
-** 	mfree((void **)&environ);
-** 	mfree((void **)&path[0]);
-** 	mfree((void **)&path[1]);
-** 	return (WEXITSTATUS(p[1]));
-** }
-*/

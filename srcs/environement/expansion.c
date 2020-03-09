@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 16:04:15 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/09 19:11:07 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,18 @@ int		spec_char(char c)
 ** echo \t \\ \$HOME "~ \t \\ \$HOME" ---> [t \ $HOME Users/frlindh \t \ $HOME]
 */
 
+int		expand_simple_quotes(char **args, char *new)
+{
+	int		i;
+
+	i = 0;
+	(*args)++;
+	while (*args && **args && **args != '\'')
+		new[i++] = *((*args)++);
+	(*args)++;
+	return (i);
+}
+
 char	*expand_qt(char *args)
 {
 	int		quote;
@@ -103,11 +115,10 @@ char	*expand_qt(char *args)
 
 	quote = 0;
 	j = 0;
-	while (args && *args)
+	while (args && *args && j < LINE_MAX)
 	{
 		if (quote == 0 && *args == '\'')
-			while (args++ && *args && *args != '\'')
-				new[j++] = *args;
+			j += expand_simple_quotes(&args, &new[j]);
 		else if (*args == '$' && ok_envchar(*(args + 1), 0) && args++)
 			j += expand_env(&args, &new[j]);
 		else if (*args == '\"' && args++)
