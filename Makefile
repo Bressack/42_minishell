@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/08 01:50:54 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/09 02:49:02 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -32,7 +32,7 @@ CC						=	clang
 FLAGS					=	\
 							-Wall -Wextra -Werror \
 							-ferror-limit=1000 \
-							# -O3 \
+							-O3 \
 							# -g3 -fsanitize=address \
 							# -g3 \
 
@@ -91,6 +91,9 @@ SRCS_AST_BUILDER		=	\
 
 SRCS_AST_INTERPRETER	=	\
 							ast_interpreter/ast_interpreter.c \
+							ast_interpreter/node__pipe_handle.c \
+							ast_interpreter/node__sep_controller.c \
+							ast_interpreter/redir_handle.c \
 
 SRCS_UTILS				=	\
 							utils/ft_strlen.c \

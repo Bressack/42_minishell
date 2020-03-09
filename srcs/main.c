@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 23:11:44 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 05:28:05 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	print_prompt(int sloc)
 
 void	sig_handler(int signo)
 {
-	if (signo == SIGINT && ft_dprintf(STDOUT, "\n")) //RESET LINE
+	if (signo == SIGINT && ft_dprintf(STDOUT, "\n")) // RESET LINE
 		print_prompt(0);
 	else if (signo == SIGQUIT)
 		ft_dprintf(2, "\b\b  \b\b");
@@ -49,10 +49,9 @@ int		main(int ac, char **av, char **env)
 		signal(SIGQUIT, sig_handler);
 		if ((ast = ast_builder(sloc)))
 		{
-			// ast ? tree_draw(ast) : 0;
-			// print_ast(ast, 0);
+			ast ? tree_draw(ast) : 0;
 			sloc = ast_interpreter(ast);
-			del_node(&ast, RECURCIVLY);
+			node__del(&ast, RECURCIVLY);
 		}
 	}
 	free_all_malloc();

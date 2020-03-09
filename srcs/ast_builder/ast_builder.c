@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:31:13 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 08:06:14 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 04:13:23 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,88 +26,29 @@ int		astb_error(t_astb *tool, int opt)
 	return (ERROR);
 }
 
-t_node	*new_node(t_nodetype type)
+t_node	*node__new(t_nodetype type)
 {
 	t_node		*new;
 
 	new = mmalloc(sizeof(t_node));
 	new->type = type;
+	new->stdin = STDIN;
+	new->stdout = STDOUT;
 	return (new);
 }
 
-void	del_node(t_node **node, int opt)
+void	node__del(t_node **node, int opt)
 {
 	token__list_del(&(*node)->av);
 	token__list_del(&(*node)->redir);
 	token__list_del(&(*node)->sep);
 	if (opt == RECURCIVLY)
 	{
-		(*node)->left ? del_node(&(*node)->left, opt) : 0;
-		(*node)->right ? del_node(&(*node)->right, opt) : 0;
+		(*node)->left ? node__del(&(*node)->left, opt) : 0;
+		(*node)->right ? node__del(&(*node)->right, opt) : 0;
 	}
 	mfree((void **)node);
 }
-
-/*
-** int		print_node(t_node *n)
-** {
-** 	ft_printf("[ NODE   "C_G_YELLOW"%-4s"C_RES" | "C_G_GREEN"%-14p"C_RES" ] {["
-** 		C_G_CYAN"%4s"C_RES"] <- ["C_G_RED"%4s"C_RES"] -> ["C_G_CYAN"%4s"
-** 		C_RES"]}",
-** 		n ? n->type == CMD ? "CMD" : "SEP" : "NULL",
-** 		n,
-** 		n && n->left ? n->left->type == CMD ? n->left->av->value : n->left->sep
-** 		->value : "NULL",
-** 		n ? n->type == CMD ? n->av->value : n->sep->value : "NULL",
-** 		n && n->right ? n->right->type == CMD ? n->right->av->value : n->right->
-** 		sep->value : "NULL"
-** 	);
-** 	n = n ? n->parent : NULL;
-** 	ft_printf(" "C_G_MAGENTA"####"C_RES" [ PARENT "C_G_YELLOW"%-4s"C_RES" | "
-** 		C_G_GREEN"%-14p"C_RES" ] {["C_G_CYAN"%4s"C_RES"] <- ["C_G_RED"%4s"C_RES
-** 		"] -> ["C_G_CYAN"%4s"C_RES"]}",
-** 		n ? n->type == CMD ? "CMD" : "SEP" : "NULL",
-** 		n,
-** 		n && n->left ? n->left->type == CMD ? n->left->av->value : n->left->sep
-** 		->value : "NULL",
-** 		n ? n->type == CMD ? n->av->value : n->sep->value : "NULL",
-** 		n && n->right ? n->right->type == CMD ? n->right->av->value : n->right->
-** 		sep->value : "NULL"
-** 	);
-** 	ft_printf("\n");
-** 	return (0);
-** }
-**
-** void	print_ast(t_node *n, int deep)
-** {
-** 	!deep ? ft_printf("\n") : 0;
-** 	if (!n)
-** 		ft_printf("("C_G_RED"null"C_RES")\n");
-** 	else
-** 	{
-** 		if (n->type == CMD)
-** 		{
-** 			if (!n->av)
-** 				ft_printf(""C_G_RED"null"C_RES);
-** 			else
-** 				for (t_token *tmp = n->av ; tmp ; tmp = tmp->next)
-** 					ft_printf("{"C_G_YELLOW"%s"C_RES"} ", tmp->value);
-** 			ft_printf("\n");
-** 		}
-** 		else
-** 		{
-** 			ft_printf("["C_G_CYAN"%s"C_RES"]\n", n->sep ? n->sep->value :
-** 			C_G_RED"null"C_RES);
-** 			for (int i = 0; i < deep; i++)
-** 				ft_printf("|   ");
-** 			ft_printf("L - "), print_ast(n->left, deep + 1);
-** 			for (int i = 0; i < deep; i++)
-** 				ft_printf("|   ");
-** 			ft_printf("R - "), print_ast(n->right, deep + 1);
-** 		}
-** 	}
-** }
-*/
 
 int		eat(t_astb *tool, t_token_type_m type)
 {
@@ -165,8 +106,6 @@ void	search_place_node(t_astb *tool, t_node *node, t_token_type_m type)
 
 int		add_to_ast(t_astb *tool, t_node *node)
 {
-	node->stdin = STDIN;
-	node->stdout = STDOUT;
 	if (tool->ast == NULL)
 	{
 		if (node->type == SEP)
@@ -175,11 +114,8 @@ int		add_to_ast(t_astb *tool, t_node *node)
 	}
 	else
 	{
-		if (node->type == CMD)
-		{
-			tool->tree_pos->right = node;
+		if (node->type == CMD && (tool->tree_pos->right = node))
 			node->parent = tool->tree_pos;
-		}
 		else if (node->type == SEP)
 		{
 			if (!node->sep)
@@ -196,36 +132,19 @@ int		add_to_ast(t_astb *tool, t_node *node)
 	return (SUCCESS);
 }
 
-/*
-** t_node *cmd; -> new empty node command
-** t_node *sep; -> new empty node separator
-** Send an error if the first token is a sep. a command cannot begin by a sep
-**
-** init the node cmd
-** loop on each next token could be a redirection ['&&' | '||' | '|' WORD] or an
-** arg (cmd name then args)
-**
-** handle redir (a redir is a redir token following by a WORD (its file)
-**
-** add the REDIR token into the node and eat the current_token to reveal the
-** next one
-** add the WORD token into the node and eat the current_token to reveal the next
-** one
-**
-** handle args (cmd och args ...)
-** add the WORD token into the node and eat the current_token to reveal the next
-** one
-**
-** add the node cmd to the ast. A cmd is always added to the right child of
-** tree_pos (tree_pos is the last position where a node was added)
-** if a sep is present after the cmd, then add it to the sep node then into the
-**< ast
-**
-** init the node sep
-**
-** add the node sep to the ast.
-** rerun process to the next cmd
-*/
+int		process_call_next(t_astb *tool, t_node **sep)
+{
+	if (token__issep(tool->current_token))
+	{
+		*sep = node__new(SEP);
+		if (add_token_into_node(tool, &(*sep)->sep, AST_SEP) == ERROR)
+			return (ERROR);
+		add_to_ast(tool, *sep);
+		if (process(tool) == ERROR)
+			return (ERROR);
+	}
+	return (SUCCESS);
+}
 
 int		process(t_astb *tool)
 {
@@ -237,7 +156,7 @@ int		process(t_astb *tool)
 		return (SUCCESS);
 	if (token__issep(tool->current_token) || token__iseot(tool->current_token))
 		return (astb_error(tool, UNEXPECTED_TOKEN));
-	cmd = new_node(CMD);
+	cmd = node__new(CMD);
 	while (token__isword(tool->current_token) ||
 		token__isredir(tool->current_token))
 	{
@@ -253,16 +172,7 @@ int		process(t_astb *tool)
 			return (ERROR);
 	}
 	add_to_ast(tool, cmd);
-	if (token__issep(tool->current_token))
-	{
-		sep = new_node(SEP);
-		if (add_token_into_node(tool, &sep->sep, AST_SEP) == ERROR)
-			return (ERROR);
-		add_to_ast(tool, sep);
-		if (process(tool) == ERROR)
-			return (ERROR);
-	}
-	return (SUCCESS);
+	return (process_call_next(tool, &sep));
 }
 
 int		init_tool(t_astb *tool, int sloc)

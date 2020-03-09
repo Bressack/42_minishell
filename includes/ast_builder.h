@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 02:37:21 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 16:23:04 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/09 04:12:13 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,9 @@ typedef struct		s_astb
 */
 t_node				*ast_builder(int sloc);
 void				print_ast(t_node *n, int deep);
-t_node				*new_node(t_nodetype type);
-void				del_node(t_node **node, int opt);
+t_node				*node__new(t_nodetype type);
+void				node__del(t_node **node, int opt);
+int					process(t_astb *tool);
 /*
 ** *****************************************************************************
 ** *****************************************************************************

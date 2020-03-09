@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/07 23:12:25 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 03:04:24 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,10 @@ int				lexer__error(int opt, t_lexer *lex)
 		ft_dprintf(2, "minishell: functionality not supported \'||\'\n");
 	else if (opt == ERR_UNSUPPORTED_FEATURE_SUBSHELL)
 		ft_dprintf(2, "minishell: subshells are not supported\n");
+	else if (opt == ERR_UNSUPPORTED_FEATURE_HEREDOC)
+		ft_dprintf(2, "minishell: heredocs are not supported\n");
 	else if (opt == ERR_GNL)
-	{
-		// ft_dprintf(2, "minishell: unable to read on stdout\n");
-		exit(0); // if i put that here, I do like bash
-	}
+		exit(0);
 	else
 		ft_dprintf(2, "minishell: invalid character \'%c\' (%#x)\n",
 			lex->current_char, lex->current_char);

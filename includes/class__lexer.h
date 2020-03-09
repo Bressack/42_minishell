@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/06 15:04:47 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 03:53:09 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef enum		e_error_id
 	ERR_UNSUPPORTED_FEATURE_DBL_AND,
 	ERR_UNSUPPORTED_FEATURE_DBL_OR,
 	ERR_UNSUPPORTED_FEATURE_SUBSHELL,
+	ERR_UNSUPPORTED_FEATURE_HEREDOC,
 	ERR_GNL
 }					t_error_id;
 typedef enum		e_debug
@@ -97,6 +98,12 @@ int					lexer__isquote(t_lexer *lex);
 */
 int					lexer__advance(t_lexer *lex, int n);
 int					lexer__refill_line(t_lexer *lex, int sloc);
-int					lexer__isdefined_token(t_lexer *lex, int adv);
 t_token				*lexer__get_next_token(t_lexer *lex);
+
+/*
+** class__lexer__defined_tokens.c
+*/
+int			unsupported_feature(t_lexer *lex, int *type, char curr, char next);
+int			lexer__deftoken_double(t_lexer *lex, int *len, char curr, char next);
+int			lexer__isdefined_token(t_lexer *lex, int adv);
 #endif
