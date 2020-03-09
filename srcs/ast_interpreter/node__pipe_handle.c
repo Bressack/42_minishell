@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 19:50:36 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 20:55:03 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,38 +57,42 @@ int		waitallpipes(int pipe[2], int opt)
 {
 	static t_pid_save	*list = NULL;
 	static int			nb_cmd = 0;
+	int					i;
 	t_pid_save			*new;
 	int					sloc;
 
 	sloc = 0;
-	if (opt == ADD)
-	{
+	if (opt & ADD)
+	{printf("opt: ADD\n");
 		new = mmalloc(sizeof(t_pid_save));
 		new->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
 		new->pipe[PIPE_READ] = pipe[PIPE_READ];
 		nb_cmd += 2;
 		ft_add_node_end_np((t_pnp **)&list, (t_pnp *)new);
 	}
-	else if (opt == WAIT)
-	{
+	if (opt & CLOSE)
+	{printf("opt: CLOSE\n");
 		new = list;
 		while (new)
 		{
-			printf("[PIPE { %d } ] closed !\n", new->pipe[PIPE_WRITE]);
-			printf("[PIPE { %d } ] closed !\n", new->pipe[PIPE_READ]);
 			close(new->pipe[PIPE_WRITE]);
 			close(new->pipe[PIPE_READ]);
 			new = new->next;
 		}
-		ft_del_list_np((t_pnp **)list);
-		dprintf(2, ""C_G_RED"nb_cmd: "C_G_BLUE"%d\n"C_RES, nb_cmd);
-		while (nb_cmd)
+	}
+	if (opt & WAIT)
+	{printf("opt: WAIT\n");
+		i = nb_cmd;
+		while (i)
 		{
-			printf(TEST);
 			wait(&sloc);
-			printf(TEST);
-			nb_cmd--;
+			i--;
 		}
+		nb_cmd = 0;
+	}
+	if (opt & FREE)
+	{printf("opt: FREE\n");
+		ft_del_list_np((t_pnp **)&list);
 	}
 	return (sloc);
 }
@@ -133,6 +137,6 @@ int		node__pipe_handle(t_node *ppln)
 	node__controller(ppln->right);
 	waitallpipes(ppln->pipe_ltor, ADD);
 	if (head == 1)
-		sloc = waitallpipes(ppln->pipe_ltor, WAIT);
+		sloc = waitallpipes(ppln->pipe_ltor, WAIT | CLOSE | FREE);
 	return (WEXITSTATUS(sloc));
 }

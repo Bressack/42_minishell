@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/09 18:27:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 20:41:45 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,7 @@ int		execute_in_child(t_node *cmd)
 	environ = env_to_arr(g_env);
 	execve(path, av, environ);
 	bi_error(av[0], NULL, strerror(errno), 0);
+	waitallpipes(NULL, CLOSE);
 	return (errno);
 }
 
