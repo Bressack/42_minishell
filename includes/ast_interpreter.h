@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 03:39:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 02:52:34 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 18:29:26 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct			s_pid_save
 {
 	struct s_pid_save	*next;
 	struct s_pid_save	*prev;
-	pid_t				pid;
+	int					pipe[2];
 }						t_pid_save;
 typedef enum			e_ast_interpreter_opt
 {
@@ -73,7 +73,7 @@ int						node__sep_controller(t_node *sep);
 ** node__pipe_handle.c
 */
 int						node__parent_ispipe(t_node *node);
-int						waitallpipes(pid_t pid, int opt);
+int						waitallpipes(int pipe[2], int opt);
 int						node__pipe_handle(t_node *ppln);
 
 /*
