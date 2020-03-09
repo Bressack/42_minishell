@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 05:54:09 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 06:08:37 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int		node__parent_ispipe(t_node *node)
 {
-	printf("parent is pipe ? %d && %d && %d && %d\n", node ? 1 : 0, node && node->parent ? 1 : 0, node && node->parent && node->parent->type == SEP ? 1 : 0, node && node->parent && node->parent->type == SEP && node->parent->sep->type == PIPE ? 1 : 0);
+	// dprintf(2, "parent is pipe ? %d && %d && %d && %d\n", node ? 1 : 0, node && node->parent ? 1 : 0, node && node->parent && node->parent->type == SEP ? 1 : 0, node && node->parent && node->parent->type == SEP && node->parent->sep->type == PIPE ? 1 : 0);
 	return (node && node->parent && node->parent->type == SEP &&
 		node->parent->sep->type == PIPE);
 }
@@ -78,7 +78,6 @@ int		node__pipe_handle(t_node *ppln)
 
 	head = 0;
 	sloc = 0;
-	printf(TEST);
 	if (!node__parent_ispipe(ppln))
 		head = 1;
 	if (pipe(ppln->pipe_ltor) == -1)
@@ -88,10 +87,8 @@ int		node__pipe_handle(t_node *ppln)
 	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
 	ppln->right->stdin = ppln->pipe_ltor[PIPE_READ];
 	ppln->right->stdout = ppln->stdout;
-	printf(TEST);
 	node__controller(ppln->left);
 	close(ppln->pipe_ltor[PIPE_WRITE]);
-	printf(TEST);
 	node__controller(ppln->right);
 	close(ppln->pipe_ltor[PIPE_READ]);
 	if (head == 1)

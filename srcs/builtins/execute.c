@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/09 06:05:22 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 06:06:26 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ int		launch(t_node *cmd, char **av)
 		exit(errno); // errno ?
 	}
 	mfree((void **)&path);
-	ft_dprintf(2, "[ CMD ] { %s }\n", av[0]);
 	waitpid(pid, &sloc, WUNTRACED);
 	return (WEXITSTATUS(sloc));
 }
