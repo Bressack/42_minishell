@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/08 13:36:52 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/09 21:34:59 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,19 @@ int		xecho(int ac, char **args, int out)
 int		xpwd(int ac, char **args, int out)
 {
 	char	cwd[LINE_MAX];
+	char	*cwd2;
 
 	(void)ac;
 	(void)args;
-	if (!(getcwd(cwd, LINE_MAX)))
-		return (errno);
-	ft_dprintf(out, "%s\n", cwd);
+	if (getcwd(cwd, LINE_MAX))
+		ft_dprintf(out, "%s\n", cwd);
+	else if ((cwd2 = ret_envval("PWD")))
+		ft_dprintf(out, "%s\n", cwd2);
+	else if ((cwd2 = ret_envval("OLDPWD")))
+		ft_dprintf(out, "%s\n", cwd2);
+	else
+		return (bi_error(args[0], "error retrieving current directory",
+		strerror(errno), 0));
 	return (0);
 }
 
@@ -63,31 +70,59 @@ int		xexit(int ac, char **args, int out)
 	exit(code);
 }
 
+static void	set_pwdenv(char *dir, int flag)
+{
+	char	dir2[LINE_MAX];
+	t_env	*old;
+	t_env	*pwd;
+
+	pwd = ret_env("PWD");
+	old = ret_env("OLDPWD");
+	if (!old)
+	{
+		set_var("OLDPWD", '=', NULL, 0);
+		old = ret_env("OLDPWD");
+	}
+	if (pwd)
+		old->value = pwd->value;
+	else
+	{
+		old->value = ft_strdup(dir);
+		set_var("PWD", '=', NULL, 0);
+		pwd = ret_env("PWD");
+	}
+	if (!getcwd(dir2, LINE_MAX))
+		pwd->value = ft_strdup(pwd->value);
+	else
+		pwd->value = ft_strdup(dir2);
+	if (flag == 1)
+		pwd->value = cat_value(pwd->value, 0, "/.");
+}
+
 int		xcd(int ac, char **args, int out)
 {
-	t_env	*slct;
+	int		flag;
 	char	*tmp;
 	char	*tmp2;
 	char	dir[LINE_MAX];
 
-	slct = ret_env("OLDPWD");
-	tmp = (slct) ? slct->value : NULL;
-	getcwd(dir, LINE_MAX);
+	flag = 0;
+	if (!ft_strcmp(args[1], ".") && !getcwd(dir, LINE_MAX) && (flag = 1))
+		bi_error(args[0], "error retrieving current directory: getcwd: cannot access parent directories", strerror(errno), 0);
 	if (ac > 2)
 		return (bi_error(args[0], NULL, "too many arguments", 0));
 	if (ac == 1 && (tmp2 = ret_envval("HOME")))
 		chdir(tmp2);
-	else if (ac == 1 || (args[1][0] == '-' && !tmp))
-		return (ac != 1) ? (bi_error(args[0], NULL, "OLDPWD not set", 0)) :
-			(bi_error(args[0], NULL, "HOME not set", 0));
-	else if (args[1][0] == '-' && tmp && ft_dprintf(out, "%s\n", tmp))
-		chdir(tmp);
-	else if (chdir(args[1]) != 0)
+	else if (ac == 1)
+		return (bi_error(args[0], NULL, "HOME not set", 0));
+	if (args[1][0] == '-' && !(tmp = ret_envval("OLDPWD")))
+		return (bi_error(args[0], NULL, "OLDPWD not set", 0));
+	else if (args[1][0] == '-' && tmp && !chdir(tmp))
+		ft_dprintf(out, "%s\n", tmp);
+	else if (args[1][0] == '-' && tmp)
+		return (bi_error(args[0], tmp, strerror(errno), 0));
+	else if (chdir(args[1]))
 		return (bi_error(args[0], args[1], strerror(errno), 0));
-	if (slct)
-		slct->value = (ret_envval("PWD")) ? ret_envval("PWD") : ft_strdup(dir);
-	if ((slct = ret_env("PWD")))
-		slct->value = ft_strdup(getcwd(dir, LINE_MAX));
-	mfree((void **)&tmp);
+	set_pwdenv(dir, flag);
 	return (0);
 }

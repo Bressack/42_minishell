@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 10:32:31 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 17:04:12 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/09 19:15:17 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int		bi_error(char *ft, char *arg, char *mess, int f)
 			ft_dprintf(2, "Permission denied\n");
 		else if (f++)
 			ft_dprintf(2, "Is a directory\n");
-		printf("RETURN EXIT %d\n", f);
 		return (f);
 	}
 	return (1);
