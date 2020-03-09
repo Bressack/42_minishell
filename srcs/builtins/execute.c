@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/09 06:06:26 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 18:27:32 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,9 +237,6 @@ int		execute_fork(t_node *cmd)
 		free_all_malloc();
 		exit(ret);
 	}
-	cmd->pid = pid;
-	if (node__parent_ispipe(cmd))
-		waitallpipes(pid, ADD);
 	return (0);
 }
 /*
@@ -291,8 +288,6 @@ int		execute_fork(t_node *cmd)
 ** 		free_all_malloc();
 ** 		exit(ret);
 ** 	}
-** 	cmd->pid = pid;
-** 	waitallpipes(pid, ADD);
 ** 	return (0);
 ** }
 */

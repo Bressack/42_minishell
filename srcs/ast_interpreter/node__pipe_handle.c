@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 06:08:37 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/09 19:50:36 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,33 +24,73 @@ int		node__parent_ispipe(t_node *node)
 		node->parent->sep->type == PIPE);
 }
 
-int		waitallpipes(pid_t pid, int opt)
-{
-	static t_pid_save	*pids = NULL;
-	t_pid_save			*new;
-	int					sloc[2];
+/*
+** int		waitallpipes(pid_t pid, int opt)
+** {
+** 	static t_pid_save	*pids = NULL;
+** 	t_pid_save			*new;
+** 	int					sloc[2];
+**
+** 	sloc[0] = 0;
+** 	sloc[1] = 0;
+** 	if (opt == ADD)
+** 	{
+** 		new = mmalloc(sizeof(t_pid_save));
+** 		new->pid = pid;
+** 		ft_add_node_end_np((t_pnp **)&pids, (t_pnp *)new);
+** 	}
+** 	else if (opt == WAIT && (new = pids))
+** 	{
+** 		while (new->next)
+** 			new = new->next;
+** 		waitpid(new->pid, &sloc[0], WUNTRACED);
+** 		while ((new = new->prev))
+** 			waitpid(new->pid, &sloc[1], 0);
+** 		}
+** 		ft_del_list_np((t_pnp **)&pids);
+** 	}
+** 	return (sloc[0]);
+** }
+*/
 
-	sloc[0] = 0;
-	sloc[1] = 0;
+int		waitallpipes(int pipe[2], int opt)
+{
+	static t_pid_save	*list = NULL;
+	static int			nb_cmd = 0;
+	t_pid_save			*new;
+	int					sloc;
+
+	sloc = 0;
 	if (opt == ADD)
 	{
 		new = mmalloc(sizeof(t_pid_save));
-		new->pid = pid;
-		ft_add_node_end_np((t_pnp **)&pids, (t_pnp *)new);
+		new->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
+		new->pipe[PIPE_READ] = pipe[PIPE_READ];
+		nb_cmd += 2;
+		ft_add_node_end_np((t_pnp **)&list, (t_pnp *)new);
 	}
-	else if (opt == WAIT && (new = pids))
+	else if (opt == WAIT)
 	{
-		while (new->next)
-			new = new->next;
-		waitpid(new->pid, &sloc[0], WUNTRACED);
-		while ((new = new->prev))
+		new = list;
+		while (new)
 		{
-			kill(new->pid, SIGKILL);
-			waitpid(new->pid, &sloc[1], 0);
+			printf("[PIPE { %d } ] closed !\n", new->pipe[PIPE_WRITE]);
+			printf("[PIPE { %d } ] closed !\n", new->pipe[PIPE_READ]);
+			close(new->pipe[PIPE_WRITE]);
+			close(new->pipe[PIPE_READ]);
+			new = new->next;
 		}
-		ft_del_list_np((t_pnp **)&pids);
+		ft_del_list_np((t_pnp **)list);
+		dprintf(2, ""C_G_RED"nb_cmd: "C_G_BLUE"%d\n"C_RES, nb_cmd);
+		while (nb_cmd)
+		{
+			printf(TEST);
+			wait(&sloc);
+			printf(TEST);
+			nb_cmd--;
+		}
 	}
-	return (sloc[0]);
+	return (sloc);
 }
 
 /*
@@ -82,16 +122,17 @@ int		node__pipe_handle(t_node *ppln)
 		head = 1;
 	if (pipe(ppln->pipe_ltor) == -1)
 		return (asti_error(NULL, ERR_PIPE));
+	printf("[PIPE { %d } ] opened !\n", ppln->pipe_ltor[PIPE_WRITE]);
+	printf("[PIPE { %d } ] opened !\n", ppln->pipe_ltor[PIPE_READ]);
 	ppln->left->stdout != STDOUT ? close(ppln->left->stdout) : 0;
 	ppln->right->stdin != STDIN ? close(ppln->right->stdin) : 0;
 	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
 	ppln->right->stdin = ppln->pipe_ltor[PIPE_READ];
 	ppln->right->stdout = ppln->stdout;
 	node__controller(ppln->left);
-	close(ppln->pipe_ltor[PIPE_WRITE]);
 	node__controller(ppln->right);
-	close(ppln->pipe_ltor[PIPE_READ]);
+	waitallpipes(ppln->pipe_ltor, ADD);
 	if (head == 1)
-		sloc = waitallpipes(0, WAIT);
+		sloc = waitallpipes(ppln->pipe_ltor, WAIT);
 	return (WEXITSTATUS(sloc));
 }
