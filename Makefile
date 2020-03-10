@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/10 04:41:07 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/10 22:02:12 by fredrikalindh    ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -75,8 +75,8 @@ SRCS_ENVIRONEMENT		=	\
 							environement/unset.c \
 							environement/env.c \
 							environement/expansion.c \
+							environement/expansion_utils.c \
 							environement/export.c \
-							environement/to_arr.c \
 
 SRCS_LEXER				=	\
 							lexer/class__lexer.c \
@@ -88,6 +88,7 @@ SRCS_LEXER				=	\
 SRCS_BUILTIN			=	\
 							builtins/commands.c \
 							builtins/execute.c \
+							builtins/execute_utils.c \
 							builtins/path.c \
 
 SRCS_AST_BUILDER		=	\

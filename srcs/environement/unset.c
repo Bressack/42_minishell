@@ -6,27 +6,11 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 18:27:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/07 16:06:00 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/10 21:58:55 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-int		is_valid_variable(char *args, int flag)
-{
-	int i;
-
-	i = -1;
-	if (!(is_letter(args[0])) && args[0] != '_')
-		return (0);
-	while (args[++i] && (flag == 0 || (args[i] != '=' &&
-	!(args[i] == '+' && args[i + 1] == '='))))
-		if (!(is_letter(args[i])) && args[i] != '_' && !(is_num(args[i])))
-			return (0);
-	if (flag == 2 && args[i] != '=')
-		return (0);
-	return (1);
-}
 
 /*
 ** SO BASICALLY A LIST REMOVE IF WITH EVERY ARGS

@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/10 16:07:20 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/10 21:35:55 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int		xpwd(int ac, char **args, int out)
 
 int		xexit(int ac, char **args, int out)
 {
-	int code;
+	int		code;
 
 	ft_dprintf(2, "exit\n");
 	code = g_exit;
@@ -108,7 +108,8 @@ int		xcd(int ac, char **args, int out)
 
 	flag = 0;
 	if (!ft_strcmp(args[1], ".") && !getcwd(dir, LINE_MAX) && (flag = 1))
-		bi_error(args[0], "error retrieving current directory: getcwd: cannot access parent directories", strerror(errno), 0);
+		bi_error
+		(args[0], "error retrieving current directory", strerror(errno), 0);
 	if (ac > 2)
 		return (bi_error(args[0], NULL, "too many arguments", 0));
 	if (ac == 1 && (tmp2 = ret_envval("HOME")))
