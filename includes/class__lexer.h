@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 03:53:09 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/10 04:42:49 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,18 @@ int					lexer__isquote(t_lexer *lex);
 ** **************************************************************************
 */
 int					lexer__advance(t_lexer *lex, int n);
+int					lexer__pass_quotes(t_lexer *lex, t_char_type type);
+t_token				*lexer__token_grabber(t_lexer *lex, t_token_type_m type);
 int					lexer__refill_line(t_lexer *lex, int sloc);
 t_token				*lexer__get_next_token(t_lexer *lex);
+void				lexer__set_start_pos(t_lexer *lex, int new_pos);
 
 /*
 ** class__lexer__defined_tokens.c
 */
-int			unsupported_feature(t_lexer *lex, int *type, char curr, char next);
-int			lexer__deftoken_double(t_lexer *lex, int *len, char curr, char next);
-int			lexer__isdefined_token(t_lexer *lex, int adv);
+int					unsupported_feature(
+	t_lexer *lex, int *type, char curr, char next);
+int					lexer__deftoken_double(
+	t_lexer *lex, int *len, char curr, char next);
+int					lexer__isdefined_token(t_lexer *lex, int adv);
 #endif

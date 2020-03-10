@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/09 18:33:24 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/10 04:41:07 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -68,6 +68,7 @@ SRCS_DIR				=	./srcs/
 
 SRCS_TOKEN				=	\
 							token/class__token.c \
+							token/class__token__is.c \
 							token/class__token__global_arrays.c \
 
 SRCS_ENVIRONEMENT		=	\
@@ -79,7 +80,10 @@ SRCS_ENVIRONEMENT		=	\
 
 SRCS_LEXER				=	\
 							lexer/class__lexer.c \
+							lexer/class__lexer__advance.c \
 							lexer/class__lexer__defined_tokens.c \
+							lexer/class__lexer__is.c \
+							lexer/class__lexer__refill_line.c \
 
 SRCS_BUILTIN			=	\
 							builtins/commands.c \
@@ -87,7 +91,10 @@ SRCS_BUILTIN			=	\
 							builtins/path.c \
 
 SRCS_AST_BUILDER		=	\
-							ast_builder/ast_builder.c \
+							ast_builder/ast__builder.c \
+							ast_builder/ast__add_toast.c \
+							ast_builder/ast__eat.c \
+							ast_builder/ast__process.c \
 
 SRCS_AST_INTERPRETER	=	\
 							ast_interpreter/ast_interpreter.c \
@@ -166,7 +173,7 @@ OBJS					=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 
 # *** RULES ****************************************************************** #
 
-.PHONY: clean fclean all re norm test
+.PHONY: clean fclean all re norm
 
 all: $(OBJS) $(SRCS) $(NAME)
 

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 20:55:03 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/10 04:43:49 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,35 +24,6 @@ int		node__parent_ispipe(t_node *node)
 		node->parent->sep->type == PIPE);
 }
 
-/*
-** int		waitallpipes(pid_t pid, int opt)
-** {
-** 	static t_pid_save	*pids = NULL;
-** 	t_pid_save			*new;
-** 	int					sloc[2];
-**
-** 	sloc[0] = 0;
-** 	sloc[1] = 0;
-** 	if (opt == ADD)
-** 	{
-** 		new = mmalloc(sizeof(t_pid_save));
-** 		new->pid = pid;
-** 		ft_add_node_end_np((t_pnp **)&pids, (t_pnp *)new);
-** 	}
-** 	else if (opt == WAIT && (new = pids))
-** 	{
-** 		while (new->next)
-** 			new = new->next;
-** 		waitpid(new->pid, &sloc[0], WUNTRACED);
-** 		while ((new = new->prev))
-** 			waitpid(new->pid, &sloc[1], 0);
-** 		}
-** 		ft_del_list_np((t_pnp **)&pids);
-** 	}
-** 	return (sloc[0]);
-** }
-*/
-
 int		waitallpipes(int pipe[2], int opt)
 {
 	static t_pid_save	*list = NULL;
@@ -63,7 +34,7 @@ int		waitallpipes(int pipe[2], int opt)
 
 	sloc = 0;
 	if (opt & ADD)
-	{printf("opt: ADD\n");
+	{
 		new = mmalloc(sizeof(t_pid_save));
 		new->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
 		new->pipe[PIPE_READ] = pipe[PIPE_READ];
@@ -71,7 +42,7 @@ int		waitallpipes(int pipe[2], int opt)
 		ft_add_node_end_np((t_pnp **)&list, (t_pnp *)new);
 	}
 	if (opt & CLOSE)
-	{printf("opt: CLOSE\n");
+	{
 		new = list;
 		while (new)
 		{
@@ -81,7 +52,7 @@ int		waitallpipes(int pipe[2], int opt)
 		}
 	}
 	if (opt & WAIT)
-	{printf("opt: WAIT\n");
+	{
 		i = nb_cmd;
 		while (i)
 		{
@@ -91,7 +62,7 @@ int		waitallpipes(int pipe[2], int opt)
 		nb_cmd = 0;
 	}
 	if (opt & FREE)
-	{printf("opt: FREE\n");
+	{
 		ft_del_list_np((t_pnp **)&list);
 	}
 	return (sloc);
@@ -126,8 +97,6 @@ int		node__pipe_handle(t_node *ppln)
 		head = 1;
 	if (pipe(ppln->pipe_ltor) == -1)
 		return (asti_error(NULL, ERR_PIPE));
-	printf("[PIPE { %d } ] opened !\n", ppln->pipe_ltor[PIPE_WRITE]);
-	printf("[PIPE { %d } ] opened !\n", ppln->pipe_ltor[PIPE_READ]);
 	ppln->left->stdout != STDOUT ? close(ppln->left->stdout) : 0;
 	ppln->right->stdin != STDIN ? close(ppln->right->stdin) : 0;
 	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
