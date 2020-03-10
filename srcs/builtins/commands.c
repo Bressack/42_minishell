@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/09 21:34:59 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/10 16:07:20 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int		xexit(int ac, char **args, int out)
 {
 	int code;
 
-	ft_dprintf(out, "exit\n");
+	ft_dprintf(2, "exit\n");
 	code = g_exit;
 	if (ac > 1 && !ft_strisnum(args[1]) && (code = 2))
 		bi_error(args[0], args[1], "numeric argument required", 0);

@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/07 08:18:27 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/10 13:20:33 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ init_tester()
 			make
 		fi
 	fi
+	rm -rf tester_dir
 	mkdir -p tester_dir
 	rm -rf tester_dir/*
 	cp $1 tester_dir/
@@ -47,17 +48,17 @@ exit_tester()
 test()
 {
 	# $USER_BIN="$(basename -- USER_BIN)"
-	(echo "$1" ; echo "exit") | $USER_BIN 2>&- > tester_dir/user_output
-	(echo "$1" ; echo "exit") | /bin/bash 2>&- > tester_dir/bash_output
+	(printf "$1\nexit\n") | $USER_BIN 2>&- > tester_dir/user_output
+	(printf "$1\nexit\n") | /bin/bash 2>&- > tester_dir/bash_output
 	# echo "user_output" ; cat tester_dir/user_output ; echo
 	# echo "bash_output" ; cat tester_dir/bash_output ; echo
 	let "TOTAL_TEST+=1"
 	diff --text tester_dir/user_output tester_dir/bash_output > /dev/null
 	if [[ $? == 0 ]]; then
-		printf "\033[33;01mtest \033[32;01mOK\033[0m : $1\n"
+		printf "\033[33;01mtest \033[31;01m$TOTAL_TEST\033[32;01mOK\033[0m : $1\n"
 		let "TOTAL_SUCCESS+=1"
 	else
-		printf "\033[33;01mtest \033[31;01mKO\033[0m : $1\n"
+		printf "\033[33;01mtest \033[31;01m$TOTAL_TEST\033[31;01mKO\033[0m : $1\n"
 	fi
 	diff --text tester_dir/user_output tester_dir/bash_output
 }
@@ -70,32 +71,32 @@ init_tester $1 $2 $3
 
 test ""
 test "ls"
-# test "echo \'salut\'"
-# test "ls|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e "
-# test "ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|cat -e"
-# test "mkdir ok
-# cd ok
-# pwd
-# rm -rf ../ok
-# cd .
-# cd ..
-# pwd"
-# test "ls | asdf"
-# test "ls > test && cat test"
-# test "ls > test
-# ls >> test
-# cat test | cat -e | cat -e && echo KO | cat -e"
-# test "echo SALUT > test ; rm test ; cat test"
-# test "echo \"coucou les \'amis\' je suis la\""
-# test "echo gotta sleep, se ya tommorow; echo 'Hello future theo ;)'"
-# test "cat /dev/null"
-# test "man bash | head -c 1000 | cat -e | tail"
-# test "< test"
-# test "rm test
-# > test
-# ls test
-# rm test"
-# test "export HEJ=da;echo \$HEJ"
+test "echo \'salut\'"
+test "ls|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e "
+test "ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|cat -e"
+test "mkdir ok
+cd ok
+pwd
+rm -rf ../ok
+cd .
+cd ..
+pwd"
+test "ls | asdf"
+test "ls > test && cat test"
+test "ls > test
+ls >> test
+cat test | cat -e | cat -e && echo KO | cat -e"
+test "echo SALUT > test ; rm test ; cat test"
+test "echo \"coucou les \'amis\' je suis la\""
+test "echo gotta sleep, se ya tommorow; echo 'Hello future theo ;)'"
+test "cat /dev/null"
+test "man bash | head -c 1000 | cat -e | tail"
+test "< test"
+test "rm test
+> test
+ls test
+rm test"
+test "export HEJ=da;echo \$HEJ"
 
 # **************************************************************************** #
 # **************************************************************************** #
