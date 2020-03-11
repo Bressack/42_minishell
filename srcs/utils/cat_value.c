@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 21:35:45 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 18:48:23 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 14:21:13 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,24 @@ char	*cat_value(char *s1, char c, char *s2)
 	char	*ret;
 
 	i = 0;
-	while (s1 && s1[i])
+	while (!(j = 0) && s1 && s1[i])
 		i++;
-	j = 0;
 	while (s2 && s2[j])
 		j++;
 	if (!(ret = (char *)mmalloc(i + j + 2)))
 		return (NULL);
-	i = -1;
-	while (s1 && s1[++i])
+	i = 0;
+	while (!(j = 0) && s1 && s1[i])
+	{
 		ret[i] = s1[i];
+		i++;
+	}
 	mfree((void **)&s1);
 	(c) ? ret[i++] = c : 0;
-	j = -1;
-	while (s2 && s2[++j])
+	while (s2 && s2[j])
+	{
 		ret[i + j] = s2[j];
-	ret[i + j] = '\0';
-	return (ret);
+		j++;
+	}
+	return (!(ret[i + j] = '\0')) ? (ret) : (ret);
 }

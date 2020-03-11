@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/10 04:43:49 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/11 14:59:08 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		node__parent_ispipe(t_node *node)
 int		waitallpipes(int pipe[2], int opt)
 {
 	static t_pid_save	*list = NULL;
-	static int			nb_cmd = 0;
+	static int			nb_cmd = 1;
 	int					i;
 	t_pid_save			*new;
 	int					sloc;
@@ -38,7 +38,7 @@ int		waitallpipes(int pipe[2], int opt)
 		new = mmalloc(sizeof(t_pid_save));
 		new->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
 		new->pipe[PIPE_READ] = pipe[PIPE_READ];
-		nb_cmd += 2;
+		nb_cmd += 1;
 		ft_add_node_end_np((t_pnp **)&list, (t_pnp *)new);
 	}
 	if (opt & CLOSE)
@@ -56,10 +56,11 @@ int		waitallpipes(int pipe[2], int opt)
 		i = nb_cmd;
 		while (i)
 		{
+			printf("%d\n", i);
 			wait(&sloc);
 			i--;
 		}
-		nb_cmd = 0;
+		nb_cmd = 1;
 	}
 	if (opt & FREE)
 	{
@@ -102,9 +103,11 @@ int		node__pipe_handle(t_node *ppln)
 	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
 	ppln->right->stdin = ppln->pipe_ltor[PIPE_READ];
 	ppln->right->stdout = ppln->stdout;
-	node__controller(ppln->left);
-	node__controller(ppln->right);
 	waitallpipes(ppln->pipe_ltor, ADD);
+	node__controller(ppln->left);
+	printf(TEST);
+	node__controller(ppln->right);
+	printf(TEST);
 	if (head == 1)
 		sloc = waitallpipes(ppln->pipe_ltor, WAIT | CLOSE | FREE);
 	return (WEXITSTATUS(sloc));
