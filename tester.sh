@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 01:41:55 by fredrikalindh    ###   ########.fr        #
+#    Updated: 2020/03/11 13:42:35 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,13 +49,19 @@ C_RES="\033[0m"
 
 # ENABLE TEST
 
-TEST__ECHO=0
+TEST__ECHO=1
 TEST__CD=1
 TEST__PWD=1
 TEST__EXPORT=1
 TEST__UNSET=1
 TEST__ENV=1
 TEST__EXIT=1
+
+# SUB TEST
+
+TEST__SIMPLE=1
+TEST__SIMPLE_REDIR=1
+TEST__DOUBLE_REDIR=1
 
 # **************************************************************************** #
 # **************************************************************************** #
@@ -107,15 +113,19 @@ test()
 
 	# (printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/user_output
 	# (printf "$1\nexit\n") | zsh 2>&- > $MAIN_DIR/user_output
+
+
+	# TEST minishell # ******************************************************* #
 	(printf "$1\nexit\n") | $MAIN_DIR/minishell 2>&- > $MAIN_DIR/user_output
 	USER_RETVAL=$?
 	reset_dirtest
+
+	# TEST bash # ************************************************************ #
 	(printf "$1\nexit\n") | bash 2>&- > $MAIN_DIR/bash_output
 	BASH_RETVAL=$?
 	reset_dirtest
-	# printf "user_output (%d):\n" $USER_RETVAL ; cat $MAIN_DIR/user_output;
-	# echo "********************************************"
-	# printf "bash_output (%d):\n" $BASH_RETVAL ; cat $MAIN_DIR/bash_output;
+
+	# ANALYZE RESULT ********************************************************* #
 	let "TOTAL_TEST+=1"
 	diff --text $MAIN_DIR/user_output $MAIN_DIR/bash_output > /dev/null
 	if [ $? == 0 ] && [ $USER_RETVAL == $BASH_RETVAL ]
@@ -133,8 +143,8 @@ test()
 		printf "user_output (%d):\n" $USER_RETVAL ; printf "$C_G_RED" ; cat $MAIN_DIR/user_output; printf "$C_RES"
 		echo "********************************************"
 		printf "bash_output (%d):\n" $BASH_RETVAL ; printf "$C_G_GREEN" ; cat $MAIN_DIR/bash_output; printf "$C_RES"
+		printf "\n"
 	fi
-	# diff --text $MAIN_DIR/user_output $MAIN_DIR/bash_output
 }
 
 init_tester $1 $2 $3
@@ -149,6 +159,7 @@ init_tester $1 $2 $3
 # echo
 if [ $TEST__ECHO == 1 ]; then
 # simple
+if [ $TEST__SIMPLE == 1 ]; then
 test "echo "
 test "echo a"
 test "echo aaa"
@@ -190,7 +201,9 @@ test "echo ls -l"
 #adding // FRED
 test "\\t \\\\ \\\$\'\\\\ \$HEJ \$HOME \\\$\'\"\\\\ \$HEJ \$HOME \\\$\""
 test "\\\$? \$?"
+fi
 # redir out
+if [ $TEST__SIMPLE_REDIR == 1 ]; then
 test " > test1 echo  > test2 > test2 okcgood > test3; cat test1 test2 test3"
 test " > test1 echo a > test2 > test2 okcgood > test3; cat test1 test2 test3"
 test " > test1 echo aaa > test2 > test2 okcgood > test3; cat test1 test2 test3"
@@ -229,7 +242,9 @@ test " > test1 echo \$HOME\$PWD\$OLDPWD > test2 > test2 okcgood > test3; cat tes
 test " > test1 echo \$ > test2 > test2 okcgood > test3; cat test1 test2 test3"
 test " > test1 echo echo > test2 > test2 okcgood > test3; cat test1 test2 test3"
 test " > test1 echo ls -l > test2 > test2 okcgood > test3; cat test1 test2 test3"
+fi
 # double redir out
+if [ $TEST__DOUBLE_REDIR == 1 ]; then
 test ">test1 > test2 echo  >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
 test ">test1 > test2 echo a >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
 test ">test1 > test2 echo aaa >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
@@ -266,24 +281,40 @@ test ">test1 > test2 echo \$ >test2 >> test1 >> test1 >> test2 >> test3 OK CTREG
 test ">test1 > test2 echo echo >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
 test ">test1 > test2 echo ls -l >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
 fi
+fi
 # **************************************************************************** #
 
 # **************************************************************************** #
 # cd
 if [ $TEST__CD == 1 ]; then
 test "cd;pwd"
-test "cd /"
-test "cd /dev"
-test "cd bad_arg"
-test "cd bad_arg1 bad_arg2"
-test "mkdir dir1\ncd dir1"
+test "cd /;pwd"
+test "cd /dev;pwd"
+test "cd bad_arg;pwd"
+test "cd bad_arg1 bad_arg2;pwd"
+test "mkdir dir1\ncd dir1;pwd"
 fi
 # **************************************************************************** #
 
 # **************************************************************************** #
 # pwd
 if [ $TEST__PWD == 1 ]; then
-test ""
+test "pwd"
+test "unset \$PWD; pwd"
+test "export TESTPWD=\$PWD;unset \$PWD; pwd"
+test "export TESTPWD=\$PWD;unset \$PWD; pwd; export PWD=\$TESTPWD;pwd"
+test "export TESTPWD=\$PWD;unset \$PWD; pwd; export PWD=\$TESTPWD;pwd;unset \$PWD; pwd"
+test "pwd pwd"
+test "pwd;pwd;pwd;pwd;pwd;pwd;pwd;pwd;pwd;pwd;pwd;pwd;pwd;pwd"
+test "pwd asdf"
+test "pwd asdf sadf"
+test "pwd ."
+test "pwd .."
+test "cd / ; pwd"
+test "cd asdfSD ; pwd"
+test "mkdir dir1;cd dir1 ; pwd"
+test "mkdir dir1 ; mkdir dir1/dir2 ; cd dir1/dir2 ; pwd"
+test "cd / \npwd"
 fi
 # **************************************************************************** #
 
@@ -292,6 +323,7 @@ fi
 if [ $TEST__EXPORT == 1 ]; then
 test "export LS=\"    ls     -l      \" ; \$LS"
 test "export hej hej+=da 56=he"
+test "export "
 fi
 # **************************************************************************** #
 

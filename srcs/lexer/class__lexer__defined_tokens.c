@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:55:50 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 04:40:19 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/11 12:00:02 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,21 @@ int			lexer__isdefined_token(t_lexer *lex, int adv)
 		return (I_ERR);
 	curr = lex->current_char;
 	next = lex->len_line > 1 ? lex->line[lex->pos + 1] : 0;
-	type = lexer__deftoken_double(lex, &len, curr, next);
-	if (type == I_ERR && unsupported_feature(lex, &type, curr, next))
-		return (type);
-	else if (curr == '<' && (len = 1))
-		type = I_REDIREC_IN;
-	else if (curr == '>' && (len = 1))
-		type = I_REDIREC_OUT;
-	else if (type == I_ERR && curr == '|' && (len = 1))
-		type = I_PIPE;
-	else if (curr == ';' && (len = 1))
-		type = I_SEMICON;
-	else if (!type)
-		return (I_NONE);
+	if ((type = lexer__deftoken_double(lex, &len, curr, next)) == I_ERR)
+	{
+		if (unsupported_feature(lex, &type, curr, next))
+			return (type);
+		else if (curr == '<' && (len = 1))
+			type = I_REDIREC_IN;
+		else if (curr == '>' && (len = 1))
+			type = I_REDIREC_OUT;
+		else if (type == I_ERR && curr == '|' && (len = 1))
+			type = I_PIPE;
+		else if (curr == ';' && (len = 1))
+			type = I_SEMICON;
+		else if (!type)
+			return (I_NONE);
+	}
 	if (type != I_ERR && adv == ADVANCE)
 		lexer__advance(lex, len);
 	return (type);
