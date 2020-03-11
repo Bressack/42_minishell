@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/11 14:08:22 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 18:29:36 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ int		xexit(int ac, char **args, int out)
 
 	ft_dprintf(2, "exit\n");
 	code = g_exit;
-	if (ac > 1 && !ft_strisnum(args[1]) && (code = 2))
+	if (ac > 1 && (!ft_strisnum(args[1]) || ft_strlen(args[1]) > 11) && (code = 2))
 		bi_error(args[0], args[1], "numeric argument required", 0);
 	else if (ac > 2 && bi_error(args[0], NULL, "too many arguments", 0))
-		return (1);
+		return (code == 2) ? (2) : (1);
 	(ac == 2 && code == 0) ? code = ft_atoi(args[1]) : 0;
 	free_all_malloc();
 	out == -1 ? code = 0 : 0;
