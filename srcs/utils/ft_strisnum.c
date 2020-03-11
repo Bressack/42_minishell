@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 16:17:07 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/07 16:22:31 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 20:07:26 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 int		ft_strisnum(char *str)
 {
+	if (*str == '+' || *str == '-')
+		str++;
 	while (str && *str)
 	{
-		if (!(*str >= '0' && *str <= '9') && *str != ' ' &&
-		*str != '-' && *str != '+')
+		if (!(*str >= '0' && *str <= '9') && *str != ' ')
 			return (0);
 		str++;
 	}

@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 21:56:27 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/11 01:43:52 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/11 20:09:02 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ int		is_valid_variable(char *args, int flag)
 	int i;
 
 	i = -1;
+	if (!args)
+		return (0);
 	if (!(is_letter(args[0])) && args[0] != '_')
 		return (0);
 	while (args[++i] && (flag == 0 || (args[i] != '=' &&
