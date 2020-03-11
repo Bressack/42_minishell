@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/07 16:26:22 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/10 22:01:41 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,20 @@ void			set_var(char *name, int op, char *val, int export);
 /*
 ** UNSET.C
 */
-int				is_valid_variable(char *args, int flag);
 int				unset(int ac, char **args, int out);
+/*
+** EXPANSION_UTILS
+*/
+int				is_valid_variable(char *args, int flag);
+int				ok_envchar(char c, int f);
+char			**convert_to_arr(t_token *args, int ac);
+int				tilde_exp(char *new);
+int				spec_char(char c);
 /*
 ** EXPANSION
 */
-
 # define IFS " \t\n"
-
-int				ok_envchar(char c, int f);
 int				expand(t_token **args);
-char			**convert_to_arr(t_token *args, int ac);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/09 21:55:11 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/10 22:05:29 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,77 +22,6 @@ t_bi		g_builtins[BUILTINS] =
 	{"unset", &unset},
 	{"env", &print_env}
 };
-
-/*
-** PUTS THE ENVIRONMENT VARS IN A CHAR ARRAR TO PASS ON TO FUNCTIONS.
-*/
-
-char	**env_to_arr(t_env *trav)
-{
-	int		size;
-	char	**env;
-
-	size = 0;
-	while (trav && ++size != -1)
-		trav = trav->next;
-	if (!(env = (char **)mmalloc(sizeof(char *) * (size + 2))))
-		return (NULL);
-	trav = g_env;
-	size = 0;
-	while (trav)
-	{
-		if (trav->export && (env[size] =
-		(char *)mmalloc(ft_strlen(trav->name) + ft_strlen(trav->value) + 1)))
-			env[size++] = cat_value(trav->name, '=', trav->value);
-		trav = trav->next;
-	}
-	env[size] = NULL;
-	return (env);
-}
-
-void	sig_exec(int signo)
-{
-	if (signo == SIGINT)
-	{
-		write(1, "\n", 1);
-		g_exit = 130;
-	}
-	if (signo == SIGQUIT)
-	{
-		ft_dprintf(2, "Quit: 3\n");
-		g_exit = 131;
-		// exit(3);
-	}
-}
-
-int		launch(t_node *cmd, char **av)
-{
-	pid_t	pid;
-	int		sloc;
-	char	*path;
-	char	**environ;
-
-	if (!(path = get_path(av[0], &sloc)))
-		return (bi_error(av[0], NULL, NULL, sloc));
-	if ((pid = fork()) < 0 && mfree((void **)&path))
-		return (bi_error(av[0], NULL, strerror(errno), 0));
-	signal(SIGINT, sig_exec);
-	signal(SIGQUIT, sig_exec);
-	if (pid == 0)
-	{
-		environ = env_to_arr(g_env);
-		if (cmd->stdout != STDOUT && dup2(cmd->stdout, STDOUT) != -1)
-			close(cmd->stdout);
-		if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
-			close(cmd->stdin);
-		execve(path, av, environ);
-		free_all_malloc();
-		exit(errno); // errno ?
-	}
-	mfree((void **)&path);
-	waitpid(pid, &sloc, WUNTRACED);
-	return (g_exit >= 130) ? (g_exit) : (WEXITSTATUS(sloc));
-}
 
 /*
 ** CHECK COMMAND:
@@ -129,6 +58,35 @@ char	**check_cmd(t_node *cmd, int *ac, int *type)
 		if (!ft_strcmp(av[0], g_builtins[j].name) && (*type = j) > -1)
 			return (av);
 	return (av);
+}
+
+int		launch(t_node *cmd, char **av)
+{
+	pid_t	pid;
+	int		sloc;
+	char	*path;
+	char	**environ;
+
+	if (!(path = get_path(av[0], &sloc)))
+		return (bi_error(av[0], NULL, NULL, sloc));
+	if ((pid = fork()) < 0 && mfree((void **)&path))
+		return (bi_error(av[0], NULL, strerror(errno), 0));
+	signal(SIGINT, sig_exec);
+	signal(SIGQUIT, sig_exec);
+	if (pid == 0)
+	{
+		environ = env_to_arr(g_env);
+		if (cmd->stdout != STDOUT && dup2(cmd->stdout, STDOUT) != -1)
+			close(cmd->stdout);
+		if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
+			close(cmd->stdin);
+		execve(path, av, environ);
+		free_all_malloc();
+		exit(errno);
+	}
+	mfree((void **)&path);
+	waitpid(pid, &sloc, WUNTRACED);
+	return (g_exit >= 130) ? (g_exit) : (WEXITSTATUS(sloc));
 }
 
 /*

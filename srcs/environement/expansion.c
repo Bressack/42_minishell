@@ -6,39 +6,11 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/09 19:11:07 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/10 21:58:41 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-/*
-** F==0: ALLOWED CHARACTERS TO FOLLOW A $. F==1: ALLOWED CHARACTERS IN ENV + ?
-*/
-
-int		ok_envchar(char c, int f)
-{
-	if (f == 1)
-		return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
-			(c >= '0' && c <= '9') || c == '?');
-	else
-		return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
-		c == '?');
-}
-
-int		tilde_exp(char *new)
-{
-	char	*home;
-	int		i;
-
-	home = ret_envval("HOME");
-	i = 0;
-	if (!home)
-		new[i++] = '~';
-	while (home && *home)
-		new[i++] = *home++;
-	return (i);
-}
 
 /*
 ** EXPANDING ENV VAR
@@ -71,15 +43,6 @@ int		expand_env(char **args, char *new)
 	new[i] = '\0';
 	!ft_strcmp(name, "?") ? mfree((void **)&val) : 0;
 	return (i);
-}
-
-/*
-** SPECIAL CHARS FOR \ ---> the bashslash wont be printed
-*/
-
-int		spec_char(char c)
-{
-	return (c == '\\' || c == '$' || c == '\"' || c == '`');
 }
 
 /*
