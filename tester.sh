@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 15:37:12 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/11 17:15:19 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,12 +50,12 @@ C_RES="\033[0m"
 # ENABLE TEST
 
 TEST__ECHO=0
-TEST__CD=0
-TEST__PWD=0
-TEST__EXPORT=0
+TEST__CD=1
+TEST__PWD=1
+TEST__EXPORT=1
 TEST__UNSET=1
-TEST__ENV=0
-TEST__EXIT=0
+TEST__ENV=1
+TEST__EXIT=1
 
 # SUB TEST
 
@@ -110,12 +110,9 @@ reset_dirtest()
 
 test()
 {
-
-	# (printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/user_output
-	# (printf "$1\nexit\n") | zsh 2>&- > $MAIN_DIR/user_output
-
-
 	# TEST minishell # ******************************************************* #
+	# (printf "$1\nexit\n") | bash 2>&- > $MAIN_DIR/user_output
+	# (printf "$1\nexit\n") | zsh 2>&- > $MAIN_DIR/user_output
 	(printf "$1\nexit\n") | $MAIN_DIR/minishell 2>&- > $MAIN_DIR/user_output
 	USER_RETVAL=$?
 	reset_dirtest
@@ -137,14 +134,14 @@ test()
 		if [ $DIFF_RET != 0 ]
 		then
 			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED DIFF ERROR $C_RES\"$C_G_GRAY$1$C_G_WHITE\"$C_RES\n" $TOTAL_TEST
+			printf "user_output (%d):\n" $USER_RETVAL ; printf "$C_G_RED" ; cat $MAIN_DIR/user_output; printf "$C_RES"
+			echo "********************************************"
+			printf "bash_output (%d):\n" $BASH_RETVAL ; printf "$C_G_GREEN" ; cat $MAIN_DIR/bash_output; printf "$C_RES"
+			printf "\n"
 		elif [ $USER_RETVAL != $BASH_RETVAL ]
 		then
 			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED BAD RETURN VALUE$C_RES [ $C_G_BLUE%d$C_RES instead of $C_G_BLUE%d$C_RES ] \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST $USER_RETVAL $BASH_RETVAL
 		fi
-		printf "user_output (%d):\n" $USER_RETVAL ; printf "$C_G_RED" ; cat -e $MAIN_DIR/user_output; printf "$C_RES"
-		echo "********************************************"
-		printf "bash_output (%d):\n" $BASH_RETVAL ; printf "$C_G_GREEN" ; cat -e $MAIN_DIR/bash_output; printf "$C_RES"
-		printf "\n"
 	fi
 }
 
@@ -157,6 +154,8 @@ init_tester $1 $2 $3
 ## BUILTINS
 
 # **************************************************************************** #
+test "ls;ls|cat -e&&ls>test || cat test | head -c 5 ; echo KO | cat -e && ls ; cat test | head -c 100"
+test "echo START | cat && ls > test >> test >> test | cat -e | cat -e || echo KO || echo NICE && ls | cat | cat -e | head -c 2"
 # echo
 if [ $TEST__ECHO == 1 ]; then
 # simple
@@ -324,7 +323,7 @@ fi
 if [ $TEST__EXPORT == 1 ]; then
 test "export LS=\"    ls     -l      \" ; \$LS"
 test "export hej hej+=da 56=he"
-test "export | sort"
+test "export | sort | grep -v \"declare -x _=\" | grep -v \"declare -x SHLVL\""
 fi
 # **************************************************************************** #
 
@@ -349,15 +348,32 @@ fi
 # **************************************************************************** #
 # env
 if [ $TEST__ENV == 1 ]; then
-test ""
+test "env | sort | grep -v \"_=/\""
+test "env s| sort | grep -v \"_=/\""
+test "env s ds| sort | grep -v \"_=/\""
+test "env $HOME$HOME| sort | grep -v \"_=/\""
+test "env | sort | grep -v \"_=/\""
 fi
 # **************************************************************************** #
 
 # **************************************************************************** #
 # exit
 if [ $TEST__EXIT == 1 ]; then
-test ""
+test "exit"
+test "exit -1"
+test "exit -123412341234123398740239"
+test "exit 12382397429180470123849"
+test "exit -123412341234123398740239 129834761298346981723469182734"
+test "exit 12382397429180470123849 129834761298346981723469182734"
+test "exit -123412341234123398740239 jkdsafdjs"
+test "exit 12382397429180470123849 jkdsafdjs"
+test "exit -123412341234123398740239 129834761298346981723469182734 jkdsafdjs"
+test "exit 12382397429180470123849 129834761298346981723469182734 jkdsafdjs"
+test "exit 123"
+test "exit 123 345"
 fi
 # **************************************************************************** #
+
+# norminette $MAIN_DIR | grep "error"
 
 exit_tester

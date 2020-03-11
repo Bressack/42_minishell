@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 22:32:02 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 15:11:51 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 16:49:23 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,58 @@ int		node__cmd_controller(t_node *cmd)
 {
 	if (redir_handle(cmd) == ERROR)
 		return (ERROR);
-	printf(TEST);
-	printf("cmd: %s\n", cmd->av->value)
+	// printf("[ CMD %s ] [ parent: %s ] [ left: %s ] [ right: %s ]\n",
+	// cmd->av->value,
+	// cmd->parent ?
+	// 	cmd->parent->type == CMD ?
+	// 		cmd->parent->av->value
+	// 		:	cmd->parent->type == SEP ?
+	// 				cmd->parent->sep->type == PIPE ?
+	// 					"PIPE"
+	// 				:	cmd->parent->sep->type == SEMICON ?
+	// 					"SEMICON"
+	// 					:	cmd->parent->sep->type == DBL_AND ?
+	// 						"DBL_AND"
+	// 						:	cmd->parent->sep->type == DBL_OR ?
+	// 							"DBL_OR"
+	// 						: "unvalid sep token"
+	// 			: "unvalid node"
+	// 	: "null",
+	// cmd->left   ?
+	// 	cmd->left  ->type == CMD ?
+	// 		cmd->left  ->av->value
+	// 		:	cmd->left  ->type == SEP ?
+	// 				cmd->left  ->sep->type == PIPE ?
+	// 					"PIPE"
+	// 				:	cmd->left  ->sep->type == SEMICON ?
+	// 					"SEMICON"
+	// 					:	cmd->left  ->sep->type == DBL_AND ?
+	// 						"DBL_AND"
+	// 						:	cmd->left  ->sep->type == DBL_OR ?
+	// 							"DBL_OR"
+	// 						: "unvalid sep token"
+	// 			: "unvalid node"
+	// 	: "null",
+	// cmd->right  ?
+	// 	cmd->right ->type == CMD ?
+	// 		cmd->right ->av->value
+	// 		:	cmd->right ->type == SEP ?
+	// 				cmd->right ->sep->type == PIPE ?
+	// 					"PIPE"
+	// 				:	cmd->right ->sep->type == SEMICON ?
+	// 					"SEMICON"
+	// 					:	cmd->right ->sep->type == DBL_AND ?
+	// 						"DBL_AND"
+	// 						:	cmd->right ->sep->type == DBL_OR ?
+	// 							"DBL_OR"
+	// 						: "unvalid sep token"
+	// 			: "unvalid node"
+	// 	: "null"
+	// );
 	if (node__parent_ispipe(cmd))
 		g_exit = execute_fork(cmd);
 	else
-	{
-		printf("%d %d\n", cmd->type, (cmd->parent->sep) ? (cmd->parent->sep->type == PIPE) : 0);
 		g_exit = execute_simple(cmd);
-	}
 	return (g_exit);
 }
 

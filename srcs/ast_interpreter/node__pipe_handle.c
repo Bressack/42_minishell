@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 14:59:08 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 16:58:45 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int		waitallpipes(int pipe[2], int opt)
 		i = nb_cmd;
 		while (i)
 		{
-			printf("%d\n", i);
 			wait(&sloc);
 			i--;
 		}
@@ -105,9 +104,7 @@ int		node__pipe_handle(t_node *ppln)
 	ppln->right->stdout = ppln->stdout;
 	waitallpipes(ppln->pipe_ltor, ADD);
 	node__controller(ppln->left);
-	printf(TEST);
 	node__controller(ppln->right);
-	printf(TEST);
 	if (head == 1)
 		sloc = waitallpipes(ppln->pipe_ltor, WAIT | CLOSE | FREE);
 	return (WEXITSTATUS(sloc));

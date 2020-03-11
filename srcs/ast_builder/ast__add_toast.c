@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 04:18:03 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/10 04:23:31 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/11 16:47:52 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	search_place_node(t_astb *tool, t_node *node, t_token_type_m type)
 	else
 	{
 		node->left = tool->tree_pos->right;
+		node->left->parent = node;
 		node->right = NULL;
 		node->parent = tool->tree_pos;
 		tool->tree_pos->right = node;
