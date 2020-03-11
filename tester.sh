@@ -6,14 +6,59 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/10 13:20:33 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/11 01:07:18 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #!/bin/sh
 # a tester for minishell (new 42_cursus)
 
-USER_BIN=$1
+# COLORS
+
+C_BLACK="\033[30m"
+C_RED="\033[31m"
+C_GREEN="\033[32m"
+C_YELLOW="\033[33m"
+C_BLUE="\033[34m"
+C_MAGENTA="\033[35m"
+C_CYAN="\033[36m"
+C_WHITE="\033[37m"
+C_GRAY="\033[90m"
+C_G_BLACK="\033[30;01m"
+C_G_RED="\033[31;01m"
+C_G_GREEN="\033[32;01m"
+C_G_YELLOW="\033[33;01m"
+C_G_BLUE="\033[34;01m"
+C_G_MAGENTA="\033[35;01m"
+C_G_CYAN="\033[36;01m"
+C_G_WHITE="\033[37;01m"
+C_G_GRAY="\033[90;01m"
+C_B_BLACK="\033[40m"
+C_B_RED="\033[41m"
+C_B_GREEN="\033[42m"
+C_B_YELLOW="\033[43m"
+C_B_BLUE="\033[44m"
+C_B_MAGENTA="\033[45m"
+C_B_CYAN="\033[46m"
+C_B_WHITE="\033[47m"
+C_B_GRAY="\033[100m"
+C_RES="\033[0m"
+
+# **************************************************************************** #
+# **************************************************************************** #
+
+# ENABLE TEST
+
+TEST__ECHO=0
+TEST__CD=1
+TEST__PWD=1
+TEST__EXPORT=1
+TEST__UNSET=1
+TEST__ENV=1
+TEST__EXIT=1
+
+# **************************************************************************** #
+# **************************************************************************** #
 
 TOTAL_TEST=0
 TOTAL_SUCCESS=0
@@ -34,33 +79,62 @@ init_tester()
 		fi
 	fi
 	rm -rf tester_dir
-	mkdir -p tester_dir
-	rm -rf tester_dir/*
-	cp $1 tester_dir/
+	mkdir tester_dir
+	export MAIN_DIR=$PWD
+	cd tester_dir
 }
 
 exit_tester()
 {
 	printf "test succeded %d/%d\n" $TOTAL_SUCCESS $TOTAL_TEST
-	# rm -rf tester_dir
+	rm -rf tester_dir
+	if [ $TOTAL_TEST != $TOTAL_SUCCESS ]
+	then
+		printf "wtf bros ... what a shitty job...\n"
+	else
+		printf "Great ! Good job ! You can set as finish !\n"
+	fi
+	cd $MAIN_DIR
+}
+
+reset_dirtest()
+{
+	rm -rf *
 }
 
 test()
 {
-	# $USER_BIN="$(basename -- USER_BIN)"
-	(printf "$1\nexit\n") | $USER_BIN 2>&- > tester_dir/user_output
-	(printf "$1\nexit\n") | /bin/bash 2>&- > tester_dir/bash_output
-	# echo "user_output" ; cat tester_dir/user_output ; echo
-	# echo "bash_output" ; cat tester_dir/bash_output ; echo
+
+	# (printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/user_output
+	# (printf "$1\nexit\n") | zsh 2>&- > $MAIN_DIR/user_output
+	(printf "$1\nexit\n") | $MAIN_DIR/minishell 2>&- > $MAIN_DIR/user_output
+	USER_RETVAL=$?
+	reset_dirtest
+	(printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/bash_output
+	BASH_RETVAL=$?
+	reset_dirtest
+	# printf "user_output (%d):\n" $USER_RETVAL ; cat $MAIN_DIR/user_output;
+	# echo "********************************************"
+	# printf "bash_output (%d):\n" $BASH_RETVAL ; cat $MAIN_DIR/bash_output;
 	let "TOTAL_TEST+=1"
-	diff --text tester_dir/user_output tester_dir/bash_output > /dev/null
-	if [[ $? == 0 ]]; then
-		printf "\033[33;01mtest \033[31;01m$TOTAL_TEST\033[32;01mOK\033[0m : $1\n"
+	diff --text $MAIN_DIR/user_output $MAIN_DIR/bash_output > /dev/null
+	if [ $? == 0 ] && [ $USER_RETVAL == $BASH_RETVAL ]
+	then
+		printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_GREEN OK !$C_G_WHITE : \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST
 		let "TOTAL_SUCCESS+=1"
 	else
-		printf "\033[33;01mtest \033[31;01m$TOTAL_TEST\033[31;01mKO\033[0m : $1\n"
+		if [ $? != 0 ]
+		then
+			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED DIFF ERROR $C_RES\"$C_G_GRAY$1$C_G_WHITE\"$C_RES\n" $TOTAL_TEST
+		elif [ $USER_RETVAL == $BASH_RETVAL ]
+		then
+			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED BAD RETURN VALUE$C_G_RES [ $C_G_BLUE%d$C_G_RES instead of $C_G_BLUE%d$C_G_RES ] \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST
+		fi
+		printf "user_output (%d):\n" $USER_RETVAL ; printf "$C_G_RED" ; cat $MAIN_DIR/user_output; printf "$C_RES"
+		echo "********************************************"
+		printf "bash_output (%d):\n" $BASH_RETVAL ; printf "$C_G_GREEN" ; cat $MAIN_DIR/bash_output; printf "$C_RES"
 	fi
-	diff --text tester_dir/user_output tester_dir/bash_output
+	# diff --text $MAIN_DIR/user_output $MAIN_DIR/bash_output
 }
 
 init_tester $1 $2 $3
@@ -69,36 +143,173 @@ init_tester $1 $2 $3
 # *** tests ****************************************************************** #
 # **************************************************************************** #
 
-test ""
-test "ls"
-test "echo \'salut\'"
-test "ls|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e "
-test "ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|cat -e"
-test "mkdir ok
-cd ok
-pwd
-rm -rf ../ok
-cd .
-cd ..
-pwd"
-test "ls | asdf"
-test "ls > test && cat test"
-test "ls > test
-ls >> test
-cat test | cat -e | cat -e && echo KO | cat -e"
-test "echo SALUT > test ; rm test ; cat test"
-test "echo \"coucou les \'amis\' je suis la\""
-test "echo gotta sleep, se ya tommorow; echo 'Hello future theo ;)'"
-test "cat /dev/null"
-test "man bash | head -c 1000 | cat -e | tail"
-test "< test"
-test "rm test
-> test
-ls test
-rm test"
-test "export HEJ=da;echo \$HEJ"
+## BUILTINS
 
 # **************************************************************************** #
+# echo
+if [ $TEST__ECHO == 1 ]; then
+# simple
+test "echo "
+test "echo a"
+test "echo aaa"
+test "echo a b c d e f g h"
+test "echo @?"
+test "echo %%?"
+test "echo ??"
+test "echo \$?"
+test "echo \$"
+test "echo 920347912slakjdfhlsakfhlaskf__D_SD_FS_DF_S_FS709304"
+test "echo \$HOME"
+test "echo \$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME"
+test "echo \$1HOME"
+test "echo \$H1OME"
+test "echo \$HOME1"
+test "echo \$PWD"
+test "echo \$1PWD"
+test "echo \$P1WD"
+test "echo \$PWD1"
+test "echo \$OLDPWD"
+test "echo \$1OLDPWD"
+test "echo \$O1LDPWD"
+test "echo \$OLDPWD1"
+test "echo \$ \$1HOME \$PWD ok \$OLDPWD"
+test "echo \$ \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$HOME\$PWD\$OLDPWD"
+test "echo \$ \$1HOME \$PWD ok \$OLDPWD"
+test "echo \$ \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$HOME\$PWD\$OLDPWD"
+test "echo \$ \$1HOME \$PWD ok \$OLDPWD"
+test "echo \$ \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$HOME\$PWD\$OLDPWD"
+test "echo \$"
+test "echo echo"
+test "echo ls -l"
+# redir out
+test " > test1 echo  > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo a > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo aaa > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo a b c d e f g h > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo @? > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo %%? > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo ?? > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$? > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$ > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo 920347912slakjdfhlsakfhlaskf__D_SD_FS_DF_S_FS709304 > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$HOME > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$1HOME > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$H1OME > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$HOME1 > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$PWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$1PWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$P1WD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$PWD1 > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$1OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$O1LDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$OLDPWD1 > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$ \$1HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$ \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$HOME\$PWD\$OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$ \$1HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$ \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$HOME\$PWD\$OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$ \$1HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$ \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$HOME\$PWD\$OLDPWD > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo \$ > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo echo > test2 > test2 okcgood > test3; cat test1 test2 test3"
+test " > test1 echo ls -l > test2 > test2 okcgood > test3; cat test1 test2 test3"
+# double redir out
+test ">test1 > test2 echo  >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo a >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo aaa >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo a b c d e f g h >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$? >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$ >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo 920347912slakjdfhlsakfhlaskf__D_SD_FS_DF_S_FS709304 >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$HOME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$1HOME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$H1OME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$HOME1 >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$PWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$1PWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$P1WD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$PWD1 >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$O1LDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$OLDPWD1 >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$ \$1HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$ \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$HOME\$PWD\$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$ \$1HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$ \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$HOME\$PWD\$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$ \$1HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$ \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$HOME\$PWD\$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo \$ >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo echo >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+test ">test1 > test2 echo ls -l >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat test1 test2 test3"
+fi
 # **************************************************************************** #
+
 # **************************************************************************** #
+# cd
+if [ $TEST__CD == 1 ]; then
+test "cd;pwd"
+test "cd /"
+test "cd /dev"
+test "cd bad_arg"
+test "cd bad_arg1 bad_arg2"
+test "mkdir dir1\ncd dir1"
+fi
+# **************************************************************************** #
+
+# **************************************************************************** #
+# pwd
+if [ $TEST__PWD == 1 ]; then
+test ""
+fi
+# **************************************************************************** #
+
+# **************************************************************************** #
+# export
+if [ $TEST__EXPORT == 1 ]; then
+test ""
+fi
+# **************************************************************************** #
+
+# **************************************************************************** #
+# unset
+if [ $TEST__UNSET == 1 ]; then
+test ""
+fi
+# **************************************************************************** #
+
+# **************************************************************************** #
+# env
+if [ $TEST__ENV == 1 ]; then
+test ""
+fi
+# **************************************************************************** #
+
+# **************************************************************************** #
+# exit
+if [ $TEST__EXIT == 1 ]; then
+test ""
+fi
+# **************************************************************************** #
+
 exit_tester
