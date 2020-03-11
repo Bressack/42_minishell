@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/10 21:58:41 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/11 01:27:43 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ char	*expand_qt(char *args)
 			j += expand_simple_quotes(&args, &new[j]);
 		else if (*args == '$' && ok_envchar(*(args + 1), 0) && args++)
 			j += expand_env(&args, &new[j]);
+		else if (*args == '$' && (*(args + 1) >= '0' && *(args + 1) <= '9')) // $1 or not ?
+			args += 2;
 		else if (*args == '\"' && args++)
 			quote = (quote == 0) ? *args : 0;
 		else if (*args == '\\' &&

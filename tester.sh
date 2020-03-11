@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 01:07:18 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/11 01:41:55 by fredrikalindh    ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -110,7 +110,7 @@ test()
 	(printf "$1\nexit\n") | $MAIN_DIR/minishell 2>&- > $MAIN_DIR/user_output
 	USER_RETVAL=$?
 	reset_dirtest
-	(printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/bash_output
+	(printf "$1\nexit\n") | bash 2>&- > $MAIN_DIR/bash_output
 	BASH_RETVAL=$?
 	reset_dirtest
 	# printf "user_output (%d):\n" $USER_RETVAL ; cat $MAIN_DIR/user_output;
@@ -187,6 +187,9 @@ test "echo \$HOME\$PWD\$OLDPWD"
 test "echo \$"
 test "echo echo"
 test "echo ls -l"
+#adding // FRED
+test "\\t \\\\ \\\$\'\\\\ \$HEJ \$HOME \\\$\'\"\\\\ \$HEJ \$HOME \\\$\""
+test "\\\$? \$?"
 # redir out
 test " > test1 echo  > test2 > test2 okcgood > test3; cat test1 test2 test3"
 test " > test1 echo a > test2 > test2 okcgood > test3; cat test1 test2 test3"
@@ -287,7 +290,8 @@ fi
 # **************************************************************************** #
 # export
 if [ $TEST__EXPORT == 1 ]; then
-test ""
+test "export LS=\"    ls     -l      \" ; \$LS"
+test "export hej hej+=da 56=he"
 fi
 # **************************************************************************** #
 

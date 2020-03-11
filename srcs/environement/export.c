@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/07 18:47:42 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 01:47:29 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ int			export(int ac, char **av, int out)
 	export = (ft_strcmp(av[0], "export")) ? 0 : 1;
 	if ((i = -1) == -1 && export && i++ && ac == 1)
 		return (print_exp(out));
-	while (++i < ac && !(out = 0))
+	out = 0;
+	while (++i < ac)
 	{
 		if (av[i] && !is_valid_variable(av[i], 1))
 			out = bi_error(av[0], av[i], "not a valid identifier", 1);
