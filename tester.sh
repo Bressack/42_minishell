@@ -6,11 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-<<<<<<< HEAD
-#    Updated: 2020/03/11 14:49:35 by frlindh          ###   ########.fr        #
-=======
-#    Updated: 2020/03/11 14:00:23 by tharchen         ###   ########.fr        #
->>>>>>> 65ad8e763a981c7e1f1110115c0e14ad68e41d43
+#    Updated: 2020/03/11 15:37:12 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -344,6 +340,8 @@ test "unset \$HOME\$HOME"
 test "unset \$HOME\$PWD"
 test "unset \$HOME\$PWD\$?"
 test "unset \$HOME asdf \$PWD"
+test "unset he52_ge _hej 77 hej*"
+test "unset B C= 54+=45 D"
 
 fi
 # **************************************************************************** #

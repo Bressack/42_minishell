@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 18:27:33 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/10 21:58:55 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/11 15:22:48 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,5 @@ int		unset(int ac, char **args, int out)
 			mfree((void **)&f);
 		}
 	}
-	return (0);
+	return (out);
 }
