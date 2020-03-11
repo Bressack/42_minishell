@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:46:55 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 06:04:49 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/11 14:58:09 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,11 @@ int		node__semicon_handle(t_node *cmd_sep)
 	int	sloc;
 
 	sloc = 0;
-	node__controller(cmd_sep->left);
-	waitpid(cmd_sep->left->pid, &sloc, WUNTRACED);
+	sloc = node__controller(cmd_sep->left);
+	printf(TEST);
 	if (cmd_sep->right)
-	{
-		node__controller(cmd_sep->right);
-		if (!(cmd_sep->right->type == SEP && cmd_sep->right->sep->type == PIPE))
-			waitpid(cmd_sep->right->pid, &sloc, WUNTRACED);
-	}
-	return (WEXITSTATUS(sloc));
+		sloc = node__controller(cmd_sep->right);
+	return (sloc);
 }
 
 /*

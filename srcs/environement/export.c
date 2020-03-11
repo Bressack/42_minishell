@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 17:47:16 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/11 01:47:29 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/11 14:15:50 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,11 @@ int			export(int ac, char **av, int out)
 {
 	int		i;
 	int		j;
-	int		op;
-	int		export;
+	int		opex[2];
 	char	cpy[LINE_MAX];
 
-	export = (ft_strcmp(av[0], "export")) ? 0 : 1;
-	if ((i = -1) == -1 && export && i++ && ac == 1)
+	opex[1] = (ft_strcmp(av[0], "export")) ? 0 : 1;
+	if ((i = -1) == -1 && opex[1] && i++ && ac == 1)
 		return (print_exp(out));
 	out = 0;
 	while (++i < ac)
@@ -95,12 +94,43 @@ int			export(int ac, char **av, int out)
 		{
 			while (*av[i] && *av[i] != ' ' && *av[i] != '+' && *av[i] != '=')
 				(j < LINE_MAX) ? cpy[++j] = *av[i]++ : i++;
-			if ((op = *av[i]) != 0 && *av[i]++ == '+' && *av[i] != '=')
+			if ((opex[0] = *av[i]) != 0 && *av[i]++ == '+' && *av[i] != '=')
 				out = bi_error(av[0], av[i], "not a valid identifier", 1);
 			else if ((cpy[++j] = '\0') == '\0')
-				(op == '+') ? set_var(cpy, op, ++av[i], export) :
-				set_var(cpy, op, av[i], export);
+				(opex[0] == '+') ? set_var(cpy, opex[0], ++av[i], opex[1]) :
+				set_var(cpy, opex[0], av[i], opex[1]);
 		}
 	}
 	return (out);
 }
+/*
+** int			export(int ac, char **av, int out)
+** {
+** 	int		i;
+** 	int		j;
+** 	int		op;
+** 	int		export;
+** 	char	cpy[LINE_MAX];
+**
+** 	export = (ft_strcmp(av[0], "export")) ? 0 : 1;
+** 	if ((i = -1) == -1 && export && i++ && ac == 1)
+** 		return (print_exp(out));
+** 	out = 0;
+** 	while (++i < ac)
+** 	{
+** 		if (av[i] && !is_valid_variable(av[i], 1))
+** 			out = bi_error(av[0], av[i], "not a valid identifier", 1);
+** 		else if (av[i] && (j = -1) == -1)
+** 		{
+** 			while (*av[i] && *av[i] != ' ' && *av[i] != '+' && *av[i] != '=')
+** 				(j < LINE_MAX) ? cpy[++j] = *av[i]++ : i++;
+** 			if ((op = *av[i]) != 0 && *av[i]++ == '+' && *av[i] != '=')
+** 				out = bi_error(av[0], av[i], "not a valid identifier", 1);
+** 			else if ((cpy[++j] = '\0') == '\0')
+** 				(op == '+') ? set_var(cpy, op, ++av[i], export) :
+** 				set_var(cpy, op, av[i], export);
+** 		}
+** 	}
+** 	return (out);
+** }
+*/

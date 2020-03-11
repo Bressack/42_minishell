@@ -6,14 +6,13 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 16:51:55 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/04 12:26:29 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 14:23:42 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF
-# define FT_PRINTF
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-// # include <minishell.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>

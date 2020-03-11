@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/10 22:05:29 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/11 14:40:27 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	**check_cmd(t_node *cmd, int *ac, int *type)
 		return (av);
 	*ac -= assign;
 	while ((j = -1) < 0 && assign-- > 0)
-		mfree((void **)av++); //not sure about these
+		mfree((void **)av++);
 	while (++j < BUILTINS && (*type = -2) < 0)
 		if (!ft_strcmp(av[0], g_builtins[j].name) && (*type = j) > -1)
 			return (av);
@@ -109,7 +109,7 @@ int		execute_simple(t_node *cmd)
 	else if (!(g_exit = 0))
 		type = launch(cmd, av);
 	while (av && *av)
-		mfree((void **)av++); //not sure about these
+		mfree((void **)av++);
 	mfree((void **)&av);
 	return (type);
 }
@@ -172,12 +172,12 @@ int		execute_in_child(t_node *cmd)
 		close(cmd->stdout);
 	if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
 		close(cmd->stdin);
+	waitallpipes(NULL, CLOSE);
 	if (!(path = get_path(av[0], &type)))
 		return (bi_error(av[0], NULL, NULL, type));
 	environ = env_to_arr(g_env);
 	execve(path, av, environ);
 	bi_error(av[0], NULL, strerror(errno), 0);
-	waitallpipes(NULL, CLOSE);
 	return (errno);
 }
 

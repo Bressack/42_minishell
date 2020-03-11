@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/10 22:01:41 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/11 13:57:51 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int				spec_char(char c);
 ** EXPANSION
 */
 # define IFS " \t\n"
-int				expand(t_token **args);
 
+int				expand(t_token **args);
 
 #endif
