@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 14:00:23 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/11 14:15:33 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -137,14 +137,14 @@ test()
 		if [ $DIFF_RET != 0 ]
 		then
 			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED DIFF ERROR $C_RES\"$C_G_GRAY$1$C_G_WHITE\"$C_RES\n" $TOTAL_TEST
+			printf "user_output (%d):\n" $USER_RETVAL ; printf "$C_G_RED" ; cat $MAIN_DIR/user_output; printf "$C_RES"
+			echo "********************************************"
+			printf "bash_output (%d):\n" $BASH_RETVAL ; printf "$C_G_GREEN" ; cat $MAIN_DIR/bash_output; printf "$C_RES"
+			printf "\n"
 		elif [ $USER_RETVAL != $BASH_RETVAL ]
 		then
 			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED BAD RETURN VALUE$C_RES [ $C_G_BLUE%d$C_RES instead of $C_G_BLUE%d$C_RES ] \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST $USER_RETVAL $BASH_RETVAL
 		fi
-		printf "user_output (%d):\n" $USER_RETVAL ; printf "$C_G_RED" ; cat $MAIN_DIR/user_output; printf "$C_RES"
-		echo "********************************************"
-		printf "bash_output (%d):\n" $BASH_RETVAL ; printf "$C_G_GREEN" ; cat $MAIN_DIR/bash_output; printf "$C_RES"
-		printf "\n"
 	fi
 }
 
@@ -347,15 +347,33 @@ fi
 # **************************************************************************** #
 # env
 if [ $TEST__ENV == 1 ]; then
-test ""
+test "env"
+test "env | sort"
+test "env s"
+test "env s ds"
+test "env $HOME$HOME"
+test "env | cat -e"
 fi
 # **************************************************************************** #
 
 # **************************************************************************** #
 # exit
 if [ $TEST__EXIT == 1 ]; then
-test ""
+test "exit"
+test "exit -1"
+test "exit -123412341234123398740239"
+test "exit 12382397429180470123849"
+test "exit -123412341234123398740239 129834761298346981723469182734"
+test "exit 12382397429180470123849 129834761298346981723469182734"
+test "exit -123412341234123398740239 jkdsafdjs"
+test "exit 12382397429180470123849 jkdsafdjs"
+test "exit -123412341234123398740239 129834761298346981723469182734 jkdsafdjs"
+test "exit 12382397429180470123849 129834761298346981723469182734 jkdsafdjs"
+test "exit 123"
+test "exit 123 345"
 fi
 # **************************************************************************** #
+
+norminette $MAIN_DIR | grep "error"
 
 exit_tester
