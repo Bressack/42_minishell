@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 15:13:50 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/11 17:11:40 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,12 +50,12 @@ C_RES="\033[0m"
 # ENABLE TEST
 
 TEST__ECHO=0
-TEST__CD=0
-TEST__PWD=0
-TEST__EXPORT=0
+TEST__CD=1
+TEST__PWD=1
+TEST__EXPORT=1
 TEST__UNSET=1
-TEST__ENV=0
-TEST__EXIT=0
+TEST__ENV=1
+TEST__EXIT=1
 
 # SUB TEST
 
@@ -110,12 +110,9 @@ reset_dirtest()
 
 test()
 {
-
-	# (printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/user_output
-	# (printf "$1\nexit\n") | zsh 2>&- > $MAIN_DIR/user_output
-
-
 	# TEST minishell # ******************************************************* #
+	# (printf "$1\nexit\n") | bash 2>&- > $MAIN_DIR/user_output
+	# (printf "$1\nexit\n") | zsh 2>&- > $MAIN_DIR/user_output
 	(printf "$1\nexit\n") | $MAIN_DIR/minishell 2>&- > $MAIN_DIR/user_output
 	USER_RETVAL=$?
 	reset_dirtest
@@ -157,6 +154,8 @@ init_tester $1 $2 $3
 ## BUILTINS
 
 # **************************************************************************** #
+test "ls;ls|cat -e&&ls>test || cat test | head -c 5 ; echo KO | cat -e && ls ; cat test | head -c 100"
+test "echo START | cat && ls > test >> test >> test | cat -e | cat -e || echo KO || echo NICE && ls | cat | cat -e | head -c 2"
 # echo
 if [ $TEST__ECHO == 1 ]; then
 # simple
@@ -324,7 +323,7 @@ fi
 if [ $TEST__EXPORT == 1 ]; then
 test "export LS=\"    ls     -l      \" ; \$LS"
 test "export hej hej+=da 56=he"
-test "export | sort"
+test "export | sort | grep -v \"declare -x _=\" | grep -v \"declare -x SHLVL\""
 fi
 # **************************************************************************** #
 
@@ -347,12 +346,11 @@ fi
 # **************************************************************************** #
 # env
 if [ $TEST__ENV == 1 ]; then
-test "env"
-test "env | sort"
-test "env s"
-test "env s ds"
-test "env $HOME$HOME"
-test "env | cat -e"
+test "env | sort | grep -v \"_=/\""
+test "env s| sort | grep -v \"_=/\""
+test "env s ds| sort | grep -v \"_=/\""
+test "env $HOME$HOME| sort | grep -v \"_=/\""
+test "env | sort | grep -v \"_=/\""
 fi
 # **************************************************************************** #
 
@@ -374,6 +372,6 @@ test "exit 123 345"
 fi
 # **************************************************************************** #
 
-norminette $MAIN_DIR | grep "error"
+# norminette $MAIN_DIR | grep "error"
 
 exit_tester
