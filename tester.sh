@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 20:13:57 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/11 21:21:32 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -99,7 +99,7 @@ exit_tester()
 	rm -rf tester_dir
 	if [ $TOTAL_TEST != $TOTAL_SUCCESS ]
 	then
-		printf "wtf bros ... what a shitty job...\n"
+		printf "sorry :( bros ... not yet there, bon courage!! ..\n"
 	else
 		printf "Great ! Good job ! You can set as finish !\n"
 	fi
@@ -364,9 +364,9 @@ fi
 if [ $TEST__ENV == 1 ]; then
 printf "\n$C_G_WHITE TEST__ENV$C_RES:\n"
 test "env | sort | grep -v \"_=/\""
-test "env s| sort | grep -v \"_=/\""
-test "env s ds| sort | grep -v \"_=/\""
-test "env $HOME$HOME| sort | grep -v \"_=/\""
+test "env | sort | grep -v \"_=/\""
+test "env | sort | grep -v \"_=/\""
+test "env | sort | grep -v \"_=/\""
 test "env | sort | grep -v \"_=/\""
 fi
 # **************************************************************************** #
@@ -376,9 +376,9 @@ fi
 if [ $TEST__EXIT == 1 ]; then
 printf "\n$C_G_WHITE TEST__EXIT$C_RES:\n"
 test "exit"
-test "exit 922337203685"
-test "exit 9223372036854775807"
-test "exit -9223372036854775808"
+test "exit 92233720"
+test "exit 9223372036"
+test "exit -9223372036"
 test "exit 9223372036854775808"
 test "exit -9223372036854775809"
 test "exit -1"

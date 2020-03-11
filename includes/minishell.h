@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:20:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 14:22:40 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 20:52:12 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-
+int	g_reset;
 typedef enum		e_optsignal
 {
 	CONTINUE,
