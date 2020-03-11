@@ -6,11 +6,13 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 21:10:36 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 21:23:55 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+int		g_sigint = 0;
 
 void	print_prompt(int sloc)
 {
