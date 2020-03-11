@@ -6,11 +6,13 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 16:57:59 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/11 20:52:03 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+int		g_sigint = 0;
 
 void	print_prompt(int sloc)
 {
@@ -30,7 +32,10 @@ void	print_prompt(int sloc)
 void	sig_handler(int signo)
 {
 	if (signo == SIGINT && ft_dprintf(STDOUT, "\n")) // RESET LINE
+	{
+		g_sigint = 1;
 		print_prompt(0);
+	}
 	else if (signo == SIGQUIT)
 		ft_dprintf(2, "\b\b  \b\b");
 }
