@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 13:42:35 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/11 14:00:23 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,13 +49,13 @@ C_RES="\033[0m"
 
 # ENABLE TEST
 
-TEST__ECHO=1
-TEST__CD=1
-TEST__PWD=1
-TEST__EXPORT=1
+TEST__ECHO=0
+TEST__CD=0
+TEST__PWD=0
+TEST__EXPORT=0
 TEST__UNSET=1
-TEST__ENV=1
-TEST__EXIT=1
+TEST__ENV=0
+TEST__EXIT=0
 
 # SUB TEST
 
@@ -128,17 +128,18 @@ test()
 	# ANALYZE RESULT ********************************************************* #
 	let "TOTAL_TEST+=1"
 	diff --text $MAIN_DIR/user_output $MAIN_DIR/bash_output > /dev/null
-	if [ $? == 0 ] && [ $USER_RETVAL == $BASH_RETVAL ]
+	DIFF_RET=$?
+	if [ $DIFF_RET == 0 ] && [ $USER_RETVAL == $BASH_RETVAL ]
 	then
 		printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_GREEN OK !$C_G_WHITE : \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST
 		let "TOTAL_SUCCESS+=1"
 	else
-		if [ $? != 0 ]
+		if [ $DIFF_RET != 0 ]
 		then
 			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED DIFF ERROR $C_RES\"$C_G_GRAY$1$C_G_WHITE\"$C_RES\n" $TOTAL_TEST
-		elif [ $USER_RETVAL == $BASH_RETVAL ]
+		elif [ $USER_RETVAL != $BASH_RETVAL ]
 		then
-			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED BAD RETURN VALUE$C_G_RES [ $C_G_BLUE%d$C_G_RES instead of $C_G_BLUE%d$C_G_RES ] \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST
+			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED BAD RETURN VALUE$C_RES [ $C_G_BLUE%d$C_RES instead of $C_G_BLUE%d$C_RES ] \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST $USER_RETVAL $BASH_RETVAL
 		fi
 		printf "user_output (%d):\n" $USER_RETVAL ; printf "$C_G_RED" ; cat $MAIN_DIR/user_output; printf "$C_RES"
 		echo "********************************************"
@@ -323,14 +324,23 @@ fi
 if [ $TEST__EXPORT == 1 ]; then
 test "export LS=\"    ls     -l      \" ; \$LS"
 test "export hej hej+=da 56=he"
-test "export "
+test "export | sort"
 fi
 # **************************************************************************** #
 
 # **************************************************************************** #
 # unset
 if [ $TEST__UNSET == 1 ]; then
-test ""
+test "unset PATH;ls"
+test "unset PWD;cd \$PWD"
+test "unset sdafasd"
+test "unset sdafasd asdfsd"
+test "unset"
+test "unset \$HOME\$HOME"
+test "unset \$HOME\$PWD"
+test "unset \$HOME\$PWD\$?"
+test "unset \$HOME asdf \$PWD"
+
 fi
 # **************************************************************************** #
 
