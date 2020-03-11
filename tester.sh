@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 20:07:47 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/11 20:13:57 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,13 +49,16 @@ C_RES="\033[0m"
 
 # ENABLE TEST
 
-TEST__ECHO=0
+TEST__ECHO=1
 TEST__CD=1
 TEST__PWD=1
 TEST__EXPORT=1
 TEST__UNSET=1
 TEST__ENV=1
 TEST__EXIT=1
+
+TEST__BAD=1
+TEST__GOOD=1
 
 # SUB TEST
 
@@ -118,6 +121,7 @@ test()
 	reset_dirtest
 
 	# TEST bash # ************************************************************ #
+	# (printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/bash_output
 	(printf "$1\nexit\n") | bash 2>&- > $MAIN_DIR/bash_output
 	BASH_RETVAL=$?
 	reset_dirtest
@@ -128,7 +132,7 @@ test()
 	DIFF_RET=$?
 	if [ $DIFF_RET == 0 ] && [ $USER_RETVAL == $BASH_RETVAL ]
 	then
-		printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_GREEN OK !$C_G_WHITE : \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST
+		printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_GREEN OK !$C_G_WHITE : \"$C_G_GRAY$1$C_G_WHITE\"$C_RES\n" $TOTAL_TEST
 		let "TOTAL_SUCCESS+=1"
 	else
 		if [ $DIFF_RET != 0 ]
@@ -140,9 +144,12 @@ test()
 			printf "\n"
 		elif [ $USER_RETVAL != $BASH_RETVAL ]
 		then
-			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED BAD RETURN VALUE$C_RES [ $C_G_BLUE%d$C_RES instead of $C_G_BLUE%d$C_RES ] \"$C_G_GRAY$1$C_G_WHITE \"$C_RES\n" $TOTAL_TEST $USER_RETVAL $BASH_RETVAL
+			printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_RED KO !$C_G_WHITE :$C_G_RED BAD RETURN VALUE$C_RES [ $C_G_BLUE%d$C_RES instead of $C_G_BLUE%d$C_RES ] \"$C_G_GRAY$1$C_G_WHITE\"$C_RES\n" $TOTAL_TEST $USER_RETVAL $BASH_RETVAL
 		fi
 	fi
+	# printf "user_output (%d):\n" $USER_RETVAL ; printf "$C_G_RED" ; cat $MAIN_DIR/user_output; printf "$C_RES"
+	# echo "********************************************"
+	# printf "bash_output (%d):\n" $BASH_RETVAL ; printf "$C_G_GREEN" ; cat $MAIN_DIR/bash_output; printf "$C_RES"
 }
 
 init_tester $1 $2 $3
@@ -154,12 +161,12 @@ init_tester $1 $2 $3
 ## BUILTINS
 
 # **************************************************************************** #
-test "ls;ls|cat -e&&ls>test || cat test | head -c 5 ; echo KO | cat -e && ls ; cat test | head -c 100"
-test "echo START | cat && ls > test >> test >> test | cat -e | cat -e || echo KO || echo NICE && ls | cat | cat -e | head -c 2"
 # echo
 if [ $TEST__ECHO == 1 ]; then
+printf "\n$C_G_WHITE TEST__ECHO$C_RES:\n"
 # simple
 if [ $TEST__SIMPLE == 1 ]; then
+printf "\n$C_G_WHITE TEST__SIMPLE$C_RES:\n"
 test "echo "
 test "echo a"
 test "echo aaa"
@@ -242,6 +249,7 @@ test " > test1 echo \$HOME\$PWD\$OLDPWD > test2 > test2 okcgood > test3; cat -e 
 test " > test1 echo \$ > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo echo > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo ls -l > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+printf "\n$C_G_WHITE TEST__SIMPLE_REDIR$C_RES:\n"
 fi
 # double redir out
 if [ $TEST__DOUBLE_REDIR == 1 ]; then
@@ -280,6 +288,7 @@ test ">test1 > test2 echo \$HOME\$PWD\$OLDPWD >test2 >> test1 >> test1 >> test2 
 test ">test1 > test2 echo \$ >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo echo >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo ls -l >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+printf "\n$C_G_WHITE TEST__DOUBLE_REDIR$C_RES:\n"
 fi
 fi
 # **************************************************************************** #
@@ -287,6 +296,7 @@ fi
 # **************************************************************************** #
 # cd
 if [ $TEST__CD == 1 ]; then
+printf "\n$C_G_WHITE TEST__CD$C_RES:\n"
 test "cd;pwd"
 test "cd /;pwd"
 test "cd /dev;pwd"
@@ -299,6 +309,7 @@ fi
 # **************************************************************************** #
 # pwd
 if [ $TEST__PWD == 1 ]; then
+printf "\n$C_G_WHITE TEST__PWD$C_RES:\n"
 test "pwd"
 test "unset \$PWD; pwd"
 test "export TESTPWD=\$PWD;unset \$PWD; pwd"
@@ -321,6 +332,7 @@ fi
 # **************************************************************************** #
 # export
 if [ $TEST__EXPORT == 1 ]; then
+printf "\n$C_G_WHITE TEST__EXPORT$C_RES:\n"
 test "export LS=\"    ls     -l      \" ; \$LS"
 test "export hej hej+=da 56=he"
 test "export | sort | grep -v \"declare -x _=\" | grep -v \"declare -x SHLVL\""
@@ -330,8 +342,10 @@ fi
 # **************************************************************************** #
 # unset
 if [ $TEST__UNSET == 1 ]; then
+printf "\n$C_G_WHITE TEST__UNSET$C_RES:\n"
 test "unset PATH;ls"
 test "unset PWD;cd \$PWD"
+test "unset PWD;cd \$PWD ; export PWD=~;cd PWD"
 test "unset sdafasd"
 test "unset sdafasd asdfsd"
 test "unset"
@@ -348,6 +362,7 @@ fi
 # **************************************************************************** #
 # env
 if [ $TEST__ENV == 1 ]; then
+printf "\n$C_G_WHITE TEST__ENV$C_RES:\n"
 test "env | sort | grep -v \"_=/\""
 test "env s| sort | grep -v \"_=/\""
 test "env s ds| sort | grep -v \"_=/\""
@@ -359,7 +374,13 @@ fi
 # **************************************************************************** #
 # exit
 if [ $TEST__EXIT == 1 ]; then
+printf "\n$C_G_WHITE TEST__EXIT$C_RES:\n"
 test "exit"
+test "exit 922337203685"
+test "exit 9223372036854775807"
+test "exit -9223372036854775808"
+test "exit 9223372036854775808"
+test "exit -9223372036854775809"
 test "exit -1"
 test "exit -123412341234123398740239"
 test "exit 12382397429180470123849"
@@ -377,6 +398,33 @@ test "exit -----123"
 fi
 # **************************************************************************** #
 
+if [ $TEST__BAD == 1 ]; then
+printf "\n$C_G_WHITE TEST__BAD$C_RES:\n"
+test ";;"
+test "|"
+test "|a"
+test "d|"
+test "d                                 |"
+test "ecasd"
+test "_"
+test "\-"
+test "\$"
+test "\$?"
+fi
+
+if [ $TEST__GOOD == 1 ]; then
+printf "\n$C_G_WHITE TEST__GOOD$C_RES:\n"
+test "ls;ls|cat -e&&ls>test || cat test | head -c 5 ; echo KO | cat -e && ls ; cat test | head -c 100"
+test "echo START | cat && ls > test >> test >> test | cat -e | cat -e || echo KO || echo NICE && ls | cat | cat -e | head -c 2"
+test "ls"
+test "ls|ls"
+test "ls|cat -e"
+test "ls|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e|cat -e"
+test "ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls"
+test "ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls;ls"
+test "ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls"
+test "ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls"
+fi
 # norminette $MAIN_DIR | grep "error"
 
 exit_tester
