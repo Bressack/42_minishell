@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/11 19:10:16 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/11 20:11:58 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	expand_split_env(t_token **args, int *ac)
 	(*args)->value = arr[0];
 	next = (*args)->next;
 	i = 0;
-	while ((*ac += 1) > 0 && arr[++i] != NULL)
+	while (arr[++i] != NULL && (*ac += 1) > 0)
 	{
 		(*args)->next = (t_token *)mmalloc(sizeof(t_token));
 		((*args)->next)->value = arr[i];
@@ -149,7 +149,7 @@ int		expand(t_token **args)
 	{
 		if ((*args)->value[0] == '$' && ok_envchar((*args)->value[1], 0))
 			expand_split_env(args, &ac);
-		else if (++ac != -1)
+		else if (ac++ != -1)
 		{
 			(*args)->value = expand_qt((*args)->value);
 			(!(*args)->value) ? (*args)->value = ft_strdup("") : 0;
