@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:20:01 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 12:46:56 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 18:12:45 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+
 int		g_reset;
-pid_t	g_pids[1000];
+
 typedef enum		e_optsignal
 {
 	CONTINUE,

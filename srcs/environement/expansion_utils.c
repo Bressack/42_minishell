@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 21:56:27 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/11 20:09:02 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 18:17:18 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,24 +67,14 @@ int		tilde_exp(char *new)
 	return (i);
 }
 
-/*
-** JUST TO CONVERT THE LIST OF ARGS TO ARRAY
-*/
-
-char	**convert_to_arr(t_token *args, int ac)
+int		expand_simple_quotes(char **args, char *new)
 {
-	char	**av;
-	t_token	*prev;
 	int		i;
 
-	av = (char **)mmalloc(sizeof(char *) * (ac + 1));
 	i = 0;
-	while (args)
-	{
-		av[i++] = args->value;
-		prev = args;
-		args = args->next;
-	}
-	av[i] = NULL;
-	return (av);
+	(*args)++;
+	while (*args && **args && **args != '\'')
+		new[i++] = *((*args)++);
+	(*args)++;
+	return (i);
 }

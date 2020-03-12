@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 21:49:21 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/10 22:04:55 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/12 18:16:32 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,26 @@ void	sig_exec(int signo)
 		ft_dprintf(2, "Quit: 3\n");
 		g_exit = 131;
 	}
+}
+
+/*
+** JUST TO CONVERT THE LIST OF ARGS TO ARRAY
+*/
+
+char	**convert_to_arr(t_token *args, int ac)
+{
+	char	**av;
+	t_token	*prev;
+	int		i;
+
+	av = (char **)mmalloc(sizeof(char *) * (ac + 1));
+	i = 0;
+	while (args)
+	{
+		av[i++] = args->value;
+		prev = args;
+		args = args->next;
+	}
+	av[i] = NULL;
+	return (av);
 }

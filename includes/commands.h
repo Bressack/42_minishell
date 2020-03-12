@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/12 16:10:58 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:16:23 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int				xcd(int argc, char **args, int out);
 */
 char			**env_to_arr(t_env *trav);
 void			sig_exec(int signo);
+char			**convert_to_arr(t_token *args, int ac);
 /*
 ** EXECUTE
 */
