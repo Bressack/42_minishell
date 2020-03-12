@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 00:33:56 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/12 14:16:50 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int		xecho(int ac, char **args, int out)
 {
 	int		n;
 	int		i;
+	int		len;
 
 	n = 0;
 	if (ac > 1)
@@ -25,9 +26,10 @@ int		xecho(int ac, char **args, int out)
 			n = 1;
 		while (i < ac)
 		{
-			ft_dprintf(out, "%s", args[i++]);
+			len = ft_strlen(args[i]);
+			write(out, args[i++], len);
 			if (i < ac)
-				ft_dprintf(out, " ");
+				write(out, " ", 1);
 		}
 	}
 	if (n != 1)
