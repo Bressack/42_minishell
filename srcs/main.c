@@ -6,13 +6,11 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 18:45:20 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:47:45 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-int		g_sigint = 0;
 
 void	print_prompt(int sloc)
 {
@@ -23,7 +21,8 @@ void	print_prompt(int sloc)
 	(!g_exit && sloc) ? g_exit = sloc : 0;
 	if (!getcwd(prompt, LINE_MAX))
 	{
-		ft_dprintf(2, "%s➜  %sminishell > %s", !g_exit ? C_G_GREEN : C_G_RED, C_G_CYAN, C_RES);
+		ft_dprintf(2, "%s➜  %sminishell > %s", !g_exit ? C_G_GREEN : C_G_RED,
+		C_G_CYAN, C_RES);
 		return ;
 	}
 	i = -1;
