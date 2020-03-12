@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 17:35:44 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 20:45:17 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,6 @@ int		execute_in_child(t_node *cmd)
 		close(cmd->stdout);
 	if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
 		close(cmd->stdin);
-	waitallpipes(NULL, CLOSE);
 	if (!(path = get_path(av[0], &type)))
 		return (bi_error(av[0], NULL, NULL, type));
 	environ = env_to_arr(g_env);

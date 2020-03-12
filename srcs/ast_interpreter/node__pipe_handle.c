@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 17:51:43 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 20:50:54 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,26 +94,82 @@ int		waitallpipes(int pipe[2], int opt)
 ** CHILD HAS FINISHED TO USE IT
 */
 
+// int		node__pipe_handle(t_node *ppln)
+// {
+// 	int	sloc;
+// 	int	head;
+//
+// 	head = 0;
+// 	sloc = 0;
+// 	if (!node__parent_ispipe(ppln))
+// 		head = 1;
+// 	if (pipe(ppln->pipe_ltor) == -1)
+// 		return (asti_error(NULL, ERR_PIPE));
+// 	ppln->left->stdout != STDOUT ? close(ppln->left->stdout) : 0;
+// 	ppln->right->stdin != STDIN ? close(ppln->right->stdin) : 0;
+// 	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
+// 	ppln->right->stdin = ppln->pipe_ltor[PIPE_READ];
+// 	ppln->right->stdout = ppln->stdout;
+// 	waitallpipes(ppln->pipe_ltor, ADD);
+// 	node__controller(ppln->left);
+// 	node__controller(ppln->right);
+// 	if (head == 1)
+// 		sloc = waitallpipes(ppln->pipe_ltor, WAIT | CLOSE | FREE);
+// 	return (WEXITSTATUS(sloc));
+// }
+
+
+int		node__cmdpipefirst_controller(t_node *cmd)
+{
+	cmd->stdout != STDOUT ? close(cmd->stdout) : 0;
+	if (pipe(cmd->pipe_ltor) == -1)
+		return (asti_error(NULL, ERR_PIPE));
+	cmd->stdout = cmd->pipe_ltor[PIPE_WRITE];
+	if (redir_handle(cmd) == ERROR)
+		return (ERROR);
+	g_exit = execute_fork(cmd);
+	close(cmd->pipe_ltor[PIPE_WRITE]);
+	return (cmd->pipe_ltor[PIPE_READ]);
+}
+
+int		node__cmdpipe_controller(t_node *cmd, int fdread)
+{
+	cmd->stdin != STDIN ? close(cmd->stdin) : 0;
+	cmd->stdout != STDOUT ? close(cmd->stdout) : 0;
+	if (node__parent_ispipe(cmd->parent))
+	{
+		if (pipe(cmd->pipe_ltor) == -1)
+			return (asti_error(NULL, ERR_PIPE));
+		cmd->stdout = cmd->pipe_ltor[PIPE_WRITE];
+	}
+	cmd->stdin = fdread;
+	if (redir_handle(cmd) == ERROR)
+		return (ERROR);
+	g_exit = execute_fork(cmd);
+	close(fdread);
+	if (node__parent_ispipe(cmd->parent))
+	{
+		close(cmd->pipe_ltor[PIPE_WRITE]);
+		return (cmd->pipe_ltor[PIPE_READ]);
+	}
+	return (STDOUT);
+}
+
+
+int		node__subpipe_handle(t_node *ppln)
+{
+	int	fdread;
+
+	if (ppln->left->type == CMD)
+		fdread = node__cmdpipefirst_controller(ppln->left);
+	else
+		fdread = node__subpipe_handle(ppln->left);
+	fdread = node__cmdpipe_controller(ppln->right, fdread);
+	return (fdread);
+}
+
 int		node__pipe_handle(t_node *ppln)
 {
-	int	sloc;
-	int	head;
-
-	head = 0;
-	sloc = 0;
-	if (!node__parent_ispipe(ppln))
-		head = 1;
-	if (pipe(ppln->pipe_ltor) == -1)
-		return (asti_error(NULL, ERR_PIPE));
-	ppln->left->stdout != STDOUT ? close(ppln->left->stdout) : 0;
-	ppln->right->stdin != STDIN ? close(ppln->right->stdin) : 0;
-	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
-	ppln->right->stdin = ppln->pipe_ltor[PIPE_READ];
-	ppln->right->stdout = ppln->stdout;
-	waitallpipes(ppln->pipe_ltor, ADD);
-	node__controller(ppln->left);
-	node__controller(ppln->right);
-	if (head == 1)
-		sloc = waitallpipes(ppln->pipe_ltor, WAIT | CLOSE | FREE);
-	return (WEXITSTATUS(sloc));
+	node__subpipe_handle(ppln);
+	return (pid_save(0, WAIT | FREE));
 }

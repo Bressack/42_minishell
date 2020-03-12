@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 18:54:04 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 19:47:58 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int		main(int ac, char **av, char **env)
 		if ((ast = ast_builder(sloc)))
 		{
 			sloc = ast_interpreter(ast);
+			g_exit = sloc;
 			node__del(&ast, RECURCIVLY);
 		}
 		else
