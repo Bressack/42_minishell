@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 13:47:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 17:35:44 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ int		execute_simple(t_node *cmd)
 	int		type;
 
 	av = check_cmd(cmd, &ac, &type);
+	if (!av || !*av)
+		return (0);
 	if (type >= 0)
 		type = g_builtins[type].f(ac, av, cmd->stdout);
 	else if (type == -1)

@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 14:24:10 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/12 17:34:08 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,23 +49,24 @@ C_RES="\033[0m"
 
 # ENABLE TEST
 
-TEST__ECHO=1
-TEST__CD=1
-TEST__PWD=1
-TEST__EXPORT=1
-TEST__UNSET=1
-TEST__ENV=1
-TEST__EXIT=1
+TEST__ECHO=0
+TEST__CD=0
+TEST__PWD=0
+TEST__EXPORT=0
+TEST__UNSET=0
+TEST__ENV=0
+TEST__EXIT=0
+TEST__RANDOM_FRED=1
 
-TEST__BAD=1
-TEST__GOOD=1
+TEST__BAD=0
+TEST__GOOD=0
 
 # SUB TEST
 
-TEST__SIMPLE=1
-TEST__SIMPLE_REDIR=1
-TEST__DOUBLE_REDIR=1
-TEST__SIMPLE_REDIR_IN=1
+TEST__SIMPLE=0
+TEST__SIMPLE_REDIR=0
+TEST__DOUBLE_REDIR=0
+TEST__SIMPLE_REDIR_IN=0
 
 # **************************************************************************** #
 # **************************************************************************** #
@@ -180,28 +181,28 @@ test "echo \$"
 test "echo 920347912slakjdfhlsakfhlaskf__D_SD_FS_DF_S_FS709304"
 test "echo \$HOME"
 test "echo \$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME"
-test "echo \$1HOME"
+test "echo \$HOME"
 test "echo \$H1OME"
 test "echo \$HOME1"
 test "echo \$PWD"
-test "echo \$1PWD"
+test "echo \$PWD"
 test "echo \$P1WD"
 test "echo \$PWD1"
 test "echo \$OLDPWD"
-test "echo \$1OLDPWD"
+test "echo \$OLDPWD"
 test "echo \$O1LDPWD"
 test "echo \$OLDPWD1"
-test "echo \$ \$1HOME \$PWD ok \$OLDPWD"
-test "echo \$ \$1HOME \$PWD \$ \$1OLDPWD"
-test "echo \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$ \$HOME \$PWD ok \$OLDPWD"
+test "echo \$ \$HOME \$PWD \$ \$OLDPWD"
+test "echo \$HOME \$PWD \$ \$OLDPWD"
 test "echo \$HOME\$PWD\$OLDPWD"
-test "echo \$ \$1HOME \$PWD ok \$OLDPWD"
-test "echo \$ \$1HOME \$PWD \$ \$1OLDPWD"
-test "echo \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$ \$HOME \$PWD ok \$OLDPWD"
+test "echo \$ \$HOME \$PWD \$ \$OLDPWD"
+test "echo \$HOME \$PWD \$ \$OLDPWD"
 test "echo \$HOME\$PWD\$OLDPWD"
-test "echo \$ \$1HOME \$PWD ok \$OLDPWD"
-test "echo \$ \$1HOME \$PWD \$ \$1OLDPWD"
-test "echo \$1HOME \$PWD \$ \$1OLDPWD"
+test "echo \$ \$HOME \$PWD ok \$OLDPWD"
+test "echo \$ \$HOME \$PWD \$ \$OLDPWD"
+test "echo \$HOME \$PWD \$ \$OLDPWD"
 test "echo \$HOME\$PWD\$OLDPWD"
 test "export LS=\"          ls      -l   \" ; echo \$LS\$LS\$LS"
 test "export IFS=_ TEST=hej_jag_heter_fredrika ; echo \$TEST"
@@ -236,28 +237,28 @@ test " > test1 echo \$ > test2 > test2 okcgood > test3; cat -e test1 test2 test3
 test " > test1 echo 920347912slakjdfhlsakfhlaskf__D_SD_FS_DF_S_FS709304 > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$HOME > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$1HOME > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$HOME > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$H1OME > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$HOME1 > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$PWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$1PWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$PWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$P1WD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$PWD1 > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$1OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$O1LDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$OLDPWD1 > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$ \$1HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$ \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$ \$HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$ \$HOME \$PWD \$ \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$HOME \$PWD \$ \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$HOME\$PWD\$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$ \$1HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$ \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$ \$HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$ \$HOME \$PWD \$ \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$HOME \$PWD \$ \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$HOME\$PWD\$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$ \$1HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$ \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
-test " > test1 echo \$1HOME \$PWD \$ \$1OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$ \$HOME \$PWD ok \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$ \$HOME \$PWD \$ \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
+test " > test1 echo \$HOME \$PWD \$ \$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$HOME\$PWD\$OLDPWD > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo \$ > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
 test " > test1 echo echo > test2 > test2 okcgood > test3; cat -e test1 test2 test3"
@@ -285,28 +286,28 @@ test ">test1 > test2 echo \$ >test2 >> test1 >> test1 >> test2 >> test3 OK CTREG
 test ">test1 > test2 echo 920347912slakjdfhlsakfhlaskf__D_SD_FS_DF_S_FS709304 >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$HOME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME\$HOME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$1HOME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$HOME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$H1OME >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$HOME1 >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$PWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$1PWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$PWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$P1WD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$PWD1 >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$O1LDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$OLDPWD1 >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$ \$1HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$ \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$ \$HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$ \$HOME \$PWD \$ \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$HOME \$PWD \$ \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$HOME\$PWD\$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$ \$1HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$ \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$ \$HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$ \$HOME \$PWD \$ \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$HOME \$PWD \$ \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$HOME\$PWD\$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$ \$1HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$ \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
-test ">test1 > test2 echo \$1HOME \$PWD \$ \$1OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$ \$HOME \$PWD ok \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$ \$HOME \$PWD \$ \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
+test ">test1 > test2 echo \$HOME \$PWD \$ \$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$HOME\$PWD\$OLDPWD >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo \$ >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
 test ">test1 > test2 echo echo >test2 >> test1 >> test1 >> test2 >> test3 OK CTREGOOD >> test1; cat -e test1 test2 test3"
@@ -633,5 +634,57 @@ test "ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls||ls
 test "ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls&&ls"
 fi
 # norminette $MAIN_DIR | grep "error"
+
+
+if [ $TEST__RANDOM_FRED == 1 ]; then
+
+test "              ls          -l "
+test "           echo       \$~\$?\$HOME"
+test "           echo       \$.\$?\$HOME"
+test "           echo       ~"
+test "    export    | grep PWD             "
+test "\$PWD"
+test "unset 354 ge= PWD \$PWD; \$PWD"
+test "BIG=teeeeeeeeeeeeeeeeeeest; export \$BIG\$BIG\$BIG=too_long ; echo \$BIG\$BIG\$BIG"
+test "BIG=teeeeeeeeeeeeeeeeeeest; export \$BIG\$BIG\$BIG\$BIG=too_long ; echo \$BIG\$BIG\$BIG\$BIG"
+test "BIG=teeeeeeeeeeeeeeeeeeest; export \$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG=too_long ; echo \$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG"
+test "BIG=\$PWD\$PWD\$PWD\$PWD; \$BIG\$BIG\$BIG=too_long"
+test "BIG=\$PWD\$PWD\$PWD\$PWD; \$BIG\$BIG\$BIG\$BIG=too_long"
+test "BIG=\$PWD\$PWD\$PWD\$PWD; \$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG\$BIG=too_long"
+test "bad one"
+test "a=b b=3 c"
+test "a=b b=3 c=3; echo \$a\$b\$c"
+test "a=b b=3 echo \$a\$b\$c"
+test "a=b b=3 ; export a b= c=1 a+ a+=\$c\$c\$c echo \$a\$b\$c"
+test "a=b b=3 ; export a b= c=1 a+ a+=\$c\$c\$c ; echo \$a\$b\$c"
+test "a=b b=3 _hej; export a b= c=1 a+ a+=\$c\$c\$c ; echo \$a\$b\$c"
+test "a=b b=3 _hej=da; export a b= c=1 a+ a+=\$c\$c\$c ; echo \$a\$b\$c"
+test "a=b b=3 _he?j=da; export a b= c=1 a+ a+=\$c\$c\$c ; echo \$a\$b\$c"
+test "./sre"
+test "./Makefile"
+test "/bin/notfound"
+test "hej"
+test ""
+test "          "
+test "          l "
+test "å"
+test "./å"
+test "mkdir test; cd test; rm -r ../test ; cd ."
+test "mkdir test; cd test; rm -r ../test ; cd . ; pwd"
+test "mkdir test; cd test; rm -r ../test ; cd . ; echo \$PWD \$OLDPWD"
+test "mkdir test; cd test; rm -r ../test ; cd .. ; echo \$PWD \$OLDPWD"
+test "mkdir test; cd test; rm -r ../test ; cd .. ; cd -"
+test "unset HOME; cd "
+test "unset PWD OLDPWD HOME; echo \$PWD \$OLDPWD \$HOME; cd . "
+test "\$? \$?"
+test "\$#"
+test "./notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename"
+test "/toolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenamee"
+test "famf2 > mf2;"
+test "echo hej > mf2 ;/toolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenamee > mf2"
+test "lsha ; teaaaa ; cat mf2"
+test "echo hej > mf2 ; cat mf2 > mf2 ; cat mf2"
+
+fi
 
 exit_tester

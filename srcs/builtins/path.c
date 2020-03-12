@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/10 21:37:46 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/12 16:58:51 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,34 @@ char	*get_no_path(char *com)
 	return (path);
 }
 
+int		file_name_too_long(char *path)
+{
+	int			i;
+	int			last;
+	int			length;
+
+	i = -1;
+	last = 0;
+	length = 0;
+	while (path && path[++i])
+	{
+		if (path[i] == '/')
+			last = i;
+		if (i - last > length)
+			length = i - last;
+	}
+	return (length > 255 || i > 1024);
+}
+
 int		check_stat(char *path, int *err, int f)
 {
 	int			ret;
 	struct stat	buf;
 
 	ret = stat(path, &buf);
-	if (ret < 0)
+	if (file_name_too_long(path))
+		*err = 124;
+	else if (ret < 0)
 		*err = 127 + f;
 	else if (!(buf.st_mode & S_IXUSR))
 		*err = 126;
