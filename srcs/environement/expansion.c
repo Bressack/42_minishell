@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 18:17:28 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 20:09:13 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,10 @@ t_token	**expand_split_env(t_token **args, int *ac)
 	char	*ifs;
 	int		i;
 
-	if (!((*args)->value = expand_qt((*args)->value)))
+	if (!((*args)->value = expand_qt((*args)->value)) || !*((*args)->value))
 	{
-		*args = (*args)->next;
-		return (&(*args));
+		*args = ((*args)->next);
+		return (*args) ? (&(*args)) : (NULL);
 	}
 	ifs = ret_envval("IFS");
 	arr = (ifs) ? ft_split((*args)->value, ifs) : ft_split((*args)->value, IFS);
@@ -150,7 +150,7 @@ int		expand(t_token **args)
 	int	ac;
 
 	ac = 0;
-	while (*args)
+	while (args && *args)
 	{
 		if ((*args)->value[0] == '$' && ok_envchar((*args)->value[1], 0))
 			args = expand_split_env(args, &ac);
