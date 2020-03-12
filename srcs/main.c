@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 22:48:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 23:34:12 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int		main(int ac, char **av, char **env)
 {
 	int			sloc;
 	t_node		*ast;
-	int			i;
 
 	get_env(ac, av, env);
 	sloc = 0;
@@ -66,9 +65,6 @@ int		main(int ac, char **av, char **env)
 		}
 		else
 			g_exit = 2;
-		i = 2;
-		while (++i < OPEN_MAX)
-			close(i);
 	}
 	free_all_malloc();
 	return (0);
