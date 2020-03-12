@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 21:07:28 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 22:50:32 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,9 @@ int		launch(t_node *cmd, char **av)
 			close(cmd->stdout);
 		if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
 			close(cmd->stdin);
+		int i = 2;
+		while (++i < OPEN_MAX)
+			close(i);
 		execve(path, av, environ);
 		free_all_malloc();
 		exit(errno);

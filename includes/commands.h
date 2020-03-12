@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/12 18:16:23 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 22:44:09 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char			**convert_to_arr(t_token *args, int ac);
 */
 char			**check_cmd(t_node *cmd, int *ac, int *type);
 int				launch(t_node *cmd, char **av);
-int				execute_fork(t_node *cmd);
+int             execute_fork(t_node *cmd, int out);
 int				execute_simple(t_node *cmd);
 /*
 ** PATH.C

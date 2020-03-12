@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 21:11:09 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 23:24:56 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,12 +121,13 @@ int		waitallpipes(int pipe[2], int opt)
 
 int		node__cmdpipefirst_controller(t_node *cmd)
 {
+	cmd->stdin != STDIN ? close(cmd->stdin) : 0;
 	cmd->stdout != STDOUT ? close(cmd->stdout) : 0;
 	if (pipe(cmd->pipe_ltor) == -1)
 		return (asti_error(NULL, ERR_PIPE));
 	cmd->stdout = cmd->pipe_ltor[PIPE_WRITE];
 	if (redir_handle(cmd) == ERROR)
-		return (ERROR);
+		return (-1);
 	g_exit = execute_fork(cmd, cmd->pipe_ltor[PIPE_READ]);
 	close(cmd->pipe_ltor[PIPE_WRITE]);
 	return (cmd->pipe_ltor[PIPE_READ]);
@@ -144,7 +145,7 @@ int		node__cmdpipe_controller(t_node *cmd, int fdread)
 	}
 	cmd->stdin = fdread;
 	if (redir_handle(cmd) == ERROR)
-		return (ERROR);
+		return (-1);
 	g_exit = node__parent_ispipe(cmd->parent) ? execute_fork(cmd, cmd->pipe_ltor[PIPE_READ]) : execute_fork(cmd, 0);
 	close(fdread);
 	if (node__parent_ispipe(cmd->parent))
@@ -161,17 +162,24 @@ int		node__subpipe_handle(t_node *ppln)
 	int	fdread;
 
 	if (ppln->left->type == CMD)
-		fdread = node__cmdpipefirst_controller(ppln->left);
+	{
+		if ((fdread = node__cmdpipefirst_controller(ppln->left)) == -1)
+			return (-1);
+	}
 	else
-		fdread = node__subpipe_handle(ppln->left);
-	fdread = node__cmdpipe_controller(ppln->right, fdread);
+		if ((fdread = node__subpipe_handle(ppln->left)) == -1)
+			return (-1);
+	if ((fdread = node__cmdpipe_controller(ppln->right, fdread)) == -1)
+		return (-1);
 	return (fdread);
 }
 
 int		node__pipe_handle(t_node *ppln)
 {
 	int sig;
-	node__subpipe_handle(ppln);
+
+	if ((node__subpipe_handle(ppln)) == -1)
+		return (1);
 	sig = pid_save(0, WAIT | FREE);
 	return (WEXITSTATUS(sig));
 }

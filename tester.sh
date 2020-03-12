@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 20:19:27 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/12 22:44:30 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,13 +49,13 @@ C_RES="\033[0m"
 
 # ENABLE TEST
 
-TEST__ECHO=0
-TEST__CD=0
-TEST__PWD=0
-TEST__EXPORT=0
-TEST__UNSET=0
-TEST__ENV=0
-TEST__EXIT=0
+TEST__ECHO=1
+TEST__CD=1
+TEST__PWD=1
+TEST__EXPORT=1
+TEST__UNSET=1
+TEST__ENV=1
+TEST__EXIT=1
 TEST__RANDOM_FRED=1
 
 TEST__BAD=0
@@ -63,10 +63,10 @@ TEST__GOOD=0
 
 # SUB TEST
 
-TEST__SIMPLE=0
-TEST__SIMPLE_REDIR=0
-TEST__DOUBLE_REDIR=0
-TEST__SIMPLE_REDIR_IN=0
+TEST__SIMPLE=1
+TEST__SIMPLE_REDIR=1
+TEST__DOUBLE_REDIR=1
+TEST__SIMPLE_REDIR_IN=1
 
 # **************************************************************************** #
 # **************************************************************************** #
