@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 01:28:38 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 12:52:58 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,19 @@ int		g_sigint = 0;
 
 void	print_prompt(int sloc)
 {
-	char	prompt[1024];
+	char	prompt[LINE_MAX];
 	int		i;
 	int		last;
 
-	getcwd(prompt, 1024);
+	// (void)sloc;
+	// printf("sloc %d\n", sloc);
+	(!g_exit && sloc) ? g_exit = sloc : 0;
+	getcwd(prompt, LINE_MAX);
 	i = -1;
 	while (prompt[++i])
 		if (prompt[i] == '/')
 			last = i + 1;
-	ft_dprintf(2, "%s➜  %s%s > %s", !sloc ? C_G_GREEN : C_G_RED, C_G_CYAN,
+	ft_dprintf(2, "%s➜  %s%s > %s", !g_exit ? C_G_GREEN : C_G_RED, C_G_CYAN,
 		&prompt[last], C_RES);
 }
 
@@ -34,6 +37,7 @@ void	sig_handler(int signo)
 	if (signo == SIGINT && ft_dprintf(STDOUT, "\n"))
 	{
 		g_reset = 1;
+		g_exit = 130;
 		print_prompt(0);
 	}
 	else if (signo == SIGQUIT)
@@ -46,6 +50,7 @@ int		main(int ac, char **av, char **env)
 	t_node		*ast;
 
 	get_env(ac, av, env);
+	ft_bzero(&g_pids, sizeof(int) * 500);
 	sloc = 0;
 	g_exit = 0;
 	while (1)
