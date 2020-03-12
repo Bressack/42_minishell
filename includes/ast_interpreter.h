@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 03:39:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 13:53:58 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 15:39:40 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ typedef enum			e_asti_error_opt
 }						t_asti_error_opt;
 typedef enum			e_binopt
 {
-	ADD = 1,
-	WAIT = 2,
-	CLOSE = 4,
-	FREE = 8,
-	GET = 16
+	ADD   = 0x1,
+	WAIT  = 0x2,
+	CLOSE = 0x4,
+	FREE  = 0x8,
+	GET   = 0x10
 }						t_binopt;
 
 /*
