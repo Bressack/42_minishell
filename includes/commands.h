@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 19:07:19 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/12 12:05:35 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 16:10:58 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ unsigned int	g_exit;
 typedef enum	e_err_value
 {
 	SUCCESS,
-	ERROR
+	ERROR,
+	EMPTY
 }				t_err_value;
 /*
 ** COMMANDS
