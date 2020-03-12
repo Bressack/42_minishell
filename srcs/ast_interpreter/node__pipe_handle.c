@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 12:54:56 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 13:55:55 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,47 @@
 
 int		node__parent_ispipe(t_node *node)
 {
-	// dprintf(2, "parent is pipe ? %d && %d && %d && %d\n", node ? 1 : 0, node && node->parent ? 1 : 0, node && node->parent && node->parent->type == SEP ? 1 : 0, node && node->parent && node->parent->type == SEP && node->parent->sep->type == PIPE ? 1 : 0);
 	return (node && node->parent && node->parent->type == SEP &&
 		node->parent->sep->type == PIPE);
 }
 
-int		waitallpipes(int pipe[2], int opt)
+int		pid_save(int pid, int opt)
 {
 	static t_pid_save	*list = NULL;
-	static int			nb_cmd = 1;
-	int					i;
-	t_pid_save			*new;
+	t_pid_save			*new = NULL;
 	int					sloc;
 
 	sloc = 0;
 	if (opt & ADD)
 	{
 		new = mmalloc(sizeof(t_pid_save));
+		new->pid = pid;
+		ft_add_node_end_np((t_pnp **)&list, (t_pnp *)new);
+	}
+	else if (opt & WAIT)
+	{
+		new = list;
+		while (new)
+		{
+			waitpid(new->pid, &sloc, 0);
+			new = new->next;
+		}
+		return (sloc);
+	}
+	else if (opt & FREE)
+		ft_del_list_np((t_pnp **)&list);
+	return (0);
+}
+
+int		waitallpipes(int pipe[2], int opt)
+{
+	static t_pipe_save	*list = NULL;
+	static int			nb_cmd = 1;
+	t_pipe_save			*new;
+
+	if (opt & ADD)
+	{
+		new = mmalloc(sizeof(t_pipe_save));
 		new->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
 		new->pipe[PIPE_READ] = pipe[PIPE_READ];
 		nb_cmd += 1;
@@ -52,19 +76,10 @@ int		waitallpipes(int pipe[2], int opt)
 		}
 	}
 	if (opt & WAIT)
-	{
-		i = -1;
-		while (g_pids[++i] > 0)
-			waitpid(g_pids[i], &sloc, 0);
-		i = -1; // OBS REMOVE!!!!!!!!!!!
-		while (g_pids[++i] < 1000)
-			g_pids[i] = -1;
-	}
+		return (pid_save(0, WAIT | FREE));
 	if (opt & FREE)
-	{
 		ft_del_list_np((t_pnp **)&list);
-	}
-	return (sloc);
+	return (0);
 }
 
 /*

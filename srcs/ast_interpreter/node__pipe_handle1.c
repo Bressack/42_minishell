@@ -26,16 +26,16 @@ int		node__parent_ispipe(t_node *node)
 
 int		waitallpipes(int pipe[2], int opt)
 {
-	static t_pid_save	*list = NULL;
+	static t_pipe_save	*list = NULL;
 	static int			nb_cmd = 1;
 	int					i;
-	t_pid_save			*new;
+	t_pipe_save			*new;
 	int					sloc;
 
 	sloc = 0;
 	if (opt & ADD)
 	{
-		new = mmalloc(sizeof(t_pid_save));
+		new = mmalloc(sizeof(t_pipe_save));
 		new->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
 		new->pipe[PIPE_READ] = pipe[PIPE_READ];
 		nb_cmd += 1;
