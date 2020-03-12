@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 18:08:47 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:45:20 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,11 @@ void	print_prompt(int sloc)
 	int		last;
 
 	(!g_exit && sloc) ? g_exit = sloc : 0;
-	getcwd(prompt, LINE_MAX);
+	if (!getcwd(prompt, LINE_MAX))
+	{
+		ft_dprintf(2, "%s➜  %sminishell > %s", !g_exit ? C_G_GREEN : C_G_RED, C_G_CYAN, C_RES);
+		return ;
+	}
 	i = -1;
 	while (prompt[++i])
 		if (prompt[i] == '/')
@@ -48,7 +52,6 @@ int		main(int ac, char **av, char **env)
 	t_node		*ast;
 
 	get_env(ac, av, env);
-	ft_bzero(&g_pids, sizeof(int) * 500);
 	sloc = 0;
 	g_exit = 0;
 	while (1)

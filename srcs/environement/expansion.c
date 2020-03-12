@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 16:16:21 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 18:17:28 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,51 +58,6 @@ int		expand_env(char **args, char *new)
 ** echo \t \\ \$HOME "~ \t \\ \$HOME" ---> [t \ $HOME Users/frlindh \t \ $HOME]
 */
 
-int		expand_simple_quotes(char **args, char *new)
-{
-	int		i;
-
-	i = 0;
-	(*args)++;
-	while (*args && **args && **args != '\'')
-		new[i++] = *((*args)++);
-	(*args)++;
-	return (i);
-}
-
-/*
-** char	*expand_qt(char *args)
-** {
-** 	int		quote;
-** 	int		j;
-** 	int		bufsize;
-** 	char	new[20002];
-**
-** 	quote = 0;
-** 	j = 0;
-** 	bufsize = 20000;
-** 	while (args && *args && j < 10000)
-** 	{
-** 		if (quote == 0 && *args == '\'')
-** 			j += expand_simple_quotes(&args, &new[j]);
-** 		else if (*args == '$' && ok_envchar(*(args + 1), 0) && args++)
-** 			j += expand_env(&args, &new[j]);
-** 		else if (*args == '$' && (*(args + 1) >= '0' && *(args + 1) <= '9'))
-** 			args += 2;
-** 		else if (*args == '\"' && args++)
-** 			quote = (quote == 0) ? *args : 0;
-** 		else if (*args == '\\' &&
-** 		(((quote == 0 || spec_char(*(args + 1))) && args++) || 1))
-** 			new[j++] = *args++;
-** 		else if (quote == 0 && *args == '~' && args++)
-** 			j += tilde_exp(&new[j]);
-** 		else
-** 			new[j++] = *args++;
-** 	}
-** 	return (!(new[j] = '\0') && j > 0) ? (ft_strdup(new)) : NULL;
-** }
-*/
-
 char	*expand_qt2(char *args, char *new)
 {
 	int		quote;
@@ -121,7 +76,7 @@ char	*expand_qt2(char *args, char *new)
 		else if (*args == '\\' &&
 		(((quote == 0 || spec_char(*(args + 1))) && args++) || 1))
 			new[j++] = *args++;
-		else if (quote == 0 && *args == '~' && args++)
+		else if (quote == 0 && *args == '~' && *(args - 1) != '$' && args++)
 			j += tilde_exp(&new[j]);
 		else
 			new[j++] = *args++;
@@ -147,7 +102,6 @@ char	*expand_qt(char *args)
 	ret = cat_value(ret, 0, prev);
 	return (ret);
 }
-
 
 /*
 ** EXPAND AND SPLIT: IF AN ENVIRONMENT VAR IS EXPANDED OUTSIDE QUOTES IT

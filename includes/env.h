@@ -6,7 +6,7 @@
 /*   By: fredrika <fredrika@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 01:48:59 by fredrika          #+#    #+#             */
-/*   Updated: 2020/03/11 13:57:51 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 18:17:26 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ int				unset(int ac, char **args, int out);
 */
 int				is_valid_variable(char *args, int flag);
 int				ok_envchar(char c, int f);
-char			**convert_to_arr(t_token *args, int ac);
 int				tilde_exp(char *new);
 int				spec_char(char c);
+int				expand_simple_quotes(char **args, char *new);
 /*
 ** EXPANSION
 */
