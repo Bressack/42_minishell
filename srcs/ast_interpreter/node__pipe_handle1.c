@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node__pipe_handle.c                                :+:      :+:    :+:   */
+/*   node__pipe_handle1.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 12:54:56 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 12:24:04 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,13 @@ int		waitallpipes(int pipe[2], int opt)
 	}
 	if (opt & WAIT)
 	{
-		i = -1;
-		while (g_pids[++i] > 0)
-			waitpid(g_pids[i], &sloc, 0);
-		i = -1; // OBS REMOVE!!!!!!!!!!!
-		while (g_pids[++i] < 1000)
-			g_pids[i] = -1;
+		i = nb_cmd;
+		while (i)
+		{
+			wait(&sloc);
+			i--;
+		}
+		nb_cmd = 1;
 	}
 	if (opt & FREE)
 	{
