@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/11 20:11:58 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 01:03:57 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	*expand_qt(char *args)
 ** IS NULL IT WILL NOT KEEP ARGUMENT. AFTER SPLIT IT INSERTS IN LIST
 */
 
-void	expand_split_env(t_token **args, int *ac)
+t_token	**expand_split_env(t_token **args, int *ac)
 {
 	t_token	*next;
 	char	**arr;
@@ -115,22 +115,23 @@ void	expand_split_env(t_token **args, int *ac)
 	if (!((*args)->value = expand_qt((*args)->value)))
 	{
 		*args = (*args)->next;
-		return ;
+		return (&(*args));
 	}
 	ifs = ret_envval("IFS");
-	arr = ifs ? ft_split((*args)->value, ifs) : ft_split((*args)->value, IFS);
+	arr = (ifs) ? ft_split((*args)->value, ifs) : ft_split((*args)->value, IFS);
 	if (!(*arr) && (*args = ((*args)->next)))
-		return ;
+		return (&(*args));
 	(*args)->value = arr[0];
 	next = (*args)->next;
 	i = 0;
-	while (arr[++i] != NULL && (*ac += 1) > 0)
+	while ((*ac += 1) > 0 && arr[++i] != NULL)
 	{
 		(*args)->next = (t_token *)mmalloc(sizeof(t_token));
 		((*args)->next)->value = arr[i];
 		args = &((*args)->next);
 	}
 	(*args)->next = next;
+	return (&((*args)->next));
 }
 
 /*
@@ -148,7 +149,7 @@ int		expand(t_token **args)
 	while (*args)
 	{
 		if ((*args)->value[0] == '$' && ok_envchar((*args)->value[1], 0))
-			expand_split_env(args, &ac);
+			args = expand_split_env(args, &ac);
 		else if (ac++ != -1)
 		{
 			(*args)->value = expand_qt((*args)->value);
