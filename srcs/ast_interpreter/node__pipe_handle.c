@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 13:55:55 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 17:51:43 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		node__parent_ispipe(t_node *node)
 int		pid_save(int pid, int opt)
 {
 	static t_pid_save	*list = NULL;
-	t_pid_save			*new = NULL;
+	t_pid_save			*new;
 	int					sloc;
 
 	sloc = 0;
@@ -53,38 +53,32 @@ int		pid_save(int pid, int opt)
 
 int		waitallpipes(int pipe[2], int opt)
 {
-	static t_pipe_save	*list = NULL;
+	static t_pipe_save	*list[2] = {NULL, NULL};
 	static int			nb_cmd = 1;
-	t_pipe_save			*new;
 
 	if (opt & ADD)
 	{
-		new = mmalloc(sizeof(t_pipe_save));
-		new->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
-		new->pipe[PIPE_READ] = pipe[PIPE_READ];
+		list[1] = mmalloc(sizeof(t_pipe_save));
+		list[1]->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
+		list[1]->pipe[PIPE_READ] = pipe[PIPE_READ];
 		nb_cmd += 1;
-		ft_add_node_end_np((t_pnp **)&list, (t_pnp *)new);
+		ft_add_node_end_np((t_pnp **)&list[0], (t_pnp *)list[1]);
 	}
 	if (opt & CLOSE)
 	{
-		new = list;
-		while (new)
+		list[1] = list[0];
+		while (list[1])
 		{
-			close(new->pipe[PIPE_WRITE]);
-			close(new->pipe[PIPE_READ]);
-			new = new->next;
+			close(list[1]->pipe[PIPE_WRITE]);
+			close(list[1]->pipe[PIPE_READ]);
+			list[1] = list[1]->next;
 		}
 	}
 	if (opt & WAIT)
 		return (pid_save(0, WAIT | FREE));
-	if (opt & FREE)
-		ft_del_list_np((t_pnp **)&list);
+	opt & FREE ? ft_del_list_np((t_pnp **)&list[0]) : 0;
 	return (0);
 }
-
-/*
-cat /dev/random | head -c 100
-*/
 
 /*
 ** THIS FUNCTION OPEN A NEW PIPE AND ASSIGN THE WRITE SIDE TO THE LEFT CHILD

@@ -6,12 +6,11 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:46:55 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 16:51:14 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 17:51:53 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
 
 /*
 ** THIS FUNCTION RUN THE LEFT CHILD OF THE DBL_AND NODE THEN WAIT FOR ITS END

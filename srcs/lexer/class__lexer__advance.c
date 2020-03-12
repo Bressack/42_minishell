@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 04:32:30 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/10 04:35:47 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:01:46 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 ** current_char != EOT.
 ** PROTECTED: do not go throught the EOT
 */
-int				lexer__advance(t_lexer *lex, int n)
+
+int			lexer__advance(t_lexer *lex, int n)
 {
 	if (lex->current_char == CHR_EOT)
 		return (0);
@@ -48,7 +49,8 @@ int				lexer__advance(t_lexer *lex, int n)
 ** advance the read head while the current_char is of the same type as the
 ** variable 'type'
 */
-void			lexer__advence_foreach(t_lexer *lex, t_char_type type, int whis)
+
+void		lexer__advence_foreach(t_lexer *lex, t_char_type type, int whis)
 {
 	while (1)
 	{
@@ -67,9 +69,10 @@ void			lexer__advence_foreach(t_lexer *lex, t_char_type type, int whis)
 
 /*
 ** advance the read head until the current char is not the same quote as the
-start of the function. e.g '"' will go to the next '"' and ''' go to the
-next '''.
+** start of the function. e.g '"' will go to the next '"' and ''' go to the
+** next '''.
 */
+
 int			lexer__pass_quotes(t_lexer *lex, t_char_type type)
 {
 	int		found;
@@ -84,7 +87,7 @@ int			lexer__pass_quotes(t_lexer *lex, t_char_type type)
 			break ;
 	}
 	if (!lexer__istype(lex, type) &&
-		lexer__error(ERR_UNEXPECTED_EOT, lex) == ERROR)
+		lexer__error(EUE, lex) == ERROR)
 		return (ERROR);
 	return (SUCCESS);
 }

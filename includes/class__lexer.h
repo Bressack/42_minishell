@@ -23,7 +23,7 @@ typedef enum		e_foreach_opt
 }					t_foreach_opt;
 typedef enum		e_error_id
 {
-	ERR_UNEXPECTED_EOT,
+	EUE,
 	ERR_UNSUPPORTED_FEATURE,
 	ERR_UNSUPPORTED_FEATURE_DBL_AND,
 	ERR_UNSUPPORTED_FEATURE_DBL_OR,

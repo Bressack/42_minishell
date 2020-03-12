@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 22:32:02 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 17:24:23 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 17:46:31 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int		asti_error(char *name, int opt)
 		ft_dprintf(2, "minishell: %s: %s\n", name, strerror(errno));
 	else if (opt == ERR_PIPE)
 		ft_dprintf(2, "minishell: %s\n", strerror(errno));
-		return (ERROR);
+	return (ERROR);
 }
 
 /*

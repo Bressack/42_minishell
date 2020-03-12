@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 12:52:58 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 18:08:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	print_prompt(int sloc)
 	int		i;
 	int		last;
 
-	// (void)sloc;
-	// printf("sloc %d\n", sloc);
 	(!g_exit && sloc) ? g_exit = sloc : 0;
 	getcwd(prompt, LINE_MAX);
 	i = -1;
@@ -59,7 +57,6 @@ int		main(int ac, char **av, char **env)
 		signal(SIGQUIT, sig_handler);
 		if ((ast = ast_builder(sloc)))
 		{
-			// ast ? tree_draw(ast) : 0;
 			sloc = ast_interpreter(ast);
 			node__del(&ast, RECURCIVLY);
 		}

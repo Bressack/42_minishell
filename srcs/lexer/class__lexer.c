@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:59:23 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/10 04:35:45 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:00:23 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void			lexer__del(t_lexer **lex)
 
 int				lexer__error(int opt, t_lexer *lex)
 {
-	if (opt == ERR_UNEXPECTED_EOT)
+	if (opt == EUE)
 		ft_dprintf(2, "minishell: unexpected \'end of line\' after \'%c\'\n",
 		lex->prev_char);
 	else if (opt == ERR_UNSUPPORTED_FEATURE)
@@ -68,16 +68,16 @@ int				lexer__error(int opt, t_lexer *lex)
 ** Ok then. I would tell you a story.
 **
 ** When you take a call to get_next_token, this last will try to return the next
-** token he can found on the line since the end posision of the last returned token
-** or since the begining for the first call.
+** token he can found on the line since the end posision of the last returned
+** token or since the begining for the first call.
 **
-** First step, we want to pass all the nasty little spaces and ignored characters
-** trying to pretend to be tokens ;)
+** First step, we want to pass all the nasty little spaces and ignored
+** characters trying to pretend to be tokens ;)
 **
 ** Second step, we send a short message to the lexer to ask him to reset the
 ** position of the variable start_pos to the current pos (just afters spaces and
-** passed characters). start_pos is used to know the start position of the token we
-** want to return.
+** passed characters). start_pos is used to know the start position of the token
+** we want to return.
 **
 ** Third step, if we find a match with the defined token EOT, we return a copy
 ** of this token it.
@@ -89,15 +89,22 @@ int				lexer__error(int opt, t_lexer *lex)
 ** Fifth step, here, we are trying to grab a word. A word is defined by a string
 ** of letters [a ... z], [A ... Z], numbers [0 ... 9], and listed specials
 ** characters. A backslash '\' "transform" the next character as a word
-** character. The word ended when we found the end of the line or a defined token
-** like '&&', '||', '|', ';', '<', '<<', '>' or '&' ('&' is not a valid token, for
-** now, it's an error).
+** character. The word ended when we found the end of the line or a defined
+** token like '&&', '||', '|', ';', '<', '<<', '>' or '&' ('&' is not a valid
+** token, for now, it's an error).
 **
 ** Sixth step, just return the word token just found. the token start at
 ** 'start_pos' included until 'pos' excluded (variable included in lex)
 */
 
-t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
+void			pass_quote_(t_lexer *lex, int *rtype)
+{
+	if ((*rtype = lexer__isquote(lex)))
+		lexer__pass_quotes(lex, *rtype);
+	lexer__advance(lex, 1);
+}
+
+t_token			*lexer__get_next_token(t_lexer *lex)
 {
 	int			rtype;
 
@@ -111,10 +118,9 @@ t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
 	while (!lexer__istype(lex, CHR_EOT | CHR_SPACE | CHR_PASS | CHR_ERR))
 	{
 		if (lexer__istype(lex, CHR_BSLASH))
-	 	{
+		{
 			lexer__advance(lex, 1);
-			if (lexer__istype(lex, CHR_EOT) &&
-				lexer__error(ERR_UNEXPECTED_EOT, lex) == ERROR)
+			if (lexer__istype(lex, CHR_EOT) && lexer__error(EUE, lex) == ERROR)
 				return (NULL);
 			lexer__advance(lex, 1);
 		}
@@ -122,9 +128,7 @@ t_token			*lexer__get_next_token(t_lexer *lex) // NEEDS COMMENTS
 			return (NULL);
 		if (rtype != I_NONE)
 			break ;
-		if ((rtype = lexer__isquote(lex)))
-			lexer__pass_quotes(lex, rtype);
-		lexer__advance(lex, 1);
+		pass_quote_(lex, &rtype);
 	}
 	return (lexer__token_grabber(lex, WORD));
 }
