@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 13:59:04 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/12 14:02:47 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -400,11 +400,6 @@ test "pwd;cd _;pwd"
 test "pwd;cd ~;pwd"
 test "pwd;mkdir dir1;mkdir dir1/dir2;mkdir dir1/dir2/dir3;mkdir dir1/dir2/dir3/dir4;cd dir1;pwd; cd dir1/dir2; pwd;cd dir3/ ;pwd; cd ../../../dir1/dir2/dir3/dir4;pwd;cd ../../../../; pwd"
 test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
 test "cd /;pwd"
 test "cd /dev;pwd"
 test "cd bad_arg;pwd"
@@ -534,6 +529,13 @@ test "exit -255"
 test "exit -256"
 test "exit -"
 test "exit +"
+test "exit ++"
+test "exit __"
+test "exit a"
+test "exit a1"
+test "exit 1a1"
+test "exit 1a"
+test "exit abeille"
 test "exit --"
 test "exit ---"
 test "exit --+-"
