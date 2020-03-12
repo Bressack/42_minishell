@@ -6,17 +6,17 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 03:39:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 15:39:40 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:50:50 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AST_INTERPRETER_H
 # define AST_INTERPRETER_H
 # include <minishell.h>
-# define PIPE_READ			0 // the side of the pipe where the cmd will read
-# define PIPE_WRITE			1 // the side of the pipe where the cmd will write
-# define STDIN				0 // where the cmd will read
-# define STDOUT				1 // where the cmd will write
+# define PIPE_READ			0
+# define PIPE_WRITE			1
+# define STDIN				0
+# define STDOUT				1
 
 /*
 ** fd[STDOUT] : [PIPE_READ]   [PIPE_WRITE]
@@ -31,6 +31,7 @@
 ** yes it's weird for the parent side,
 ** but more easy for the child process.
 */
+
 typedef struct			s_pipe_save
 {
 	struct s_pipe_save	*next;
@@ -55,11 +56,11 @@ typedef enum			e_asti_error_opt
 }						t_asti_error_opt;
 typedef enum			e_binopt
 {
-	ADD   = 0x1,
-	WAIT  = 0x2,
+	ADD = 0x1,
+	WAIT = 0x2,
 	CLOSE = 0x4,
-	FREE  = 0x8,
-	GET   = 0x10
+	FREE = 0x8,
+	GET = 0x10
 }						t_binopt;
 
 /*
@@ -90,6 +91,6 @@ int						node__pipe_handle(t_node *ppln);
 ** redir_handle.c
 */
 int						redir_handle__each(
-	t_node *cmd, t_token *tmp_redir,t_token *tmp_file);
+	t_node *cmd, t_token *tmp_redir, t_token *tmp_file);
 int						redir_handle(t_node *cmd);
 #endif
