@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 01:36:32 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/12 01:37:57 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,7 +57,7 @@ TEST__UNSET=1
 TEST__ENV=1
 TEST__EXIT=1
 
-TEST__BAD=0
+TEST__BAD=1
 TEST__GOOD=1
 
 # SUB TEST
