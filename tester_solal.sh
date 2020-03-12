@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/12 14:55:36 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 14:57:09 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/12 21:29:38 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -111,7 +111,7 @@ exec_test 'echo "$=TEST"'
 exec_test 'echo "$"'
 exec_test 'echo "$?TEST"'
 exec_test 'echo $TEST $TEST'
-exec_test 'echo "$1TEST"'
+exec_test 'echo "$USER"'
 exec_test 'echo "$T1TEST"'
 
 # ENV EXPANSIONS
