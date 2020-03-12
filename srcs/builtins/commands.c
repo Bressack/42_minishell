@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/11 18:29:36 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 00:33:56 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ int		xexit(int ac, char **args, int out)
 
 	ft_dprintf(2, "exit\n");
 	code = g_exit;
-	if (ac > 1 && (!ft_strisnum(args[1]) || ft_strlen(args[1]) > 11) && (code = 2))
+	if (ac > 1 &&
+		(!ft_strisnum(args[1]) || ft_strlen(args[1]) > 11) && (code = 2))
 		bi_error(args[0], args[1], "numeric argument required", 0);
 	else if (ac > 2 && bi_error(args[0], NULL, "too many arguments", 0))
 		return (code == 2) ? (2) : (1);
@@ -115,14 +116,14 @@ int		xcd(int ac, char **args, int out)
 	if (ac > 2)
 		return (bi_error(args[0], NULL, "too many arguments", 0));
 	if (ac == 1 && (tmp2 = ret_envval("HOME")))
-		chdir(tmp2);
+		chdir(tmp2) ? bi_error(args[0], tmp2, strerror(errno), 0) : 0;
 	else if (ac == 1)
 		return (bi_error(args[0], NULL, "HOME not set", 0));
-	else if (args[1][0] == '-' && !(tmp = ret_envval("OLDPWD")))
+	else if (!ft_strcmp(args[1], "-") && !(tmp = ret_envval("OLDPWD")))
 		return (bi_error(args[0], NULL, "OLDPWD not set", 0));
-	else if (args[1][0] == '-' && tmp && !chdir(tmp))
+	else if (!ft_strcmp(args[1], "-") && tmp && !chdir(tmp))
 		ft_dprintf(out, "%s\n", tmp);
-	else if (args[1][0] == '-' && tmp)
+	else if (!ft_strcmp(args[1], "-") && tmp)
 		return (bi_error(args[0], tmp, strerror(errno), 0));
 	else if (chdir(args[1]))
 		return (bi_error(args[0], args[1], strerror(errno), 0));
