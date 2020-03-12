@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 12:53:34 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/12 13:47:21 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,9 +196,6 @@ int		execute_fork(t_node *cmd)
 		free_all_malloc();
 		exit(ret);
 	}
-	ret = 0;
-	while (g_pids[ret] > 0)
-		ret++;
-	g_pids[ret] = pid;
+	pid_save(pid, ADD);
 	return (0);
 }

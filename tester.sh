@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 14:22:05 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/12 14:24:10 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,7 +115,7 @@ reset_dirtest()
 test()
 {
 	# TEST minishell # ******************************************************* #
-	# (printf "$1\nexit\n") | bash 2>&- > $MAIN_DIR/user_output
+	# (printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/user_output
 	# (printf "$1\nexit\n") | zsh 2>&- > $MAIN_DIR/user_output
 	(printf "$1\nexit\n") | $MAIN_DIR/minishell 2>&- > $MAIN_DIR/user_output
 	USER_RETVAL=$?
@@ -403,15 +403,22 @@ test "pwd;cd _;pwd"
 test "pwd;cd ~;pwd"
 test "pwd;mkdir dir1;mkdir dir1/dir2;mkdir dir1/dir2/dir3;mkdir dir1/dir2/dir3/dir4;cd dir1;pwd; cd dir1/dir2; pwd;cd dir3/ ;pwd; cd ../../../dir1/dir2/dir3/dir4;pwd;cd ../../../../; pwd"
 test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "pwd;cd ;pwd"
-test "cd /;pwd"
-test "cd /dev;pwd"
-test "cd bad_arg;pwd"
-test "cd bad_arg1 bad_arg2;pwd"
+test "pwd;cd /;pwd"
+test "pwd;cd /dev;pwd"
+test "pwd;cd /dev/random;pwd"
+test "pwd;cd /dev/fd;pwd"
+test "pwd;cd /dev/fd/0;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/0;pwd;cd asdfasdf;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/1;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/1;pwd;cd asdfasdf;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/2;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/2;pwd;cd asdfasdf;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/3;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/3;pwd;cd asdfasdf;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/4;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd /dev/fd/4;pwd;cd asdfasdf;pwd;cd \$MAIN_DIR/tester_dir;pwd"
+test "pwd;cd bad_arg;pwd"
+test "pwd;cd bad_arg1 bad_arg2;pwd"
 test "mkdir dir1\ncd dir1;pwd"
 fi
 # **************************************************************************** #
@@ -524,6 +531,56 @@ test "exit 123 345"
 test "exit +12+3"
 test "exit ++123"
 test "exit -----123"
+test "exit 0"
+test "exit 1"
+test "exit 2"
+test "exit -1"
+test "exit -2"
+test "exit 127"
+test "exit -128"
+test "exit 255"
+test "exit 256"
+test "exit -255"
+test "exit -256"
+test "exit -"
+test "exit +"
+test "exit ++"
+test "exit __"
+test "exit a"
+test "exit a1"
+test "exit 1a1"
+test "exit 1a"
+test "exit abeille"
+test "exit --"
+test "exit ---"
+test "exit --+-"
+test "exit ++"
+test "exit +++"
+test "exit ++-+"
+test "exit 1-"
+test "exit 1+"
+test "exit 1--"
+test "exit 1---"
+test "exit 1--+-"
+test "exit 1++"
+test "exit 1+++"
+test "exit 1++-+"
+test "exit -1-"
+test "exit +1-"
+test "exit -1+"
+test "exit +1+"
+test "exit -1--"
+test "exit +1--"
+test "exit -1---"
+test "exit +1---"
+test "exit -1--+-"
+test "exit +1--+-"
+test "exit -1++"
+test "exit +1++"
+test "exit -1+++"
+test "exit +1+++"
+test "exit -1++-+"
+test "exit +1++-+"
 fi
 # **************************************************************************** #
 
