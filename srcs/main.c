@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 23:23:16 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/12 01:28:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int		main(int ac, char **av, char **env)
 			sloc = ast_interpreter(ast);
 			node__del(&ast, RECURCIVLY);
 		}
+		else
+			g_exit = 2;
 	}
 	free_all_malloc();
 	return (0);

@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 01:12:47 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/12 01:31:55 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -493,10 +493,6 @@ fi
 # env
 if [ $TEST__ENV == 1 ]; then
 printf "\n$C_G_WHITE TEST__ENV$C_RES:\n"
-test "env | sort | grep -v \"_=/\""
-test "env | sort | grep -v \"_=/\""
-test "env | sort | grep -v \"_=/\""
-test "env | sort | grep -v \"_=/\""
 test "env | sort | grep -v \"_=/\""
 fi
 # **************************************************************************** #
