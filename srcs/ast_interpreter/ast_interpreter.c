@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 22:32:02 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 19:41:33 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 21:25:26 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,7 @@ int		node__cmd_controller(t_node *cmd)
 {
 	if (redir_handle(cmd) == ERROR)
 		return (ERROR);
-	if (node__parent_ispipe(cmd))
-		g_exit = execute_fork(cmd);
-	else
-		g_exit = execute_simple(cmd);
+	g_exit = execute_simple(cmd);
 	cmd->stdout != STDOUT ? close(cmd->stdout) : 0;
 	cmd->stdin != STDIN ? close(cmd->stdin) : 0;
 	return (g_exit);

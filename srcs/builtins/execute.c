@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 20:45:17 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 21:07:28 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ int		execute_in_child(t_node *cmd)
 	return (errno);
 }
 
-int		execute_fork(t_node *cmd)
+int		execute_fork(t_node *cmd, int out)
 {
 	int		pid;
 	int		ret;
@@ -193,6 +193,8 @@ int		execute_fork(t_node *cmd)
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0)
 	{
+		if (out)
+			close(out);
 		ret = execute_in_child(cmd);
 		free_all_malloc();
 		exit(ret);

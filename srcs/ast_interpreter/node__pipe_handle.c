@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 20:50:54 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 21:11:09 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int		node__cmdpipefirst_controller(t_node *cmd)
 	cmd->stdout = cmd->pipe_ltor[PIPE_WRITE];
 	if (redir_handle(cmd) == ERROR)
 		return (ERROR);
-	g_exit = execute_fork(cmd);
+	g_exit = execute_fork(cmd, cmd->pipe_ltor[PIPE_READ]);
 	close(cmd->pipe_ltor[PIPE_WRITE]);
 	return (cmd->pipe_ltor[PIPE_READ]);
 }
@@ -145,7 +145,7 @@ int		node__cmdpipe_controller(t_node *cmd, int fdread)
 	cmd->stdin = fdread;
 	if (redir_handle(cmd) == ERROR)
 		return (ERROR);
-	g_exit = execute_fork(cmd);
+	g_exit = node__parent_ispipe(cmd->parent) ? execute_fork(cmd, cmd->pipe_ltor[PIPE_READ]) : execute_fork(cmd, 0);
 	close(fdread);
 	if (node__parent_ispipe(cmd->parent))
 	{
@@ -170,6 +170,8 @@ int		node__subpipe_handle(t_node *ppln)
 
 int		node__pipe_handle(t_node *ppln)
 {
+	int sig;
 	node__subpipe_handle(ppln);
-	return (pid_save(0, WAIT | FREE));
+	sig = pid_save(0, WAIT | FREE);
+	return (WEXITSTATUS(sig));
 }
