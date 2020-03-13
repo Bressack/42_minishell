@@ -6,11 +6,22 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 22:32:02 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/12 23:23:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 23:32:46 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+/*
+** THIS FUNCTION RETURN 1 IF THE PARENT OF THE NODE IS A PIPE
+** ELSE IT RETURN 0
+*/
+
+int		node__parent_ispipe(t_node *node)
+{
+	return (node && node->parent && node->parent->type == SEP &&
+		node->parent->sep->type == PIPE);
+}
 
 /*
 ** THIS FUNCTION PRINT ERRORS ON STDERR

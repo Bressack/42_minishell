@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 23:25:58 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/12 23:37:28 by frlindh          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,8 +58,8 @@ TEST__ENV=1
 TEST__EXIT=1
 TEST__RANDOM_FRED=1
 
-TEST__BAD=0
-TEST__GOOD=0
+TEST__BAD=1
+TEST__GOOD=1
 
 # SUB TEST
 
@@ -685,7 +685,6 @@ test "/toolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilena
 test "famf2 > mf2;"
 test "echo hej > mf2 ;/toolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenamee > mf2"
 test "lsha ; teaaaa ; cat mf2"
-test "lsha ; teaaaa > mf2 ; cat mf2"
 test "echo hej > mf2 ; cat mf2 > mf2 ; cat mf2"
 test "mkdir -p ./notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename; cd ./notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename ; pwd"
 

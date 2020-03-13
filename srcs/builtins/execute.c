@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 22:50:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 23:34:09 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,6 @@ int		launch(t_node *cmd, char **av)
 			close(cmd->stdout);
 		if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
 			close(cmd->stdin);
-		int i = 2;
-		while (++i < OPEN_MAX)
-			close(i);
 		execve(path, av, environ);
 		free_all_malloc();
 		exit(errno);
@@ -118,40 +115,6 @@ int		execute_simple(t_node *cmd)
 	mfree((void **)&av);
 	return (type);
 }
-
-/*
-** USED IF FORKING IS DONE IN PIPE FUNCTION. SO THIS JUST EXECUTES BUILTINS,
-** ASSIGNMENTS OR COMMANDS IN SPECIFIC PATH OR WILL PATH ENVIRONMENT VAR
-*/
-
-/*
-** int		execute_nofork(t_node *cmd)
-** {
-** 	char	**av;
-** 	int		ac;
-** 	int		type;
-** 	char	*path;
-** 	int		sig;
-** 	char	**environ;
-**
-** 	av = check_cmd(cmd, &ac, &type);
-** 	environ = env_to_arr(g_env);
-** 	if (type == 3)
-** 		exit (g_builtins[type].f(ac, av, -1));
-** 	else if (type >= 0)
-** 		exit (g_builtins[type].f(ac, av, cmd->stdout));
-** 	else if (type == -1)
-** 		exit (export(ac, av, 1));
-** 	else
-** 	{
-** 		if (!(path = get_path(av[0], &sig)))
-** 			return (bi_error(av[0], NULL, NULL, sig));
-** 		execve(path, av, environ);
-** 		bi_error(av[0], NULL, strerror(errno), 0);
-** 		exit(errno);
-** 	}
-** }
-*/
 
 /*
 ** USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCTION. MEANING IT FORKS IN
