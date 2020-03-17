@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/17 13:23:42 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/17 13:37:09 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int		execute_simple(t_node *cmd)
 		type = g_builtins[type].f(ac, av, cmd->stdout);
 	else if (type == -1)
 		type = export(ac, av, 1);
-	else if (!(g_exit = 0)) // IS THIS REALLY GOOD ?
+	else if (!(g_exit = 0)) // IS THIS REALLY A GOOD PLACE TO RESET?
 		type = launch(cmd, av);
 	while (av && *av)
 		mfree((void **)av++);
@@ -130,8 +130,10 @@ int		execute_in_child(t_node *cmd)
 	char	**environ;
 
 	av = check_cmd(cmd, &ac, &type);
-	if (!av || !*av || type == 3)
+	if (!av || !*av)
 		return (0);
+	if (type == 3)
+		return (g_builtins[type].f(ac, av, -1));
 	else if (type >= 0)
 		return (g_builtins[type].f(ac, av, cmd->stdout));
 	else if (type == -1)

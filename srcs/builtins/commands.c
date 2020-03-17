@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 11:59:36 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 14:16:50 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/03/17 13:35:30 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ int		xexit(int ac, char **args, int out)
 {
 	int		code;
 
-	ft_dprintf(2, "exit\n");
+	if (out != -1)
+		ft_dprintf(2, "exit\n");
 	code = g_exit;
 	if (ac > 1 &&
 		(!ft_strisnum(args[1]) || ft_strlen(args[1]) > 11) && (code = 2))
