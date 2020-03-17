@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:44:24 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 02:52:26 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 23:36:41 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,22 @@ int		redir_handle__each(t_node *cmd, t_token *tmp_redir, t_token *tmp_file)
 	{
 		(cmd->stdin != STDIN) ? close(cmd->stdin) : 0;
 		if ((cmd->stdin = open(tmp_file->value,
-			O_RDWR, 0644)) == -1)
+			O_RDWR, 0644)) == -1 && !(cmd->stdin = STDIN))
 			return (asti_error(tmp_file->value, ERR_OPEN));
 	}
 	else if (tmp_redir->type == REDIR_OUT)
 	{
 		(cmd->stdout != STDOUT) ? close(cmd->stdout) : 0;
 		if ((cmd->stdout = open(tmp_file->value,
-			O_TRUNC | O_CREAT | O_RDWR, 0644)) == -1)
+			O_TRUNC | O_CREAT | O_RDWR, 0644)) == -1 && (cmd->stdout = STDOUT))
 			return (asti_error(tmp_file->value, ERR_OPEN));
 	}
 	else if (tmp_redir->type == DREDIR_OUT)
 	{
 		(cmd->stdout != STDOUT) ? close(cmd->stdout) : 0;
 		if ((cmd->stdout = open(tmp_file->value,
-			O_APPEND | O_CREAT | O_RDWR, 0644)) == -1)
-				return (asti_error(tmp_file->value, ERR_OPEN));
+			O_APPEND | O_CREAT | O_RDWR, 0644)) == -1 && (cmd->stdout = STDOUT))
+			return (asti_error(tmp_file->value, ERR_OPEN));
 	}
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/11 12:21:12 by tharchen         ###   ########.fr        #
+#    Updated: 2020/03/12 19:57:38 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -32,15 +32,17 @@ CC						=	clang
 FLAGS					=	\
 							-Wall -Wextra -Werror \
 							-ferror-limit=1000 \
-							-O3 \
-							# -g3 -fsanitize=address \
 							# -g3 \
+							# -fsanitize=address \
+							# -g3 -fsanitize=address \
 
 BONUS_FLAG				=	0
 
 # *** PROJECT HEADER ********************************************************* #
 
 HDIR					=	$(addprefix -I, $(HEADER_DIR))
+
+HEAD					=	$(addprefix $(HEADER_DIR), $(HEADER))
 
 HEADER_DIR				=	\
 							./includes/
@@ -192,7 +194,7 @@ bonus:
 	@make -j BONUS_FLAG=1
 
 norm:
-	@ norminette $(SRCS_LIST) $(HEADER)
+	@ norminette $(SRCS) $(HEADER)
 
 clean:
 	@ rm -rf $(OBJS_DIR)

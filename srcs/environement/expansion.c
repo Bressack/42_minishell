@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:17:15 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/12 01:03:57 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/12 20:09:13 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,45 +58,49 @@ int		expand_env(char **args, char *new)
 ** echo \t \\ \$HOME "~ \t \\ \$HOME" ---> [t \ $HOME Users/frlindh \t \ $HOME]
 */
 
-int		expand_simple_quotes(char **args, char *new)
-{
-	int		i;
-
-	i = 0;
-	(*args)++;
-	while (*args && **args && **args != '\'')
-		new[i++] = *((*args)++);
-	(*args)++;
-	return (i);
-}
-
-char	*expand_qt(char *args)
+char	*expand_qt2(char *args, char *new)
 {
 	int		quote;
 	int		j;
-	char	new[LINE_MAX];
 
 	quote = 0;
 	j = 0;
-	while (args && *args && j < LINE_MAX)
+	while (args && *args && j < 10000)
 	{
 		if (quote == 0 && *args == '\'')
 			j += expand_simple_quotes(&args, &new[j]);
 		else if (*args == '$' && ok_envchar(*(args + 1), 0) && args++)
 			j += expand_env(&args, &new[j]);
-		else if (*args == '$' && (*(args + 1) >= '0' && *(args + 1) <= '9'))
-			args += 2;
 		else if (*args == '\"' && args++)
 			quote = (quote == 0) ? *args : 0;
 		else if (*args == '\\' &&
 		(((quote == 0 || spec_char(*(args + 1))) && args++) || 1))
 			new[j++] = *args++;
-		else if (quote == 0 && *args == '~' && args++)
+		else if (quote == 0 && *args == '~' && *(args - 1) != '$' && args++)
 			j += tilde_exp(&new[j]);
 		else
 			new[j++] = *args++;
 	}
-	return (!(new[j] = '\0') && j > 0) ? (ft_strdup(new)) : NULL;
+	new[j] = '\0';
+	return (args);
+}
+
+char	*expand_qt(char *args)
+{
+	char	*prev;
+	char	*ret;
+	int		bufsize;
+
+	bufsize = 20000;
+	ret = NULL;
+	while (args && *args)
+	{
+		prev = mmalloc(bufsize);
+		if ((args = expand_qt2(args, prev)) && *args)
+			ret = cat_value(ret, 0, prev);
+	}
+	ret = cat_value(ret, 0, prev);
+	return (ret);
 }
 
 /*
@@ -112,10 +116,10 @@ t_token	**expand_split_env(t_token **args, int *ac)
 	char	*ifs;
 	int		i;
 
-	if (!((*args)->value = expand_qt((*args)->value)))
+	if (!((*args)->value = expand_qt((*args)->value)) || !*((*args)->value))
 	{
-		*args = (*args)->next;
-		return (&(*args));
+		*args = ((*args)->next);
+		return (*args) ? (&(*args)) : (NULL);
 	}
 	ifs = ret_envval("IFS");
 	arr = (ifs) ? ft_split((*args)->value, ifs) : ft_split((*args)->value, IFS);
@@ -146,7 +150,7 @@ int		expand(t_token **args)
 	int	ac;
 
 	ac = 0;
-	while (*args)
+	while (args && *args)
 	{
 		if ((*args)->value[0] == '$' && ok_envchar((*args)->value[1], 0))
 			args = expand_split_env(args, &ac);

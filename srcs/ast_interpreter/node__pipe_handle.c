@@ -6,29 +6,15 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 02:45:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 16:58:45 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 23:40:14 by frlindh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-/*
-** THIS FUNCTION RETURN 1 IF THE PARENT OF THE NODE IS A PIPE
-** ELSE IT RETURN 0
-*/
-
-int		node__parent_ispipe(t_node *node)
-{
-	// dprintf(2, "parent is pipe ? %d && %d && %d && %d\n", node ? 1 : 0, node && node->parent ? 1 : 0, node && node->parent && node->parent->type == SEP ? 1 : 0, node && node->parent && node->parent->type == SEP && node->parent->sep->type == PIPE ? 1 : 0);
-	return (node && node->parent && node->parent->type == SEP &&
-		node->parent->sep->type == PIPE);
-}
-
-int		waitallpipes(int pipe[2], int opt)
+int		pid_save(int pid, int opt)
 {
 	static t_pid_save	*list = NULL;
-	static int			nb_cmd = 1;
-	int					i;
 	t_pid_save			*new;
 	int					sloc;
 
@@ -36,41 +22,23 @@ int		waitallpipes(int pipe[2], int opt)
 	if (opt & ADD)
 	{
 		new = mmalloc(sizeof(t_pid_save));
-		new->pipe[PIPE_WRITE] = pipe[PIPE_WRITE];
-		new->pipe[PIPE_READ] = pipe[PIPE_READ];
-		nb_cmd += 1;
+		new->pid = pid;
 		ft_add_node_end_np((t_pnp **)&list, (t_pnp *)new);
 	}
-	if (opt & CLOSE)
+	else if (opt & WAIT)
 	{
 		new = list;
 		while (new)
 		{
-			close(new->pipe[PIPE_WRITE]);
-			close(new->pipe[PIPE_READ]);
+			waitpid(new->pid, &sloc, 0);
 			new = new->next;
 		}
+		return (sloc);
 	}
-	if (opt & WAIT)
-	{
-		i = nb_cmd;
-		while (i)
-		{
-			wait(&sloc);
-			i--;
-		}
-		nb_cmd = 1;
-	}
-	if (opt & FREE)
-	{
+	else if (opt & FREE)
 		ft_del_list_np((t_pnp **)&list);
-	}
-	return (sloc);
+	return (0);
 }
-
-/*
-cat /dev/random | head -c 100
-*/
 
 /*
 ** THIS FUNCTION OPEN A NEW PIPE AND ASSIGN THE WRITE SIDE TO THE LEFT CHILD
@@ -86,26 +54,67 @@ cat /dev/random | head -c 100
 ** CHILD HAS FINISHED TO USE IT
 */
 
+int		node__cmdpipefirst_controller(t_node *cmd)
+{
+	cmd->stdin != STDIN ? close(cmd->stdin) : 0;
+	cmd->stdout != STDOUT ? close(cmd->stdout) : 0;
+	if (pipe(cmd->pipe_ltor) == -1)
+		return (asti_error(NULL, ERR_PIPE));
+	cmd->stdout = cmd->pipe_ltor[PIPE_WRITE];
+	if (redir_handle(cmd) == ERROR)
+		return (-1);
+	g_exit = execute_fork(cmd, cmd->pipe_ltor[PIPE_READ]);
+	close(cmd->pipe_ltor[PIPE_WRITE]);
+	return (cmd->pipe_ltor[PIPE_READ]);
+}
+
+int		node__cmdpipe_controller(t_node *cmd, int fdread)
+{
+	cmd->stdin != STDIN ? close(cmd->stdin) : 0;
+	cmd->stdout != STDOUT ? close(cmd->stdout) : 0;
+	if (node__parent_ispipe(cmd->parent))
+	{
+		if (pipe(cmd->pipe_ltor) == -1)
+			return (asti_error(NULL, ERR_PIPE));
+		cmd->stdout = cmd->pipe_ltor[PIPE_WRITE];
+	}
+	cmd->stdin = fdread;
+	if (redir_handle(cmd) == ERROR)
+		return (-1);
+	g_exit = node__parent_ispipe(cmd->parent) ?
+	execute_fork(cmd, cmd->pipe_ltor[PIPE_READ]) : execute_fork(cmd, 0);
+	close(fdread);
+	if (node__parent_ispipe(cmd->parent))
+	{
+		close(cmd->pipe_ltor[PIPE_WRITE]);
+		return (cmd->pipe_ltor[PIPE_READ]);
+	}
+	return (STDOUT);
+}
+
+int		node__subpipe_handle(t_node *ppln)
+{
+	int	fdread;
+
+	if (ppln->left->type == CMD)
+	{
+		if ((fdread = node__cmdpipefirst_controller(ppln->left)) == -1)
+			return (-1);
+	}
+	else if ((fdread = node__subpipe_handle(ppln->left)) == -1)
+		return (-1);
+	if ((fdread = node__cmdpipe_controller(ppln->right, fdread)) == -1)
+		return (-1);
+	return (fdread);
+}
+
 int		node__pipe_handle(t_node *ppln)
 {
-	int	sloc;
-	int	head;
+	int sig;
 
-	head = 0;
-	sloc = 0;
-	if (!node__parent_ispipe(ppln))
-		head = 1;
-	if (pipe(ppln->pipe_ltor) == -1)
-		return (asti_error(NULL, ERR_PIPE));
-	ppln->left->stdout != STDOUT ? close(ppln->left->stdout) : 0;
-	ppln->right->stdin != STDIN ? close(ppln->right->stdin) : 0;
-	ppln->left->stdout = ppln->pipe_ltor[PIPE_WRITE];
-	ppln->right->stdin = ppln->pipe_ltor[PIPE_READ];
-	ppln->right->stdout = ppln->stdout;
-	waitallpipes(ppln->pipe_ltor, ADD);
-	node__controller(ppln->left);
-	node__controller(ppln->right);
-	if (head == 1)
-		sloc = waitallpipes(ppln->pipe_ltor, WAIT | CLOSE | FREE);
-	return (WEXITSTATUS(sloc));
+	if ((node__subpipe_handle(ppln)) == -1)
+		return (1);
+	sig = pid_save(0, WAIT | FREE);
+	g_exit = WEXITSTATUS(sig);
+	return (WEXITSTATUS(sig));
 }

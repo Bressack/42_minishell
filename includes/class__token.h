@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:21:19 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/06 10:45:57 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:51:49 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,56 +15,58 @@
 # include <minishell.h>
 
 # define NB_DEFINED_TOKEN 19
+
 /*
 ** this following enum e_token_type MUST to be sorted exactly like the
 ** global array g_defined_tokens
 ** 'ERR' must be the first one och
 ** 'NONE' must be the last one
 */
+
 typedef enum			e_token_type_m
 {
-	ERR					= 0x0,
-	EOT					= 0x1,
-	SPACE				= 0x2,
-	PASS				= 0x4,
-	WORD				= 0x8,
-	SQUOTE				= 0x10,
-	DQUOTE				= 0x20,
-	LPAREN				= 0x40,
-	RPAREN				= 0x80,
-	REDIR_IN			= 0x100,
-	REDIR_OUT			= 0x200,
-	DREDIR_OUT			= 0x400,
-	DBL_AND				= 0x800,
-	DBL_OR				= 0x2000,
-	PIPE				= 0x4000,
-	SEMICON				= 0x8000,
-	BSLASH				= 0x10000,
-	DOLLAR				= 0x40000,
-	NONE				= 0x200000
+	ERR = 0x0,
+	EOT = 0x1,
+	SPACE = 0x2,
+	PASS = 0x4,
+	WORD = 0x8,
+	SQUOTE = 0x10,
+	DQUOTE = 0x20,
+	LPAREN = 0x40,
+	RPAREN = 0x80,
+	REDIR_IN = 0x100,
+	REDIR_OUT = 0x200,
+	DREDIR_OUT = 0x400,
+	DBL_AND = 0x800,
+	DBL_OR = 0x2000,
+	PIPE = 0x4000,
+	SEMICON = 0x8000,
+	BSLASH = 0x10000,
+	DOLLAR = 0x40000,
+	NONE = 0x200000
 }						t_token_type_m;
 
 typedef enum			e_token_type
 {
-	I_ERR, // 0
-	I_EOT, // 1
-	I_SPACE, // 2
-	I_PASS, // 3
-	I_WORD, // 4
-	I_SQUOTE, // 5
-	I_DQUOTE, // 6
-	I_LPAREN, // 7
-	I_RPAREN, // 8
-	I_REDIREC_IN, // 9
-	I_REDIREC_OUT, // 10
-	I_DREDIREC_OUT, // 11
-	I_DBL_AND, // 12
-	I_DBL_OR, // 13
-	I_PIPE, // 14
-	I_SEMICON, // 15
-	I_BSLASH, // 16
-	I_DOLLAR, // 17
-	I_NONE // 18
+	I_ERR,
+	I_EOT,
+	I_SPACE,
+	I_PASS,
+	I_WORD,
+	I_SQUOTE,
+	I_DQUOTE,
+	I_LPAREN,
+	I_RPAREN,
+	I_REDIREC_IN,
+	I_REDIREC_OUT,
+	I_DREDIREC_OUT,
+	I_DBL_AND,
+	I_DBL_OR,
+	I_PIPE,
+	I_SEMICON,
+	I_BSLASH,
+	I_DOLLAR,
+	I_NONE
 }						t_token_type;
 typedef struct			s_token
 {

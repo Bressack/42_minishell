@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 08:22:11 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/10 04:38:36 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:09:42 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ t_token			*token__new(t_token_type_m type, char *value, int pos)
 	new = mmalloc(sizeof(t_token));
 	new->type = type;
 	new->pos_in_line = pos;
-	new->value = value; // value can come from a strdup, strsub, etc.
+	new->value = value;
 	new->len = 0;
 	if (value)
 		new->len = ft_strlen(value);
 	return (new);
 }
 
-t_token			*token__copy(t_token *token) // use this function on defined token. e.g. token__copy(g_defined_tokens[I_WORD])
+t_token			*token__copy(t_token *token)
 {
 	t_token		*new;
 
@@ -42,8 +42,8 @@ void			token__del(t_token **token)
 {
 	if (*token)
 	{
-		mfree((void **)&(*token)->value); // free the memory of value
-		mfree((void **)token); // free the token
+		mfree((void **)&(*token)->value);
+		mfree((void **)token);
 	}
 }
 

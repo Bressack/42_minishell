@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 04:33:20 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 23:46:19 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/12 18:07:49 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,13 @@ int				lexer__refill_line(t_lexer *lex, int sloc)
 ** just return the word token just found in lexer__get_next_token. The token
 ** start at 'start_pos' included until 'pos' excluded (variable included in lex)
 */
+
 t_token			*lexer__token_grabber(t_lexer *lex, t_token_type_m type)
 {
 	t_token		*new;
 
-	new = token__new(type, ft_strsub(lex->line, lex->start, lex->pos - lex->start),
+	new = token__new(type, ft_strsub(lex->line, lex->start,
+		lex->pos - lex->start),
 		lex->start);
 	return (new);
 }

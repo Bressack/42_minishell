@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/15 14:47:18 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/17 13:23:42 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ int		execute_simple(t_node *cmd)
 	int		type;
 
 	av = check_cmd(cmd, &ac, &type);
+	if (!av || !*av)
+		return (0);
 	if (type >= 0)
 		type = g_builtins[type].f(ac, av, cmd->stdout);
 	else if (type == -1)
@@ -113,40 +115,6 @@ int		execute_simple(t_node *cmd)
 	mfree((void **)&av);
 	return (type);
 }
-
-/*
-** USED IF FORKING IS DONE IN PIPE FUNCTION. SO THIS JUST EXECUTES BUILTINS,
-** ASSIGNMENTS OR COMMANDS IN SPECIFIC PATH OR WILL PATH ENVIRONMENT VAR
-*/
-
-/*
-** int		execute_nofork(t_node *cmd)
-** {
-** 	char	**av;
-** 	int		ac;
-** 	int		type;
-** 	char	*path;
-** 	int		sig;
-** 	char	**environ;
-**
-** 	av = check_cmd(cmd, &ac, &type);
-** 	environ = env_to_arr(g_env);
-** 	if (type == 3)
-** 		exit (g_builtins[type].f(ac, av, -1));
-** 	else if (type >= 0)
-** 		exit (g_builtins[type].f(ac, av, cmd->stdout));
-** 	else if (type == -1)
-** 		exit (export(ac, av, 1));
-** 	else
-** 	{
-** 		if (!(path = get_path(av[0], &sig)))
-** 			return (bi_error(av[0], NULL, NULL, sig));
-** 		execve(path, av, environ);
-** 		bi_error(av[0], NULL, strerror(errno), 0);
-** 		exit(errno);
-** 	}
-** }
-*/
 
 /*
 ** USED IF FORKING IS ---NOT--- DONE IN PIPE FUNCTION. MEANING IT FORKS IN
@@ -172,7 +140,6 @@ int		execute_in_child(t_node *cmd)
 		close(cmd->stdout);
 	if (cmd->stdin != STDIN && dup2(cmd->stdin, STDIN) != -1)
 		close(cmd->stdin);
-	waitallpipes(NULL, CLOSE);
 	if (!(path = get_path(av[0], &type)))
 		return (bi_error(av[0], NULL, NULL, type));
 	environ = env_to_arr(g_env);
@@ -181,7 +148,7 @@ int		execute_in_child(t_node *cmd)
 	return (errno);
 }
 
-int		execute_fork(t_node *cmd)
+int		execute_fork(t_node *cmd, int out)
 {
 	int		pid;
 	int		ret;
@@ -192,9 +159,12 @@ int		execute_fork(t_node *cmd)
 	signal(SIGQUIT, sig_exec);
 	if (pid == 0)
 	{
+		if (out)
+			close(out);
 		ret = execute_in_child(cmd);
 		free_all_malloc();
 		exit(ret);
 	}
+	pid_save(pid, ADD);
 	return (0);
 }

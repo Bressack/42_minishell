@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 12:09:08 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/10 04:42:49 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 18:51:16 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef enum		e_foreach_opt
 }					t_foreach_opt;
 typedef enum		e_error_id
 {
-	ERR_UNEXPECTED_EOT,
+	EUE,
 	ERR_UNSUPPORTED_FEATURE,
 	ERR_UNSUPPORTED_FEATURE_DBL_AND,
 	ERR_UNSUPPORTED_FEATURE_DBL_OR,
@@ -52,23 +52,23 @@ typedef struct		s_lexer
 }					t_lexer;
 typedef enum		e_char_type
 {
-	CHR_ERR			= 0x0,
-	CHR_EOT			= 0x1,
-	CHR_SPACE		= 0x2,
-	CHR_WORD		= 0x4,
-	CHR_LPAREN		= 0x8,
-	CHR_RPAREN		= 0x10,
-	CHR_REDIREC_IN	= 0x20,
-	CHR_REDIREC_OUT	= 0x40,
-	CHR_SQUOTE		= 0x80,
-	CHR_DQUOTE		= 0x100,
-	CHR_AND			= 0x200,
-	CHR_PIPE		= 0x400,
-	CHR_SEMICON		= 0x800,
-	CHR_PASS		= 0x1000,
-	CHR_DOLLAR		= 0x2000,
-	CHR_BSLASH		= 0x4000,
-	CHR_NONE		= 0x8000,
+	CHR_ERR = 0x0,
+	CHR_EOT = 0x1,
+	CHR_SPACE = 0x2,
+	CHR_WORD = 0x4,
+	CHR_LPAREN = 0x8,
+	CHR_RPAREN = 0x10,
+	CHR_REDIREC_IN = 0x20,
+	CHR_REDIREC_OUT = 0x40,
+	CHR_SQUOTE = 0x80,
+	CHR_DQUOTE = 0x100,
+	CHR_AND = 0x200,
+	CHR_PIPE = 0x400,
+	CHR_SEMICON = 0x800,
+	CHR_PASS = 0x1000,
+	CHR_DOLLAR = 0x2000,
+	CHR_BSLASH = 0x4000,
+	CHR_NONE = 0x8000,
 }					t_char_type;
 extern t_char_type	g_token_ascii_table[255];
 

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:31:13 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 16:45:57 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/12 17:46:07 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int		init_tool(t_astb *tool, int sloc)
 	if (!tool->current_token || tool->current_token->type == EOT)
 	{
 		lexer__del(&tool->lex);
-		return (ERROR); // line empty
+		return (EMPTY);
 	}
 	tool->prev_token = NULL;
 	tool->tree_pos = NULL;
@@ -71,8 +71,12 @@ int		init_tool(t_astb *tool, int sloc)
 t_node	*ast_builder(int sloc)
 {
 	t_astb		tool;
+	int			ret;
 
-	if (init_tool(&tool, sloc) != ERROR && process(&tool) != ERROR)
+	ret = init_tool(&tool, sloc);
+	if (ret == EMPTY)
+		return (ast_builder(sloc));
+	if (ret != ERROR && process(&tool) != ERROR)
 	{
 		lexer__del(&tool.lex);
 		return (tool.ast);
