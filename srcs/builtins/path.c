@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 18:37:56 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/10 21:37:46 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/03/15 14:30:08 by fredrikalindh    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int		check_stat(char *path, int *err, int f)
 		*err = 125;
 	else if (!(*err = 0))
 		return (1);
-	return (0);
+	return (0); // free path here instead ?
 }
 
 /*
@@ -87,7 +87,7 @@ char	*get_path(char *command, int *err)
 	if (i == -1)
 		path = command;
 	else if (!ret_envval("PATH"))
-		path = get_no_path(command);
+		path = get_no_path(command); // just use cat_value ?
 	else
 		env = ret_envval("PATH");
 	if (path)
