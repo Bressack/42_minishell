@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 09:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/09 02:39:03 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/03/24 14:19:41 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#if BONUS == 1
 
 char	*get_value(t_node *n)
 {
@@ -64,3 +65,5 @@ void	tree_draw(t_node *node)
 	bst_print_dot(node, stream);
 	close(stream);
 }
+
+#endif
