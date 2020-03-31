@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 23:37:28 by frlindh          ###   ########.fr        #
+#    Updated: 2020/03/31 13:53:01 by fredrikalindh    ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,24 +49,24 @@ C_RES="\033[0m"
 
 # ENABLE TEST
 
-TEST__ECHO=1
-TEST__CD=1
-TEST__PWD=1
-TEST__EXPORT=1
-TEST__UNSET=1
-TEST__ENV=1
-TEST__EXIT=1
+TEST__ECHO=0
+TEST__CD=0
+TEST__PWD=0
+TEST__EXPORT=0
+TEST__UNSET=0
+TEST__ENV=0
+TEST__EXIT=0
 TEST__RANDOM_FRED=1
 
-TEST__BAD=1
-TEST__GOOD=1
+TEST__BAD=0
+TEST__GOOD=0
 
 # SUB TEST
 
-TEST__SIMPLE=1
-TEST__SIMPLE_REDIR=1
-TEST__DOUBLE_REDIR=1
-TEST__SIMPLE_REDIR_IN=1
+TEST__SIMPLE=0
+TEST__SIMPLE_REDIR=0
+TEST__DOUBLE_REDIR=0
+TEST__SIMPLE_REDIR_IN=0
 
 # **************************************************************************** #
 # **************************************************************************** #
@@ -685,7 +685,13 @@ test "/toolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilena
 test "famf2 > mf2;"
 test "echo hej > mf2 ;/toolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenamee > mf2"
 test "lsha ; teaaaa ; cat mf2"
-test "echo hej > mf2 ; cat mf2 > mf2 ; cat mf2"
+test "lsha > tea; echo hej; cat hea"
+test "lsha > tea; echo hej; cat tea"
+test "lsha > tea; echo hej; >tea; cat tea;SO FOR SOME REASON STDERR GETS REDIRECTED INTO THE FILE"
+test "lsha > tea; echo hej; rm tea; cat tea"
+test "lsha > tea ; cat tea"
+test "lsha > tea ; cat tea ga"
+test "echo hej > mf2 ; mf2 < mf2aa ; cat mf2aa"
 test "mkdir -p ./notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename; cd ./notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename ; pwd"
 
 test "echo aharhhshrah > test < test ; cat test"
