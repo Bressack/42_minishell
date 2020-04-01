@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/04/01 12:08:54 by tharchen         ###   ########.fr        #
+#    Updated: 2020/04/01 21:50:05 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,15 +60,15 @@ TEST__ENV=1
 TEST__EXIT=1
 TEST__RANDOM_FRED=1
 
-TEST__BAD=1
-TEST__GOOD=1
+TEST__BAD=0
+TEST__GOOD=0
 
 # SUB TEST
 
-TEST__SIMPLE=1
-TEST__SIMPLE_REDIR=1
-TEST__DOUBLE_REDIR=1
-TEST__SIMPLE_REDIR_IN=1
+TEST__SIMPLE=0
+TEST__SIMPLE_REDIR=0
+TEST__DOUBLE_REDIR=0
+TEST__SIMPLE_REDIR_IN=0
 
 # **************************************************************************** #
 # **************************************************************************** #
@@ -774,7 +774,14 @@ test "/toolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilena
 test "famf2 > mf2;"
 test "echo hej > mf2 ;/toolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenametoolongfilenamee > mf2"
 test "lsha ; teaaaa ; cat mf2"
-test "echo hej > mf2 ; cat mf2 > mf2 ; cat mf2"
+test "lsha > tea; echo hej; cat hea"
+test "lsha > tea; echo hej; cat tea"
+test "lsha > tea; echo hej; >tea; cat tea;SO FOR SOME REASON STDERR GETS REDIRECTED INTO THE FILE"
+test "lsha > tea; echo hej; rm tea; cat tea"
+test "lsha > tea ; cat tea"
+test "lsha > tea ; cat tea ga"
+test "ls > test ; ghhh < test > test2; cat test; echo hej"
+test "echo hej > mf2 ; mf2 < mf2aa ; cat mf2aa"
 test "mkdir -p ./notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename; cd ./notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename/notlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilenamenotlongfilename ; pwd"
 
 test "echo aharhhshrah > test < test ; cat test"
