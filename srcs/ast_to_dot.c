@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 09:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/24 14:19:41 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/04/01 21:55:23 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#define NULL_STR_DOT "(null)"
 #if BONUS == 1
 
 char	*get_value(t_node *n)
 {
 	if (n->type == CMD)
-		return (n->av->value);
+		return (n->av ? n->av->value : NULL_STR_DOT);
 	else
-		return (n->sep->value);
+		return (n->sep ? n->sep->value : NULL_STR_DOT);
 }
 
 void	bst_print_dot_aux(t_node *node, int stream, int deep)
