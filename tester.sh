@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/04/01 21:50:05 by tharchen         ###   ########.fr        #
+#    Updated: 2020/04/03 04:22:35 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,6 +78,9 @@ TOTAL_SUCCESS=0
 
 init_tester()
 {
+	printf "\n**********************************************************\n"
+	printf "$C_G_WHITE print only fails (uncomment line 142 to print all tests) $C_RES \n"
+	printf "**********************************************************\n\n"
 	if [[ $2 == "make" ]]; then
 		if [[ $3 == "re" ]]; then
 			make re
@@ -136,7 +139,7 @@ test()
 	DIFF_RET=$?
 	if [ $DIFF_RET == 0 ] && [ $USER_RETVAL == $BASH_RETVAL ]
 	then
-		printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_GREEN OK !$C_G_WHITE : \"$C_G_GRAY$1$C_G_WHITE\"$C_RES\n" $TOTAL_TEST
+		# printf "$C_G_WHITE test $C_G_CYAN %-8d$C_G_GREEN OK !$C_G_WHITE : \"$C_G_GRAY$1$C_G_WHITE\"$C_RES\n" $TOTAL_TEST
 		let "TOTAL_SUCCESS+=1"
 	else
 		if [ $DIFF_RET != 0 ]
@@ -161,6 +164,15 @@ init_tester $1 $2 $3
 # **************************************************************************** #
 # *** tests ****************************************************************** #
 # **************************************************************************** #
+
+test "qwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwe > test ; cat test"
+test "qwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwer > test ; cat test"
+test "qwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerq > test ; cat test"
+test "qwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwer > test ; cat test"
+test "touch 000 hej; ./hej > test1 ; cat test1"
+test "mkdir a;mkdir b; cp a ./b > test2 ; cat test2"
+test "mkdir a; cp a ./b > test2 ; cat test2"
+test "cat qewr > test1 ; cat test1"
 
 test ""
 test "\n"
