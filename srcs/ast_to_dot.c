@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 09:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2020/04/01 21:55:23 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/04/13 14:08:43 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	tree_draw(t_node *node)
 
 	remove("tree.dot");
 	remove("tree.png");
-	stream = open("tree.dot", (O_CREAT | O_RDWR), 0644);
+	stream = open("../tree.dot", (O_CREAT | O_RDWR), 0644);
 	if (!stream)
 		exit(0);
 	bst_print_dot(node, stream);

@@ -6,7 +6,7 @@
 /*   By: frlindh <frlindh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 11:59:11 by frlindh           #+#    #+#             */
-/*   Updated: 2020/03/17 13:37:09 by fredrikalindh    ###   ########.fr       */
+/*   Updated: 2020/04/13 13:59:16 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int		launch(t_node *cmd, char **av)
 			close(cmd->stdin);
 		execve(path, av, environ);
 		free_all_malloc();
-		exit(bi_error(av[0], NULL, strerror(errno), 0)); // or errno
+		exit(bi_error(av[0], NULL, strerror(errno), 0));
 	}
 	mfree((void **)&path);
 	waitpid(pid, &sloc, WUNTRACED);
@@ -108,7 +108,7 @@ int		execute_simple(t_node *cmd)
 		type = g_builtins[type].f(ac, av, cmd->stdout);
 	else if (type == -1)
 		type = export(ac, av, 1);
-	else if (!(g_exit = 0)) // IS THIS REALLY A GOOD PLACE TO RESET?
+	else if (!(g_exit = 0))
 		type = launch(cmd, av);
 	while (av && *av)
 		mfree((void **)av++);

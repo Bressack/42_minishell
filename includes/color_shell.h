@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 09:59:44 by tharchen          #+#    #+#             */
-/*   Updated: 2020/03/11 14:25:06 by frlindh          ###   ########.fr       */
+/*   Updated: 2020/04/13 14:06:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@
 # define C_B_CYAN		"\033[46m"
 # define C_B_WHITE		"\033[47m"
 # define C_B_GRAY		"\033[100m"
+
 /*
 ** default color reset
 */
@@ -56,8 +57,14 @@
 /*
 ** DEBUG printf(TEST);
 */
-# define MINUS_STR	"----------------------------------------------------------\
-------------------------------------------"
-# define TEST "\033[36;01m(%s) \033[31;01m%s\033[0m %.*s>\033[35;01m %d\033[0m\n", __FILE__, __FUNCTION__, (int)(70 - (strlen(__FUNCTION__) + strlen(__FILE__) + 3)), MINUS_STR, __LINE__
+/*
+** # define MINUS_STR
+**<	"----------------------------------------------------------\
+** ------------------------------------------"
+** # define TEST "\033[36;01m(%s) \033[31;01m%s\033[0m %.*s>\033[35;01m
+**< %d\033[0m\
+** \n", __FILE__, __FUNCTION__, (int)(70 - (strlen(__FUNCTION__) +
+** strlen(__FILE__) + 3)), MINUS_STR, __LINE__
+*/
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 12:52:12 by tharchen          #+#    #+#             */
-/*   Updated: 2020/04/01 21:56:36 by tharchen         ###   ########.fr       */
+/*   Updated: 2020/04/13 14:08:26 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	sig_handler(int signo)
 	else if (signo == SIGQUIT)
 		ft_dprintf(2, "\b\b  \b\b");
 }
+
 #if BONUS == 1
 
 int		main(int ac, char **av, char **env)
@@ -60,7 +61,7 @@ int		main(int ac, char **av, char **env)
 		signal(SIGQUIT, sig_handler);
 		if ((ast = ast_builder(sloc)))
 		{
-			// tree_draw(ast);
+			tree_draw(ast);
 			sloc = ast_interpreter(ast);
 			g_exit = sloc;
 			node__del(&ast, RECURCIVLY);
@@ -71,6 +72,7 @@ int		main(int ac, char **av, char **env)
 	free_all_malloc();
 	return (0);
 }
+
 #else
 
 int		main(int ac, char **av, char **env)
