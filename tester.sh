@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/05 21:37:03 by tharchen          #+#    #+#              #
-#    Updated: 2020/04/03 04:22:35 by tharchen         ###   ########.fr        #
+#    Updated: 2020/04/13 12:28:09 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,15 +60,15 @@ TEST__ENV=1
 TEST__EXIT=1
 TEST__RANDOM_FRED=1
 
-TEST__BAD=0
-TEST__GOOD=0
+TEST__BAD=1
+TEST__GOOD=1
 
 # SUB TEST
 
-TEST__SIMPLE=0
-TEST__SIMPLE_REDIR=0
-TEST__DOUBLE_REDIR=0
-TEST__SIMPLE_REDIR_IN=0
+TEST__SIMPLE=1
+TEST__SIMPLE_REDIR=1
+TEST__DOUBLE_REDIR=1
+TEST__SIMPLE_REDIR_IN=1
 
 # **************************************************************************** #
 # **************************************************************************** #
@@ -121,15 +121,15 @@ reset_dirtest()
 test()
 {
 	# TEST minishell # ******************************************************* #
-	# (printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/user_output
-	# (printf "$1\nexit\n") | zsh 2>&- > $MAIN_DIR/user_output
-	(printf "$1\nexit\n") | $MAIN_DIR/minishell 2>&- > $MAIN_DIR/user_output
+	# (printf "$1\nexit\n") | /bin/bash 2>/dev/null > $MAIN_DIR/user_output
+	# (printf "$1\nexit\n") | zsh 2>/dev/null > $MAIN_DIR/user_output
+	(printf "$1\nexit\n") | $MAIN_DIR/minishell 2>/dev/null > $MAIN_DIR/user_output
 	USER_RETVAL=$?
 	reset_dirtest
 
 	# TEST bash # ************************************************************ #
-	# (printf "$1\nexit\n") | /bin/bash 2>&- > $MAIN_DIR/bash_output
-	(printf "$1\nexit\n") | bash 2>&- > $MAIN_DIR/bash_output
+	# (printf "$1\nexit\n") | /bin/bash 2>/dev/null > $MAIN_DIR/bash_output
+	(printf "$1\nexit\n") | bash 2>/dev/null > $MAIN_DIR/bash_output
 	BASH_RETVAL=$?
 	reset_dirtest
 
