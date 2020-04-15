@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/12 14:55:36 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 21:29:38 by frlindh          ###   ########.fr        #
+#    Updated: 2020/04/15 16:11:56 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -152,8 +152,6 @@ exec_test '<'
 exec_test "exit 42"
 exec_test "exit 42 53 68"
 exec_test "exit 259"
-exec_test "exit 9223372036854775807"
-exec_test "exit -9223372036854775808"
 exec_test "exit 9223372036854775808"
 exec_test "exit -9223372036854775810"
 exec_test "exit -4"

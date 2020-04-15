@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/04/15 15:47:52 by tharchen         ###   ########.fr        #
+#    Updated: 2020/04/15 16:08:38 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -29,12 +29,7 @@ NAME					=	minishell
 
 CC						=	clang
 
-FLAGS					=	\
-							-Wall -Wextra -Werror \
-							-ferror-limit=1000 \
-							# -g3 \
-							# -fsanitize=address \
-							# -g3 -fsanitize=address \
+FLAGS					=	-Wall -Wextra -Werror 
 
 BONUS_FLAG				=	0
 
