@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/04/15 15:21:56 by tharchen         ###   ########.fr        #
+#    Updated: 2020/04/15 15:47:52 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -191,12 +191,15 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 
 init:
 	@ printf "\033[37;01mthe password for \033[34;01muser42\033[37;01m is : \033[32;01m42\033[0m\n"
-	@ cat ./README.TXT
+	@ cat ./README.txt
 	@ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 	@ printf "\033[34;01mbrew\033[37;01m correctly installed :)\033[0m\n"
 	@ brew install graphviz ; brew upgrade graphviz
 	@ printf "\033[34;01mgraphviz\033[37;01m correctly installed :)\033[0m\n"
 	@ make fclean
+
+drawast:
+	@ dot -Tpng /tmp/tree.dot -o tree.png && open tree.png
 
 bonus:
 	@make fclean
@@ -207,6 +210,8 @@ norm:
 
 clean:
 	@ rm -rf $(OBJS_DIR)
+	@ rm -rf /tmp/tree.dot
+	@ rm -rf ./tester_dir
 
 fclean: clean
 	@ rm -f $(NAME)
