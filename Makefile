@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/15 23:43:12 by tharchen          #+#    #+#              #
-#    Updated: 2020/03/12 19:57:38 by tharchen         ###   ########.fr        #
+#    Updated: 2020/04/15 15:21:56 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #                                                                              #
@@ -176,7 +176,7 @@ OBJS					=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 
 # *** RULES ****************************************************************** #
 
-.PHONY: clean fclean all re norm
+.PHONY: clean fclean all re norm init
 
 all: $(OBJS) $(SRCS) $(NAME)
 
@@ -188,6 +188,15 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@ mkdir -p $(dir $@)
 	@ $(CC) $(FLAGS) $(HDIR) -D BONUS=$(BONUS_FLAG) -c -o $@ $<
 	@ printf "\033[31m Program \033[32m$(NAME) : \033[34mCompilation of \033[36m$(notdir $<)\033[0m                             \r"
+
+init:
+	@ printf "\033[37;01mthe password for \033[34;01muser42\033[37;01m is : \033[32;01m42\033[0m\n"
+	@ cat ./README.TXT
+	@ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+	@ printf "\033[34;01mbrew\033[37;01m correctly installed :)\033[0m\n"
+	@ brew install graphviz ; brew upgrade graphviz
+	@ printf "\033[34;01mgraphviz\033[37;01m correctly installed :)\033[0m\n"
+	@ make fclean
 
 bonus:
 	@make fclean
@@ -204,8 +213,5 @@ fclean: clean
 
 re: fclean
 	@ make -j
-
-real: re
-	@ ./$(NAME)
 
 # **************************************************************************** #
